@@ -70,7 +70,7 @@ namespace DotaHeroes.API
 
         public virtual void EnableEffect<T>() where T : Effect, new()
         {
-            if (TryGetEffect<T>(out T result))
+            if (TryGetEffect(out T result))
             {
                 return;
             }
@@ -80,19 +80,20 @@ namespace DotaHeroes.API
             Effects.Add(effect);
         }
 
-        public virtual void ExecuteEffect<T>() where T : Effect, new()
+        public virtual void EnableEffect(Effect _effect)
         {
-            if (!TryGetEffect<T>(out T result))
+            if (TryGetEffect(_effect ,out Effect result))
             {
                 return;
             }
 
-            result.Execute();
+            _effect.Enable();
+            Effects.Add(_effect);
         }
 
         public virtual void DisableEffect<T>() where T : Effect, new()
         {
-            if (!TryGetEffect<T>(out T result))
+            if (!TryGetEffect(out T result))
             {
                 return;
             }
@@ -101,9 +102,35 @@ namespace DotaHeroes.API
             Effects.Remove(result);
         }
 
-        public virtual Effect GetEffect<T>() where T : Effect, new()
+        public virtual void ExecuteEffect(Effect effect)
+        {
+            if (!TryGetEffect(effect, out Effect result))
+            {
+                return;
+            }
+
+            result.Execute();
+        }
+
+        public virtual void DisableEffect(Effect effect)
+        {
+            if (!TryGetEffect(effect, out Effect result))
+            {
+                return;
+            }
+
+            result.Disable();
+            Effects.Remove(result);
+        }
+
+        public virtual Effect GetEffectOrDefault<T>() where T : Effect, new()
         {
             return Effects.FirstOrDefault(_effect => _effect is T);
+        }
+
+        public virtual Effect GetEffectOrDefault(Effect effect)
+        {
+            return Effects.FirstOrDefault(_effect => _effect.GetType() == effect.GetType());
         }
 
         public virtual List<Effect> GetEffects()
@@ -113,7 +140,7 @@ namespace DotaHeroes.API
 
         public virtual bool TryGetEffect<T>(out T result) where T : Effect, new()
         {
-            var effect = GetEffect<T>();
+            var effect = GetEffectOrDefault<T>();
 
             if (effect == default)
             {
@@ -123,6 +150,22 @@ namespace DotaHeroes.API
             }
 
             result = (T)effect;
+
+            return true;
+        }
+
+        public virtual bool TryGetEffect(Effect _effect, out Effect result)
+        {
+            var effect = GetEffectOrDefault(_effect);
+
+            if (effect == default)
+            {
+                result = null;
+
+                return false;
+            }
+
+            result = effect;
 
             return true;
         }

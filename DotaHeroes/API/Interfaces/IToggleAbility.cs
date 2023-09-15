@@ -8,7 +8,8 @@ using System.Threading.Tasks;
 
 namespace DotaHeroes.API.Interfaces
 {
-    public interface IActiveAbility : ICommand
+    public interface IToggleAbility : IActiveAbility
     {
+        bool IsActive { get; set; }
     }
 }

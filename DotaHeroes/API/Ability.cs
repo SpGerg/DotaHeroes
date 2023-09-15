@@ -2,6 +2,7 @@
 using DotaHeroes.API.Enums;
 using DotaHeroes.API.Extensions;
 using DotaHeroes.API.Features;
+using DotaHeroes.API.Interfaces;
 using Exiled.API.Features;
 using NorthwoodLib.Pools;
 using RemoteAdmin;
@@ -24,8 +25,6 @@ namespace DotaHeroes.API
         public abstract AbilityType AbilityType { get; }
 
         public abstract TargetType TargetType { get; }
-
-        public virtual IReadOnlyDictionary<string, List<int>> Values { get; } = new Dictionary<string, List<int>>();
 
         public abstract int MaxLevel { get; }
 
@@ -62,7 +61,11 @@ namespace DotaHeroes.API
         public virtual void LevelUp()
         {
             Level++;
-            Cooldown.Duration = Values["cooldown"][Level];
+            if (this is IValues)
+            {
+                Cooldown.Duration = (int)(this as IValues).Values["cooldown"][Level];
+            }
+            
         }
         public virtual bool Execute(ArraySegment<string> arguments, ICommandSender sender, out string response)
         {
@@ -73,11 +76,23 @@ namespace DotaHeroes.API
                 return false;
             }
 
+            if (Player.Get(sender) != Owner)
+            {
+                response = "You havent this ability.";
+
+                return false;
+            }
+
             response = $"Ability {Name} was used.";
 
             if (!Cooldown.IsCompleted)
             {
                 return false;
+            }
+
+            if (this is IToggleAbility)
+            {
+                (this as IToggleAbility).IsActive = !(this as IToggleAbility).IsActive;
             }
 
             Cooldown.Run();

@@ -12,7 +12,8 @@ namespace DotaHeroes.API.Heroes
 
         public override IReadOnlyList<Ability> Abilities => new List<Ability>
         {
-            new MeatHook(Player)
+            new MeatHook(Player),
+            new Rot(Player)
         };
 
         public override HeroStatistics HeroStatistics => new HeroStatistics(AttributeType.Strength,

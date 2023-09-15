@@ -15,7 +15,7 @@ using UnityEngine;
 
 namespace DotaHeroes.API.Features.Objects
 {
-    public class MeatHookObject : MonoBehaviour, ICastRange
+    public class MeatHookObject : MonoBehaviour, ICastRange, IDamageObject
     {
         public HeroController Owner { get; private set; }
 
@@ -29,9 +29,9 @@ namespace DotaHeroes.API.Features.Objects
 
         public float Speed { get; private set; }
 
-        public float Damage { get; private set; }
+        public int Damage { get; set; }
 
-        public DamageType DamageType { get; private set; }
+        public DamageType DamageType { get; set; }
 
         private bool isMovingToTarget { get; set; } = true;
 
@@ -43,7 +43,7 @@ namespace DotaHeroes.API.Features.Objects
         {
         }
 
-        public void Initialization(HeroController owner, Vector3 target, int range, float speed, float damage, DamageType damageType)
+        public void Initialization(HeroController owner, Vector3 target, int range, float speed, int damage, DamageType damageType)
         {
             Owner = owner;
             Target = target;

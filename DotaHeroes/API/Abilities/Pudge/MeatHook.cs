@@ -14,7 +14,7 @@ using UnityEngine;
 namespace DotaHeroes.API.Abilities.Pudge
 {
     [CommandHandler(typeof(ClientCommandHandler))]
-    public class MeatHook : Ability, ICastRange, ICost, IActiveAbility
+    public class MeatHook : Ability, ICastRange, ICost, IActiveAbility, IValues
     {
         public override string Name => "Meat hook";
 
@@ -26,15 +26,15 @@ namespace DotaHeroes.API.Abilities.Pudge
 
         public override TargetType TargetType => TargetType.ToPoint;
 
-        public override IReadOnlyDictionary<string, List<int>> Values => new Dictionary<string, List<int>>()
+        public IReadOnlyDictionary<string, List<float>> Values => new Dictionary<string, List<float>>()
         {
-            { "damage", new List<int> { 120, 180, 210, 240 } },
-            { "mana_cost", new List<int> { 120, 130, 140, 150 } },
-            { "cooldown", new List<int> { 12, 11, 9, 8 } },
-            { "cast_range", new List<int> { 40, 60, 80, 100 } },
+            { "damage", new List<float> { 120, 180, 210, 240 } },
+            { "mana_cost", new List<float> { 120, 130, 140, 150 } },
+            { "cooldown", new List<float> { 12, 11, 9, 8 } },
+            { "cast_range", new List<float> { 40, 60, 80, 100 } },
         };
 
-        public override Cooldown Cooldown => new Cooldown(Values["cooldown"][Level]);
+        public override Cooldown Cooldown => new Cooldown((int)Values["cooldown"][Level]);
 
         public int Range { get; set; } = 1200;
 
@@ -55,7 +55,7 @@ namespace DotaHeroes.API.Abilities.Pudge
 
         public MeatHook(Player owner) : base(owner)
         {
-            ManaCost = Values["mana_cost"][0];
+            ManaCost = (int)Values["mana_cost"][0];
         }
 
         public override bool Execute(ArraySegment<string> arguments, ICommandSender sender, out string response)
@@ -65,17 +65,15 @@ namespace DotaHeroes.API.Abilities.Pudge
                 return false;
             }
 
-            Player player = Player.Get(sender);
-
-            Primitive primitive = Primitive.Create(player.Position, player.Rotation.eulerAngles, Vector3.one, true);
+            Primitive primitive = Primitive.Create(Owner.Position, Owner.Rotation.eulerAngles, Vector3.one, true);
             primitive.Type = PrimitiveType.Cube;
             var meatHookObject = primitive.AdminToyBase.gameObject.AddComponent<MeatHookObject>();
             meatHookObject.Initialization(
-                player.GameObject.GetComponent<HeroController>(),
-                Utils.GetTargetPositionFromMouse(player.Transform.position, player.CameraTransform.forward, Values["cast_range"][Level]),
-                Values["cast_range"][Level],
+                Owner.GameObject.GetComponent<HeroController>(),
+                Utils.GetTargetPositionFromMouse(Owner.Transform.position, Owner.CameraTransform.forward, (int)Values["cast_range"][Level]),
+                (int)Values["cast_range"][Level],
                 20,
-                Values["damage"][Level],
+                (int)Values["damage"][Level],
                 DamageType.Pure);
             var collider = primitive.AdminToyBase.gameObject.AddComponent<BoxCollider>();
             collider.isTrigger = true;
