@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DotaHeroes.API.Interfaces
+namespace DotaHeroes.API.Enums
 {
     public enum DispelType
     {

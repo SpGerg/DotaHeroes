@@ -140,7 +140,7 @@
     <Compile Include="API\Features\Objects\MeatHookObject.cs" />
     <Compile Include="API\Hero.cs" />
     <Compile Include="API\Heroes\Pudge.cs" />
-    <Compile Include="API\Interfaces\DispelType.cs" />
+    <Compile Include="API\Enums\DispelType.cs" />
     <Compile Include="API\Interfaces\IActiveAbility.cs" />
     <Compile Include="API\Interfaces\ICastRange.cs" />
     <Compile Include="API\Interfaces\IEffectDuration.cs" />

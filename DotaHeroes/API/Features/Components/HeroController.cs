@@ -14,26 +14,27 @@ namespace DotaHeroes.API.Features.Components
 
         public void TakeDamage(float damage, DamageType damageType)
         {
+            int total_damage = 0;
+
             switch (damageType)
             {
                 case DamageType.None: break;
                 case DamageType.Physical:
                     float armor = Hero.HeroStatistics.Armor.BaseArmor + Hero.HeroStatistics.Armor.MoreArmor;
                     float armor_percent = (0.052f * armor) / (0.9f + 0.048f * armor);
-                    int physical_total_damage = (int)(damage - ((damage / 100) * armor_percent));
-
-                    ReduceHealthAndCheckForDead(physical_total_damage);
+                    total_damage = (int)(damage - ((damage / 100) * armor_percent));
 
                     break;
                 case DamageType.Magical:
-                    ReduceHealthAndCheckForDead((int)(damage - (damage / 100) * Hero.HeroStatistics.Resistance.MagicResistance));
+                    total_damage = (int)(damage - (damage / 100) * Hero.HeroStatistics.Resistance.MagicResistance);
 
                     break;
                 case DamageType.Pure:
-                    ReduceHealthAndCheckForDead(damage);
-
+                    total_damage = (int)damage;
                     break;
             }
+
+            ReduceHealthAndCheckForDead(total_damage);
         }
 
         private void ReduceHealthAndCheckForDead(float damage)

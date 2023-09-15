@@ -1,4 +1,4 @@
-﻿using DotaHeroes.API.Interfaces;
+﻿using DotaHeroes.API.Enums;
 using Exiled.API.Features;
 using System;
 using System.Collections.Generic;
