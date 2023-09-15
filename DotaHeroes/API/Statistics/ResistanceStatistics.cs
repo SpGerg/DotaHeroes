@@ -19,5 +19,10 @@ namespace DotaHeroes.API.Statistics
             MagicResistance = magicResistance;
             EffectResistance = effectResistance;
         }
+
+        public override string ToString()
+        {
+            return $"Magic resistance: {MagicResistance} Effect resistance: {EffectResistance}";
+        }
     }
 }

@@ -39,5 +39,10 @@ namespace DotaHeroes.API.Statistics
             HealthRegeneration = healthReg;
             ManaRegeneration = manaReg;
         }
+
+        public override string ToString()
+        {
+            return $"Health: <color=Red>{Health}</color> Regen: <color=Red>{HealthRegeneration}</color> Mana: <color=#00FFFF>{Mana}</color> Regen: <color=Red>{ManaRegeneration}</color>";
+        }
     }
 }

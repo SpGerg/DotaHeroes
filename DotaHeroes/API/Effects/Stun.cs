@@ -21,6 +21,8 @@ namespace DotaHeroes.API.Effects
 
         public int Duration => 3;
 
+        public override EffectClassType EffectType => EffectClassType.Negative;
+
         public Stun(Player owner) : base(owner)
         {
         }

@@ -16,6 +16,8 @@ namespace DotaHeroes.API
 
         public abstract string Description { get; }
 
+        public abstract EffectClassType EffectType { get; }
+
         public virtual DispelType DispelType { get; set; } = DispelType.None;
 
         public Effect(Player owner)

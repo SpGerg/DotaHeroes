@@ -8,6 +8,16 @@ namespace DotaHeroes.API
 {
     public class API
     {
-        public static Dictionary<string, Hero> PlayerHero { get; }
+        private static Dictionary<string, Hero> Players { get; } = new Dictionary<string, Hero>();
+
+        public static void AddPlayer(string userId, Hero hero)
+        {
+            Players.Add(userId, hero);
+        }
+
+        public static Hero GetHeroOrDefault(string userId)
+        {
+            return Players.FirstOrDefault(_player => _player.Key == userId).Value;
+        }
     }
 }

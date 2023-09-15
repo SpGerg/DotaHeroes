@@ -1,6 +1,7 @@
 ﻿using DotaHeroes.API;
 using DotaHeroes.API.Enums;
 using DotaHeroes.API.Statistics;
+using NorthwoodLib.Pools;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -92,6 +93,8 @@ namespace DotaHeroes.API
 
         public ArmorStatistics Armor { get; }
 
+        public SpeedStatistics SpeedStatistics { get; }
+
         public AttributeType Attribute { get; set; }
 
         private int strength;
@@ -109,13 +112,28 @@ namespace DotaHeroes.API
             Resistance = new ResistanceStatistics();
         }
 
-        public HeroStatistics(AttributeType attribute, HealthAndManaStatistics healthAndManaStatistics, AttackStatistics attackStatistics, ArmorStatistics armorStatistics, ResistanceStatistics resistanceStatistics)
+        public HeroStatistics(AttributeType attribute, HealthAndManaStatistics healthAndManaStatistics, AttackStatistics attackStatistics, ArmorStatistics armorStatistics, ResistanceStatistics resistanceStatistics, SpeedStatistics speedStatistics)
         {
             Attribute = attribute;
             HealthAndMana = healthAndManaStatistics;
             Attack = attackStatistics;
             Armor = armorStatistics;
             Resistance = resistanceStatistics;
+            SpeedStatistics = speedStatistics;
+        }
+
+
+        public override string ToString()
+        {
+            var stringBuilder = StringBuilderPool.Shared.Rent();
+            stringBuilder.AppendLine(HealthAndMana.ToString());
+            stringBuilder.AppendLine(Attack.ToString());
+            stringBuilder.AppendLine(Armor.ToString());
+            stringBuilder.AppendLine(Resistance.ToString());
+            stringBuilder.AppendLine(SpeedStatistics.ToString());
+            stringBuilder.AppendLine(Attribute.ToString());
+
+            return StringBuilderPool.Shared.ToStringReturn(stringBuilder);
         }
     }
 }

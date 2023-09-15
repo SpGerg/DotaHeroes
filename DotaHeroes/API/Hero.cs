@@ -2,6 +2,7 @@
 using DotaHeroes.API.Interfaces;
 using Exiled.API.Features;
 using Exiled.CustomRoles.API.Features;
+using NorthwoodLib.Pools;
 using PlayerRoles;
 using System.Collections.Generic;
 using System.Linq;
@@ -54,6 +55,7 @@ namespace DotaHeroes.API
             Player = player;
 
             Effects = new List<Effect>();
+            API.AddPlayer(player.UserId, this);
         }
 
         public Hero(Player player, SideType sideType)
@@ -62,6 +64,8 @@ namespace DotaHeroes.API
             SideType = sideType;
 
             Effects = new List<Effect>();
+
+            API.AddPlayer(player.UserId, this);
         }
 
         public virtual void EnableEffect<T>() where T : Effect, new()
@@ -100,6 +104,11 @@ namespace DotaHeroes.API
         public virtual Effect GetEffect<T>() where T : Effect, new()
         {
             return Effects.FirstOrDefault(_effect => _effect is T);
+        }
+
+        public virtual List<Effect> GetEffects()
+        {
+            return new List<Effect>(Effects);
         }
 
         public virtual bool TryGetEffect<T>(out T result) where T : Effect, new()

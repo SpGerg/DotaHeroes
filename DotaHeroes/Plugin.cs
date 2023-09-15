@@ -1,4 +1,5 @@
-﻿using DotaHeroes.Events.Internal;
+﻿using DotaHeroes.API;
+using DotaHeroes.Events.Internal;
 using Exiled.API.Features;
 using System;
 using System.Collections.Generic;
@@ -13,6 +14,8 @@ namespace DotaHeroes
     {
         public override void OnEnabled()
         {
+            Hud.RunUpdate();
+
             Player.Spawned += PlayerHandler.OnSpawned;
 
             base.OnEnabled();

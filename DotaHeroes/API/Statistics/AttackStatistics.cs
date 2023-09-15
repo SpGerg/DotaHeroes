@@ -22,5 +22,15 @@ namespace DotaHeroes.API.Statistics
             MoreAttackDamage = moreAttackDamage;
             AttackSpeed = attackSpeed;
         }
+
+        public override string ToString()
+        {
+            if (MoreAttackDamage > 0)
+            {
+                return $"Attack damage: {BaseAttackDamage} + <color=Green>{MoreAttackDamage}</color>";
+            }
+
+            return $"Attack damage: {BaseAttackDamage}";
+        }
     }
 }

@@ -7,7 +7,7 @@ using UnityEngine.UIElements;
 
 namespace DotaHeroes.API.Enums
 {
-    public enum EffectType
+    public enum EffectClassType
     {
         Positive = 0,
         Negative = 1,

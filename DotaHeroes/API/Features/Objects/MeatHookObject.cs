@@ -83,7 +83,7 @@ namespace DotaHeroes.API.Features.Objects
                 Destroy(gameObject);
 
                 HeroTarget.Hero.Player.DisableEffect<Ensnared>();
-                Timing.CallDelayed(0.5f, () =>
+                Timing.CallDelayed(0.2f, () =>
                 {
                     HeroTarget.Hero.Player.IsGodModeEnabled = false;
                 });

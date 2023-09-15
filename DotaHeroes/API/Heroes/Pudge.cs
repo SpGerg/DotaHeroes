@@ -16,11 +16,11 @@ namespace DotaHeroes.API.Heroes
         };
 
         public override HeroStatistics HeroStatistics => new HeroStatistics(AttributeType.Strength,
-            new HealthAndManaStatistics(120, 75, 1.75f, 0), 
+            new HealthAndManaStatistics(120, 75, 120, 75), 
             new AttackStatistics(48, 0, 100),
             new ArmorStatistics(),
-            new ResistanceStatistics(25, 25)
-            );
+            new ResistanceStatistics(25, 25),
+            new SpeedStatistics(0));
 
         public Pudge(Player player) : base(player)
         {

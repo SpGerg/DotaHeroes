@@ -19,5 +19,15 @@ namespace DotaHeroes.API.Statistics
             BaseArmor = baseArmor;
             MoreArmor = moreArmor;
         }
+
+        public override string ToString()
+        {
+            if (MoreArmor > 0)
+            {
+                return $"Armor: {BaseArmor} + <color=Green>{MoreArmor}</color>";
+            }
+
+            return $"Armor: {BaseArmor}";
+        }
     }
 }
