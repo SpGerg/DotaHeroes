@@ -1,0 +1,165 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{01B1B793-16E1-4FB2-88BC-6E4717FCF245}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>DotaHeroes</RootNamespace>
+    <AssemblyName>DotaHeroes</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <LangVersion>9.0</LangVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="0Harmony">
+      <HintPath>..\Imports\0Harmony.dll</HintPath>
+    </Reference>
+    <Reference Include="Assembly-CSharp">
+      <HintPath>..\Imports\Assembly-CSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="Assembly-CSharp-firstpass">
+      <HintPath>..\Imports\Assembly-CSharp-firstpass.dll</HintPath>
+    </Reference>
+    <Reference Include="ChatAPI">
+      <HintPath>..\Imports\ChatAPI.dll</HintPath>
+    </Reference>
+    <Reference Include="CommandSystem.Core">
+      <HintPath>..\Imports\CommandSystem.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="CustomHudAPI">
+      <HintPath>..\Imports\CustomHudAPI.dll</HintPath>
+    </Reference>
+    <Reference Include="Exiled.API">
+      <HintPath>..\Imports\Exiled.API.dll</HintPath>
+    </Reference>
+    <Reference Include="Exiled.CreditTags">
+      <HintPath>..\Imports\Exiled.CreditTags.dll</HintPath>
+    </Reference>
+    <Reference Include="Exiled.CustomRoles">
+      <HintPath>..\Imports\Exiled.CustomRoles.dll</HintPath>
+    </Reference>
+    <Reference Include="Exiled.Events">
+      <HintPath>..\Imports\Exiled.Events.dll</HintPath>
+    </Reference>
+    <Reference Include="Exiled.Permissions">
+      <HintPath>..\Imports\Exiled.Permissions.dll</HintPath>
+    </Reference>
+    <Reference Include="Exiled.Updater">
+      <HintPath>..\Imports\Exiled.Updater.dll</HintPath>
+    </Reference>
+    <Reference Include="Mirror">
+      <HintPath>..\Imports\Mirror.dll</HintPath>
+    </Reference>
+    <Reference Include="Mirror.Components">
+      <HintPath>..\Imports\Mirror.Components.dll</HintPath>
+    </Reference>
+    <Reference Include="NorthwoodLib">
+      <HintPath>..\Imports\NorthwoodLib.dll</HintPath>
+    </Reference>
+    <Reference Include="PluginAPI">
+      <HintPath>..\Imports\PluginAPI.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Unity.TextMeshPro">
+      <HintPath>..\Imports\Unity.TextMeshPro.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.CoreModule">
+      <HintPath>..\Imports\UnityEngine.CoreModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.PhysicsModule">
+      <HintPath>..\Imports\UnityEngine.PhysicsModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.TextCoreFontEngineModule">
+      <HintPath>..\Imports\UnityEngine.TextCoreFontEngineModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.TextCoreTextEngineModule">
+      <HintPath>..\Imports\UnityEngine.TextCoreTextEngineModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.TextRenderingModule">
+      <HintPath>..\Imports\UnityEngine.TextRenderingModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UI">
+      <HintPath>..\Imports\UnityEngine.UI.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UIElementsModule">
+      <HintPath>..\Imports\UnityEngine.UIElementsModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UIElementsNativeModule">
+      <HintPath>..\Imports\UnityEngine.UIElementsNativeModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UIModule">
+      <HintPath>..\Imports\UnityEngine.UIModule.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="API\Abilities\Pudge\MeatHook.cs" />
+    <Compile Include="API\Ability.cs" />
+    <Compile Include="API\API.cs" />
+    <Compile Include="API\Constants.cs" />
+    <Compile Include="API\Effect.cs" />
+    <Compile Include="API\Effects\Stun.cs" />
+    <Compile Include="API\Enums\AbilityType.cs" />
+    <Compile Include="API\Enums\AttributeType.cs" />
+    <Compile Include="API\Enums\DamageType.cs" />
+    <Compile Include="API\Enums\EffectType.cs" />
+    <Compile Include="API\Enums\TargetType.cs" />
+    <Compile Include="API\Events\EventArgs\Hero\HeroAttackedEventArgs.cs" />
+    <Compile Include="API\Events\EventArgs\Hero\HeroAttackingEventArgs.cs" />
+    <Compile Include="API\Events\Handlers\Hero.cs" />
+    <Compile Include="API\Extensions\EnumExtension.cs" />
+    <Compile Include="API\Features\Components\HeroController.cs" />
+    <Compile Include="API\Features\Cooldown.cs" />
+    <Compile Include="API\Features\Objects\MeatHookObject.cs" />
+    <Compile Include="API\Hero.cs" />
+    <Compile Include="API\Heroes\Pudge.cs" />
+    <Compile Include="API\Interfaces\DispelType.cs" />
+    <Compile Include="API\Interfaces\IActiveAbility.cs" />
+    <Compile Include="API\Interfaces\ICastRange.cs" />
+    <Compile Include="API\Interfaces\IEffectDuration.cs" />
+    <Compile Include="API\Interfaces\IEffectValue.cs" />
+    <Compile Include="API\Interfaces\ICost.cs" />
+    <Compile Include="API\Interfaces\IPassiveAbility.cs" />
+    <Compile Include="API\Enums\SideType.cs" />
+    <Compile Include="API\Item.cs" />
+    <Compile Include="API\Statistics\ArmorStatistics.cs" />
+    <Compile Include="API\Statistics\AttackStatistics.cs" />
+    <Compile Include="API\Statistics\HealthAndManaStatistics.cs" />
+    <Compile Include="API\Statistics\ResistanceStatistics.cs" />
+    <Compile Include="API\Utils.cs" />
+    <Compile Include="API\HeroStatistics.cs" />
+    <Compile Include="Config.cs" />
+    <Compile Include="Events\Internal\PlayerHandler.cs" />
+    <Compile Include="Plugin.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

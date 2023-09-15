@@ -1,0 +1,121 @@
+﻿using DotaHeroes.API;
+using DotaHeroes.API.Enums;
+using DotaHeroes.API.Statistics;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace DotaHeroes.API
+{
+    public class HeroStatistics
+    {
+        public int Strength
+        {
+            get
+            {
+                return strength;
+            }
+            set
+            {
+                strength = value;
+                HealthAndMana.MaximumHealth = Constants.MaximumHealthFromStrength * value;
+                HealthAndMana.HealthRegeneration = Constants.HealthRegenerationFromStrength * value;
+                
+                if (Attribute == AttributeType.Strength)
+                {
+                    Attack.BaseAttackDamage = value;
+                }
+
+                if (Attribute == AttributeType.Universal)
+                {
+                    Attack.BaseAttackDamage = (int)((Strength + Agility + Intelligence) / Constants.UniversalDamage);
+                }
+            }
+        }
+
+        public int Agility
+        {
+            get
+            {
+                return agility;
+            }
+            set
+            {
+                agility = value;
+                Armor.BaseArmor = Constants.ArmorFromAgility * value;
+                Attack.AttackSpeed = Constants.AttackSpeedFromAgility * value;
+
+                if (Attribute == AttributeType.Agility)
+                {
+                    Attack.BaseAttackDamage = value;
+                }
+
+                if (Attribute == AttributeType.Universal)
+                {
+                    Attack.BaseAttackDamage = (int)((Strength + Agility + Intelligence) / Constants.UniversalDamage);
+                }
+            }
+        }
+
+        public int Intelligence
+        {
+            get
+            {
+                return intelligence;
+            }
+            set
+            {
+                intelligence = value;
+                HealthAndMana.MaximumMana = Constants.MaximumManaFromIntelligence * value;
+                HealthAndMana.ManaRegeneration = Constants.ManaRegenerationFromIntelligence * value;
+                Resistance.EffectResistance = Constants.MagicResistanceFromIntelligence * value;
+
+                if (Attribute == AttributeType.Intelligence)
+                {
+                    Attack.BaseAttackDamage = value;
+                }
+
+                if (Attribute == AttributeType.Universal)
+                {
+                    Attack.BaseAttackDamage = (int)((Strength + Agility + Intelligence) / Constants.UniversalDamage);
+                }
+            }
+        }
+
+        public HealthAndManaStatistics HealthAndMana { get; }
+
+        public AttackStatistics Attack { get; }
+
+        public ResistanceStatistics Resistance { get; }
+
+        public ArmorStatistics Armor { get; }
+
+        public AttributeType Attribute { get; set; }
+
+        private int strength;
+
+        private int agility;
+
+        private int intelligence;
+
+        public HeroStatistics(AttributeType attribute)
+        {
+            Attribute = attribute;
+            HealthAndMana = new HealthAndManaStatistics();
+            Attack = new AttackStatistics();
+            Armor = new ArmorStatistics();
+            Resistance = new ResistanceStatistics();
+        }
+
+        public HeroStatistics(AttributeType attribute, HealthAndManaStatistics healthAndManaStatistics, AttackStatistics attackStatistics, ArmorStatistics armorStatistics, ResistanceStatistics resistanceStatistics)
+        {
+            Attribute = attribute;
+            HealthAndMana = healthAndManaStatistics;
+            Attack = attackStatistics;
+            Armor = armorStatistics;
+            Resistance = resistanceStatistics;
+        }
+    }
+}
