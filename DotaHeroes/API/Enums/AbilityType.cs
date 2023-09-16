@@ -10,6 +10,7 @@ namespace DotaHeroes.API.Enums
     {
         None = 0,
         Active = 1,
-        Passive = 2
+        Passive = 2,
+        Toggle = 3
     }
 }

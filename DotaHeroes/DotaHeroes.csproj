@@ -120,6 +120,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="API\Abilities\Pudge\Dismember.cs" />
     <Compile Include="API\Abilities\Pudge\MeatHook.cs" />
     <Compile Include="API\Abilities\Pudge\Rot.cs" />
     <Compile Include="API\Ability.cs" />

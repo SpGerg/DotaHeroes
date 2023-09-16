@@ -24,5 +24,7 @@ namespace DotaHeroes.API.Features
         {
             Owner = owner;
         }
+
+        public abstract bool Execute(ArraySegment<string> arguments, ICommandSender sender, out string response);
     }
 }

@@ -67,7 +67,7 @@ namespace DotaHeroes.API
             }
             
         }
-        public virtual bool Execute(ArraySegment<string> arguments, ICommandSender sender, out string response)
+        public virtual bool Execute(ArraySegment<string> arguments, ICommandSender sender, out string response, bool isCooldown)
         {
             if (sender is not PlayerCommandSender)
             {
@@ -95,7 +95,10 @@ namespace DotaHeroes.API
                 (this as ToggleAbility).IsActive = !(this as ToggleAbility).IsActive;
             }
 
-            Cooldown.Run();
+            if (isCooldown)
+            {
+                Cooldown.Run();
+            }
 
             return true;
         }

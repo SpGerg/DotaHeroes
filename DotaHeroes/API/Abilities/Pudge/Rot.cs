@@ -23,7 +23,7 @@ namespace DotaHeroes.API.Abilities.Pudge
 
         public override string Lore => "A foul odor precedes a toxic, choking gas, emanating from the Butcher's putrid, ever-swelling mass.";
 
-        public override AbilityType AbilityType => AbilityType.Active;
+        public override AbilityType AbilityType => AbilityType.Toggle;
 
         public override TargetType TargetType => TargetType.None;
 
@@ -51,7 +51,7 @@ namespace DotaHeroes.API.Abilities.Pudge
 
         public override bool Execute(ArraySegment<string> arguments, ICommandSender sender, out string response)
         {
-            if (!base.Execute(arguments, sender, out response)) {
+            if (!base.Execute(arguments, sender, out response, false)) {
                 return false;
             }
 

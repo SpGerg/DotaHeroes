@@ -60,7 +60,7 @@ namespace DotaHeroes.API.Abilities.Pudge
 
         public override bool Execute(ArraySegment<string> arguments, ICommandSender sender, out string response)
         {
-            if (!base.Execute(arguments, sender, out response))
+            if (!base.Execute(arguments, sender, out response, true))
             {
                 return false;
             }

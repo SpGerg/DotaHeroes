@@ -21,5 +21,7 @@ namespace DotaHeroes.API.Interfaces
         { 
             Owner = owner;
         }
+
+        public abstract bool Execute(ArraySegment<string> arguments, ICommandSender sender, out string response);
     }
 }
