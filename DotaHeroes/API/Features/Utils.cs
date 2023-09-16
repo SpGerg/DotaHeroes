@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 
-namespace DotaHeroes.API
+namespace DotaHeroes.API.Features
 {
     public static class Utils
     {

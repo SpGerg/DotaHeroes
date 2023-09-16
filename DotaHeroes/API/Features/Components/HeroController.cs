@@ -12,7 +12,7 @@ namespace DotaHeroes.API.Features.Components
     {
         public Hero Hero { get; set; }
 
-        public void TakeDamage(float damage, DamageType damageType)
+        public int TakeDamage(int damage, DamageType damageType)
         {
             int total_damage = 0;
 
@@ -35,6 +35,8 @@ namespace DotaHeroes.API.Features.Components
             }
 
             ReduceHealthAndCheckForDead(total_damage);
+
+            return total_damage;
         }
 
         private void ReduceHealthAndCheckForDead(float damage)

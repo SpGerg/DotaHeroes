@@ -6,19 +6,21 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DotaHeroes.API
+namespace DotaHeroes.API.Features
 {
     public abstract class Effect
     {
-        public Player Owner { get; }
-
         public abstract string Name { get; }
 
         public abstract string Description { get; }
 
         public abstract EffectClassType EffectClassType { get; }
 
+        public Player Owner { get; }
+
         public virtual DispelType DispelType { get; set; } = DispelType.None;
+
+        public bool IsVisible { get; set; } = true;
 
         public Effect() { }
 

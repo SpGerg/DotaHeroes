@@ -1,5 +1,7 @@
 ﻿using DotaHeroes.API.Enums;
+using DotaHeroes.API.Features.Objects;
 using DotaHeroes.API.Interfaces;
+using DotaHeroes.API.Statistics;
 using Exiled.API.Features;
 using Exiled.CustomRoles.API.Features;
 using NorthwoodLib.Pools;
@@ -7,11 +9,13 @@ using PlayerRoles;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace DotaHeroes.API
+namespace DotaHeroes.API.Features
 {
     public abstract class Hero
     {
         public abstract string HeroName { get; }
+
+        public abstract HeroClassType HeroClassType { get; set; }
 
         public virtual IReadOnlyList<Ability> Abilities => new List<Ability>();
 
@@ -22,6 +26,10 @@ namespace DotaHeroes.API
         public Player Player { get; }
 
         public SideType SideType { get; set; } = SideType.None;
+
+        public float ProjectileSpeed { get; set; } = 0.6f;
+
+        public List<ProjectileObject> ProjectilesFollow { get; }
 
         public int Level { get; set; }
 

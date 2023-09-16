@@ -12,7 +12,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DotaHeroes.API
+namespace DotaHeroes.API.Features
 {
     public abstract class Ability
     {

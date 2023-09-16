@@ -1,5 +1,6 @@
 ﻿using CustomPlayerEffects;
 using DotaHeroes.API.Enums;
+using DotaHeroes.API.Features;
 using Exiled.API.Features;
 using System;
 using System.Collections.Generic;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace DotaHeroes.API.Effects.Pudge
 {
-    public class Rot : Effect
+    public class Rot : Features.Effect
     {
         public override string Name => "Rot";
 

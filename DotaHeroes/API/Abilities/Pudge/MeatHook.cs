@@ -70,7 +70,7 @@ namespace DotaHeroes.API.Abilities.Pudge
             var meatHookObject = primitive.AdminToyBase.gameObject.AddComponent<MeatHookObject>();
             meatHookObject.Initialization(
                 Owner.GameObject.GetComponent<HeroController>(),
-                Utils.GetTargetPositionFromMouse(Owner.Transform.position, Owner.CameraTransform.forward, (int)Values["cast_range"][Level]),
+                Features.Utils.GetTargetPositionFromMouse(Owner.Transform.position, Owner.CameraTransform.forward, (int)Values["cast_range"][Level]),
                 (int)Values["cast_range"][Level],
                 20,
                 (int)Values["damage"][Level],

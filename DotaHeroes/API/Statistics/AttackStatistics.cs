@@ -14,13 +14,16 @@ namespace DotaHeroes.API.Statistics
 
         public int AttackSpeed { get; set; } //In future..
 
+        public float AttackRange { get; set; }
+
         public AttackStatistics() { }
 
-        public AttackStatistics(int baseAttackDamage, int moreAttackDamage, int attackSpeed)
+        public AttackStatistics(int baseAttackDamage, int moreAttackDamage, int attackSpeed, float attackRange)
         {
             BaseAttackDamage = baseAttackDamage;
             MoreAttackDamage = moreAttackDamage;
             AttackSpeed = attackSpeed;
+            AttackRange = attackRange;
         }
 
         public override string ToString()

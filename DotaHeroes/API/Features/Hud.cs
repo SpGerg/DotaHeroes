@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DotaHeroes.API
+namespace DotaHeroes.API.Features
 {
     public static class Hud
     {
@@ -54,9 +54,12 @@ namespace DotaHeroes.API
 
             foreach (var effect in effects)
             {
-                stringBuilder.AppendLine(effect.ToString());
+                if (effect.IsVisible)
+                {
+                    stringBuilder.AppendLine(effect.ToString());
 
-                stringBuilder.AppendLine($"— {effect.Description}");
+                    stringBuilder.AppendLine($"— {effect.Description}");
+                }
             }
 
             return StringBuilderPool.Shared.ToStringReturn(stringBuilder);

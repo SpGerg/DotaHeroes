@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DotaHeroes.API
+namespace DotaHeroes.API.Statistics
 {
     public class HeroStatistics
     {
