@@ -32,6 +32,24 @@ namespace DotaHeroes.API.Features
 
         public Player Owner { get; protected set; }
 
+        public bool IsStop { 
+            get
+            {
+                return IsStop;
+            }
+            set
+            {
+                isStop = value;
+
+                if (isStop)
+                {
+                    Stop();
+                }
+            }
+        }
+
+        private bool isStop { get; set; }
+
         public int Level
         {
             get
@@ -101,6 +119,11 @@ namespace DotaHeroes.API.Features
             }
 
             return true;
+        }
+
+        public virtual void Stop()
+        {
+
         }
 
         public override string ToString()

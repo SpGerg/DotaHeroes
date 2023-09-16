@@ -1,4 +1,5 @@
 ﻿using DotaHeroes.API.Enums;
+using DotaHeroes.API.Features.Components;
 using DotaHeroes.API.Features.Objects;
 using DotaHeroes.API.Interfaces;
 using DotaHeroes.API.Statistics;
@@ -30,6 +31,8 @@ namespace DotaHeroes.API.Features
         public float ProjectileSpeed { get; set; } = 0.6f;
 
         public List<ProjectileObject> ProjectilesFollow { get; }
+
+        public HeroController HeroController { get; }
 
         public int Level { get; set; }
 
@@ -64,6 +67,8 @@ namespace DotaHeroes.API.Features
 
             Effects = new List<Effect>();
             API.AddPlayer(player.UserId, this);
+
+            HeroController = Player.GameObject.GetComponent<HeroController>();
         }
 
         public Hero(Player player, SideType sideType)
@@ -74,6 +79,8 @@ namespace DotaHeroes.API.Features
             Effects = new List<Effect>();
 
             API.AddPlayer(player.UserId, this);
+
+            HeroController = Player.GameObject.GetComponent<HeroController>();
         }
 
         public virtual void EnableEffect<T>() where T : Effect, new()

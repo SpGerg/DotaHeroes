@@ -71,31 +71,36 @@ namespace DotaHeroes.API.Abilities
                 return true;
             }
 
+            hero.Player.EnableEffect<Ensnared>();
             target.EnableEffect<Ensnared>();
 
             response = "You eating " + target.Nickname;
 
-            Timing.CallDelayed(2f, () =>
-            {
-                target.DisableEffect<Ensnared>();
-            });
-
             var damage = Values["damage"][Level];
 
-            Timing.CallDelayed(damage / 8, () =>
-            {
-                target.DisableEffect<Ensnared>();
-            });
+            Timing.RunCoroutine(DamageCoroutine(damage, DamageType.Magical, hero));
+
+            return true;
+        }
+
+        private IEnumerator<float> DamageCoroutine(float damage, DamageType damageType, Hero target)
+        {
+            var player = target.Player;
 
             for (int i = 0; i < (damage / 8); i += (int)damage / 8)
             {
-                Timing.CallDelayed(0.1f, () =>
+                if (IsStop)
                 {
-                    target.GameObject.GetComponent<HeroController>().TakeDamage(i, DamageType.Magical);
-                });
-            }
+                    player.EnableEffect<Ensnared>();
 
-            return true;
+                    yield break;
+                }
+
+                player.DisableEffect<Ensnared>();
+                target.HeroController.TakeDamage(i, DamageType.Magical);
+
+                yield return Timing.WaitForSeconds(0.1f);
+            }
         }
     }
 }
