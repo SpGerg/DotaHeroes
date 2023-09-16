@@ -14,7 +14,7 @@ using UnityEngine;
 namespace DotaHeroes.API.Abilities.Pudge
 {
     [CommandHandler(typeof(ClientCommandHandler))]
-    public class MeatHook : Ability, ICastRange, ICost, IActiveAbility, IValues
+    public class MeatHook : ActiveAbility, ICastRange, ICost, IValues
     {
         public override string Name => "Meat hook";
 
@@ -44,9 +44,9 @@ namespace DotaHeroes.API.Abilities.Pudge
 
         public override int MaxLevel => 4;
 
-        public string Command => "meathook";
+        public override string Command => "meathook";
 
-        public string[] Aliases => Array.Empty<string>();
+        public override string[] Aliases => Array.Empty<string>();
 
         public MeatHook() : base()
         {

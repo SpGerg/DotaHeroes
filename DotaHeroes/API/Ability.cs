@@ -30,7 +30,7 @@ namespace DotaHeroes.API
 
         public virtual Cooldown Cooldown { get; } = new Cooldown(3);
 
-        public Player Owner { get; }
+        public Player Owner { get; protected set; }
 
         public int Level
         {
@@ -90,9 +90,9 @@ namespace DotaHeroes.API
                 return false;
             }
 
-            if (this is IToggleAbility)
+            if (this is ToggleAbility)
             {
-                (this as IToggleAbility).IsActive = !(this as IToggleAbility).IsActive;
+                (this as ToggleAbility).IsActive = !(this as ToggleAbility).IsActive;
             }
 
             Cooldown.Run();

@@ -1,5 +1,6 @@
 ﻿using CommandSystem;
 using DotaHeroes.API.Enums;
+using DotaHeroes.API.Features;
 using DotaHeroes.API.Features.Components;
 using DotaHeroes.API.Features.Objects;
 using DotaHeroes.API.Interfaces;
@@ -14,7 +15,7 @@ using UnityEngine;
 
 namespace DotaHeroes.API.Abilities.Pudge
 {
-    public class Rot : Ability, ICastRange, IToggleAbility, IValues
+    public class Rot : ToggleAbility, ICastRange, IValues
     {
         public override string Name => "Rot";
 
@@ -38,11 +39,11 @@ namespace DotaHeroes.API.Abilities.Pudge
 
         public int Range { get; set; } = 5;
 
-        public bool IsActive { get; set; }
+        public override bool IsActive { get; set; }
 
-        public string Command => "rot";
+        public override string Command => "rot";
 
-        public string[] Aliases => Array.Empty<string>();
+        public override string[] Aliases => Array.Empty<string>();
 
         public Rot(Player owner) : base(owner)
         {
