@@ -157,6 +157,7 @@
     <Compile Include="API\Features\PassiveAbility.cs" />
     <Compile Include="API\Enums\SideType.cs" />
     <Compile Include="API\Features\ToggleAbility.cs" />
+    <Compile Include="API\Interfaces\IPierceDebuffImmunity.cs" />
     <Compile Include="API\Interfaces\IValues.cs" />
     <Compile Include="API\Features\Item.cs" />
     <Compile Include="API\Statistics\ArmorStatistics.cs" />
