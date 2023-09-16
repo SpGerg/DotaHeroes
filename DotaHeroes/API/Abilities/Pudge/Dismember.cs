@@ -15,6 +15,7 @@ using UnityEngine;
 
 namespace DotaHeroes.API.Abilities
 {
+    [CommandHandler(typeof(ClientCommandHandler))]
     public class Dismember : ActiveAbility, ICastRange, IValues
     {
         public override string Command => "dismember";

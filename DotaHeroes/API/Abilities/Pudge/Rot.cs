@@ -15,6 +15,7 @@ using UnityEngine;
 
 namespace DotaHeroes.API.Abilities.Pudge
 {
+    [CommandHandler(typeof(ClientCommandHandler))]
     public class Rot : ToggleAbility, ICastRange, IValues
     {
         public override string Name => "Rot";

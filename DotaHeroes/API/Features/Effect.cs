@@ -16,9 +16,11 @@ namespace DotaHeroes.API.Features
 
         public abstract EffectClassType EffectClassType { get; }
 
+        public virtual DispelType DispelType { get; set; } = DispelType.None;
+
         public Player Owner { get; }
 
-        public virtual DispelType DispelType { get; set; } = DispelType.None;
+        public Hero Hero { get; }
 
         public bool IsVisible { get; set; } = true;
 
@@ -27,6 +29,7 @@ namespace DotaHeroes.API.Features
         public Effect(Player owner)
         {
             Owner = owner;
+            Hero = API.GetHeroOrDefault(owner.UserId);
         }
 
         public virtual bool Enable()

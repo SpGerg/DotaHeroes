@@ -121,8 +121,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="API\Abilities\Pudge\Dismember.cs" />
+    <Compile Include="API\Abilities\Pudge\FleshHeap.cs" />
     <Compile Include="API\Abilities\Pudge\MeatHook.cs" />
     <Compile Include="API\Abilities\Pudge\Rot.cs" />
+    <Compile Include="API\Effects\Pudge\FleshHeap.cs" />
     <Compile Include="API\Features\Ability.cs" />
     <Compile Include="API\API.cs" />
     <Compile Include="API\Constants.cs" />

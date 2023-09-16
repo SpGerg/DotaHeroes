@@ -32,6 +32,8 @@ namespace DotaHeroes.API.Features
 
         public Player Owner { get; protected set; }
 
+        public Hero Hero { get; protected set; }
+
         public bool IsStop { 
             get
             {
@@ -74,6 +76,7 @@ namespace DotaHeroes.API.Features
         public Ability(Player owner)
         {
             Owner = owner;
+            Hero = API.GetHeroOrDefault(owner.UserId);
         }
 
         public virtual void LevelUp()
