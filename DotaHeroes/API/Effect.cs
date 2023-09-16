@@ -41,5 +41,21 @@ namespace DotaHeroes.API
         {
             return true;
         }
+
+        public override string ToString()
+        {
+            if (EffectClassType == EffectClassType.Negative)
+            {
+                return $"<color=Red>{Name}</color>";
+            }
+            else if (EffectClassType == EffectClassType.Positive)
+            {
+                return $"<color=Green>{Name}</color>";
+            }
+            else
+            {
+                return Name;
+            }
+        }
     }
 }

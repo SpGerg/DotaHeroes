@@ -54,18 +54,7 @@ namespace DotaHeroes.API
 
             foreach (var effect in effects)
             {
-                if (effect.EffectClassType == EffectClassType.Negative)
-                {
-                    stringBuilder.AppendLine($"<color=Red>{effect.Name}</color>");
-                }
-                else if (effect.EffectClassType == EffectClassType.Positive)
-                {
-                    stringBuilder.AppendLine($"<color=Green>{effect.Name}</color>");
-                }
-                else
-                {
-                    stringBuilder.AppendLine(effect.Name);
-                }
+                stringBuilder.AppendLine(effect.ToString());
 
                 stringBuilder.AppendLine($"— {effect.Description}");
             }
