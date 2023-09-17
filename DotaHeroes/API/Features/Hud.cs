@@ -32,14 +32,14 @@ namespace DotaHeroes.API.Features
                         continue;
                     }
 
-                    player.Broadcast(2, $"<size=16><align=Left>{CreateHeroInfo(hero)}</align></size>");
+                    player.Broadcast(4, $"<size=16><align=Left>{CreateHeroInfo(hero)}</align></size>");
                 }
 
-                yield return Timing.WaitForSeconds(1);
+                yield return Timing.WaitForSeconds(3);
             }
         }
 
-        private static string CreateHeroInfo(Hero hero)
+        public static string CreateHeroInfo(Hero hero)
         {
             var stringBuilder = StringBuilderPool.Shared.Rent();
             var effects = hero.GetEffects();

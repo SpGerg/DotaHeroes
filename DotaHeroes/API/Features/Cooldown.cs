@@ -1,4 +1,5 @@
-﻿using MEC;
+﻿using Exiled.API.Features;
+using MEC;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,25 +8,19 @@ using System.Threading.Tasks;
 
 namespace DotaHeroes.API.Features
 {
-    public class Cooldown
+    public static class Cooldown
     {
-        public int Duration { get; set; }
-
-        public bool IsCompleted { get; set; } = true;
-
-        public Cooldown(int duration)
+        private static Dictionary<string, CooldownInfo> cooldowns = new Dictionary<string, CooldownInfo>();
+ 
+        public static CooldownInfo AddCooldown(string userId, CooldownInfo cooldownInfo)
         {
-            Duration = duration;
+            cooldowns[userId] = cooldownInfo;
+            return cooldowns[userId];
         }
 
-        public void Run()
+        public static CooldownInfo GetCooldownOrDefault(string userId, string name)
         {
-            IsCompleted = false;
-
-            Timing.CallDelayed(Duration, () =>
-            {
-                IsCompleted = true;
-            });
+            return cooldowns.FirstOrDefault(cooldown => cooldown.Key == userId).Value;
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using DotaHeroes.API.Abilities.Pudge;
+﻿using DotaHeroes.API.Abilities;
+using DotaHeroes.API.Abilities.Pudge;
 using DotaHeroes.API.Enums;
 using DotaHeroes.API.Features;
 using DotaHeroes.API.Statistics;
@@ -11,10 +12,12 @@ namespace DotaHeroes.API.Heroes
     {
         public override string HeroName => "Pudge";
 
-        public override IReadOnlyList<Ability> Abilities => new List<Ability>
+        public override List<Ability> Abilities => new List<Ability>
         {
-            new MeatHook(Player),
-            new Rot(Player)
+            new MeatHook(),
+            new Rot(),
+            new FleshHeap(),
+            new Dismember()
         };
 
         public override HeroStatistics HeroStatistics => new HeroStatistics(AttributeType.Strength,

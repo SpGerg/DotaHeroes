@@ -7,28 +7,40 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static UnityEngine.UI.GridLayoutGroup;
 
 namespace DotaHeroes.API.Features
 {
-    [CommandHandler(typeof(ClientCommandHandler))]
-    [CommandHandler(typeof(RemoteAdminCommandHandler))]
     public abstract class ToggleAbility : Ability, ICommand
     {
-        public string Command { get; }
+        public virtual string Command { get; }
 
         public virtual string[] Aliases { get; } = Array.Empty<string>();
 
+        public virtual string Desciption { get; }
+
         public abstract bool IsActive { get; set; }
 
-        public ToggleAbility() { }
-
-        public ToggleAbility(Player owner)
+        public ToggleAbility() : base()
         {
-            Owner = owner;
-
-            Command = Name;
+            if (string.IsNullOrEmpty(Command))
+            {
+                Command = Name;
+            }
         }
 
-        public abstract bool Execute(ArraySegment<string> arguments, ICommandSender sender, out string response);
+        public abstract bool Execute(Hero hero, ArraySegment<string> arguments, out string response);
+
+        public bool Execute(ArraySegment<string> arguments, ICommandSender sender, out string response)
+        {
+            if (!base.Execute(sender, out response, out Hero hero, true))
+            {
+                return false;
+            }
+
+            IsActive = !IsActive;
+
+            return Execute(hero, arguments, out response);
+        }
     }
 }

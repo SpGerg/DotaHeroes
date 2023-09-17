@@ -11,6 +11,8 @@ namespace DotaHeroes.API.Features
 {
     public abstract class PassiveAbility : Ability
     {
+        public Player Owner { get; }
+
         public bool IsEnabled { get; set; } = true;
 
         public PassiveAbility() { }

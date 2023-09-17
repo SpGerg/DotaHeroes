@@ -7,6 +7,7 @@ using Exiled.API.Features;
 using Exiled.CustomRoles.API.Features;
 using NorthwoodLib.Pools;
 using PlayerRoles;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -18,7 +19,7 @@ namespace DotaHeroes.API.Features
 
         public abstract HeroClassType HeroClassType { get; set; }
 
-        public virtual IReadOnlyList<Ability> Abilities => new List<Ability>();
+        public virtual List<Ability> Abilities => new List<Ability>();
 
         public virtual HeroStatistics HeroStatistics => new HeroStatistics(AttributeType.None);
 
@@ -66,7 +67,7 @@ namespace DotaHeroes.API.Features
             Player = player;
 
             Effects = new List<Effect>();
-            API.AddPlayer(player.UserId, this);
+            API.SetOrAddPlayer(player.UserId, this);
 
             HeroController = Player.GameObject.GetComponent<HeroController>();
         }
@@ -78,12 +79,29 @@ namespace DotaHeroes.API.Features
 
             Effects = new List<Effect>();
 
-            API.AddPlayer(player.UserId, this);
+            API.SetOrAddPlayer(player.UserId, this);
 
             HeroController = Player.GameObject.GetComponent<HeroController>();
         }
 
-        public virtual void EnableEffect<T>() where T : Effect, new()
+        public bool ExecuteAbility(string name)
+        {
+            var ability = Abilities.First(ability => ability.Name == name);
+
+            if (ability == default)
+            {
+                return false;
+            }
+
+            if (ability is ActiveAbility || ability is ToggleAbility)
+            {
+                (ability as ActiveAbility).Execute(this, new ArraySegment<string>(), out string response);
+            }
+
+            return true;
+        }
+
+        public void EnableEffect<T>() where T : Effect, new()
         {
             if (TryGetEffect(out T result))
             {
@@ -95,7 +113,7 @@ namespace DotaHeroes.API.Features
             Effects.Add(effect);
         }
 
-        public virtual void EnableEffect(Effect _effect)
+        public void EnableEffect(Effect _effect)
         {
             if (TryGetEffect(_effect ,out Effect result))
             {
@@ -106,7 +124,7 @@ namespace DotaHeroes.API.Features
             Effects.Add(_effect);
         }
 
-        public virtual void DisableEffect<T>() where T : Effect, new()
+        public void DisableEffect<T>() where T : Effect, new()
         {
             if (!TryGetEffect(out T result))
             {
@@ -117,7 +135,7 @@ namespace DotaHeroes.API.Features
             Effects.Remove(result);
         }
 
-        public virtual void ExecuteEffect(Effect effect)
+        public void ExecuteEffect(Effect effect)
         {
             if (!TryGetEffect(effect, out Effect result))
             {
@@ -127,7 +145,7 @@ namespace DotaHeroes.API.Features
             result.Execute();
         }
 
-        public virtual void DisableEffect(Effect effect)
+        public void DisableEffect(Effect effect)
         {
             if (!TryGetEffect(effect, out Effect result))
             {
@@ -138,22 +156,22 @@ namespace DotaHeroes.API.Features
             Effects.Remove(result);
         }
 
-        public virtual Effect GetEffectOrDefault<T>() where T : Effect, new()
+        public Effect GetEffectOrDefault<T>() where T : Effect, new()
         {
             return Effects.FirstOrDefault(_effect => _effect is T);
         }
 
-        public virtual Effect GetEffectOrDefault(Effect effect)
+        public Effect GetEffectOrDefault(Effect effect)
         {
             return Effects.FirstOrDefault(_effect => _effect.GetType() == effect.GetType());
         }
 
-        public virtual List<Effect> GetEffects()
+        public List<Effect> GetEffects()
         {
             return new List<Effect>(Effects);
         }
 
-        public virtual bool TryGetEffect<T>(out T result) where T : Effect, new()
+        public bool TryGetEffect<T>(out T result) where T : Effect, new()
         {
             var effect = GetEffectOrDefault<T>();
 
@@ -169,7 +187,7 @@ namespace DotaHeroes.API.Features
             return true;
         }
 
-        public virtual bool TryGetEffect(Effect _effect, out Effect result)
+        public bool TryGetEffect(Effect _effect, out Effect result)
         {
             var effect = GetEffectOrDefault(_effect);
 

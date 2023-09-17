@@ -13,11 +13,15 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 
-namespace DotaHeroes.API.Abilities
+namespace DotaHeroes.API.Abilities.Pudge
 {
+    [CommandHandler(typeof(ClientCommandHandler))]
+    [CommandHandler(typeof(RemoteAdminCommandHandler))]
     public class Dismember : ActiveAbility, ICastRange, IValues
     {
         public override string Name => "Dismember";
+
+        public override string Command { get; set; } = "dismember";
 
         public override string Description => "Eating lol";
 
@@ -37,17 +41,18 @@ namespace DotaHeroes.API.Abilities
             { "cooldown", new List<float>() { 30, 25, 20, 15 } },
         };
 
-        public override bool Execute(ArraySegment<string> arguments, ICommandSender sender, out string response)
+        public Dismember() : base() { }
+
+        public override bool Execute(Hero hero, ArraySegment<string> arguments, out string response)
         {
-            if (!base.Execute(arguments, sender, out response, false))
-            {
-                return false;
-            }
+            var player = hero.Player;
 
             RaycastHit hit;
 
-            if (!Physics.Raycast(Owner.Transform.position, Owner.Transform.forward, out hit, Range))
+            if (!Physics.Raycast(player.Transform.position, player.Transform.forward, out hit, Range))
             {
+                response = "Target not found";
+
                 return false;
             }
 
@@ -55,19 +60,11 @@ namespace DotaHeroes.API.Abilities
 
             if (target == null)
             {
-                response = "Target not found.";
+                response = "Target is not player.";
                 return true;
             }
 
-            var hero = API.GetHeroOrDefault(target.UserId);
-
-            if (hero == default)
-            {
-                response = "Target is not hero.";
-                return true;
-            }
-
-            hero.Player.EnableEffect<Ensnared>();
+            player.EnableEffect<Ensnared>();
             target.EnableEffect<Ensnared>();
 
             response = "You eating " + target.Nickname;

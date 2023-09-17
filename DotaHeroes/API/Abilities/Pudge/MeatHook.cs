@@ -1,4 +1,5 @@
 ﻿using CommandSystem;
+using CustomPlayerEffects;
 using DotaHeroes.API.Enums;
 using DotaHeroes.API.Features;
 using DotaHeroes.API.Features.Components;
@@ -13,13 +14,17 @@ using UnityEngine;
 
 namespace DotaHeroes.API.Abilities.Pudge
 {
+    [CommandHandler(typeof(ClientCommandHandler))]
+    [CommandHandler(typeof(RemoteAdminCommandHandler))]
     public class MeatHook : ActiveAbility, ICastRange, ICost, IValues
     {
         public override string Name => "Meat hook";
 
-        public override string Description => "";
+        public override string Command { get; set; } = "meathook";
 
-        public override string Lore => throw new NotImplementedException();
+        public override string Description => string.Empty;
+
+        public override string Lore => "Meat hook";
 
         public override AbilityType AbilityType => AbilityType.Active;
 
@@ -33,8 +38,6 @@ namespace DotaHeroes.API.Abilities.Pudge
             { "cast_range", new List<float> { 40, 60, 80, 100 } },
         };
 
-        public override Cooldown Cooldown => new Cooldown((int)Values["cooldown"][Level]);
-
         public int Range { get; set; } = 1200;
 
         public int ManaCost { get; set; } = 0;
@@ -45,35 +48,31 @@ namespace DotaHeroes.API.Abilities.Pudge
 
         public MeatHook() : base()
         {
-            
-        }
-
-        public MeatHook(Player owner) : base(owner)
-        {
             ManaCost = (int)Values["mana_cost"][0];
         }
 
-        public override bool Execute(ArraySegment<string> arguments, ICommandSender sender, out string response)
+        public override bool Execute(Hero hero, ArraySegment<string> arguments, out string response)
         {
-            if (!base.Execute(arguments, sender, out response, true))
-            {
-                return false;
-            }
+            var player = hero.Player;
 
-            Primitive primitive = Primitive.Create(Owner.Position, Owner.Rotation.eulerAngles, Vector3.one, true);
+            Primitive primitive = Primitive.Create(player.Position, player.Rotation.eulerAngles, Vector3.one, false);
             primitive.Type = PrimitiveType.Cube;
             var meatHookObject = primitive.AdminToyBase.gameObject.AddComponent<MeatHookObject>();
             meatHookObject.Initialization(
-                Owner.GameObject.GetComponent<HeroController>(),
-                Features.Utils.GetTargetPositionFromMouse(Owner.Transform.position, Owner.CameraTransform.forward, (int)Values["cast_range"][Level]),
+                player.GameObject.GetComponent<HeroController>(),
+                Features.Utils.GetTargetPositionFromMouse(player.Transform.position, player.CameraTransform.forward, (int)Values["cast_range"][Level]),
                 (int)Values["cast_range"][Level],
-                20,
+                35,
                 (int)Values["damage"][Level],
                 DamageType.Pure);
+            var rigidbody = primitive.AdminToyBase.gameObject.AddComponent<Rigidbody>();
+            rigidbody.isKinematic = true;
             var collider = primitive.AdminToyBase.gameObject.AddComponent<BoxCollider>();
             collider.isTrigger = true;
+            player.EnableEffect<Ensnared>();
             primitive.Spawn();
 
+            response = "Hook him!";
             return true;
         }
     }

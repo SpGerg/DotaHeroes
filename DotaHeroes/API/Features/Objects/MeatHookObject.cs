@@ -39,9 +39,7 @@ namespace DotaHeroes.API.Features.Objects
 
         private float moveLength { get; set; }
 
-        public void Start()
-        {
-        }
+        private bool isDestroying { get; set; }
 
         public void Initialization(HeroController owner, Vector3 target, int range, float speed, int damage, DamageType damageType)
         {
@@ -54,6 +52,11 @@ namespace DotaHeroes.API.Features.Objects
 
             usePosition = transform.position;
             Step = Speed * Time.deltaTime;
+
+            Timing.CallDelayed(1f, () =>
+            {
+                isDestroying = true;
+            });
         }
 
         public void FixedUpdate()
@@ -71,18 +74,20 @@ namespace DotaHeroes.API.Features.Objects
             else
             {
                 transform.position = Vector3.MoveTowards(transform.position, usePosition, Step);
-                HeroTarget.Hero.Player.Teleport(transform.position);
+                HeroTarget?.Hero.Player.Teleport(transform.position);
             }
 
-            if (transform.position == Target)
+            if (Vector3.Distance(transform.position, Target) < 3)
             {
                 isMovingToTarget = false;
             }
-            if (transform.position == usePosition)
-            {
-                Destroy(gameObject);
 
-                HeroTarget.Hero.Player.DisableEffect<Ensnared>();
+            if (isDestroying && Vector3.Distance(transform.position, usePosition) < 3)
+            {
+                NetworkServer.UnSpawn(gameObject);
+
+                HeroTarget?.Hero.Player.DisableEffect<Ensnared>();
+                Owner.Hero.Player.DisableEffect<Ensnared>();
                 Timing.CallDelayed(0.2f, () =>
                 {
                     HeroTarget.Hero.Player.IsGodModeEnabled = false;

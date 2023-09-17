@@ -11,9 +11,13 @@ using System.Threading.Tasks;
 
 namespace DotaHeroes.API.Abilities.Pudge
 {
+    [CommandHandler(typeof(ClientCommandHandler))]
+    [CommandHandler(typeof(RemoteAdminCommandHandler))]
     public class FleshHeap : ActiveAbility
     {
         public override string Name => "Flesh heap";
+
+        public override string Command { get; set; } = "fleshheap";
 
         public override string Description => "Flesh heap";
 
@@ -27,28 +31,23 @@ namespace DotaHeroes.API.Abilities.Pudge
 
         public FleshHeap() : base() { }
 
-        public FleshHeap(Player player) : base(player) { }
-
-        public override void LevelUp()
+        public override void LevelUp(Hero hero)
         {
-            var effect = Hero.GetEffects().FirstOrDefault(_effect => _effect is Effects.Pudge.FleshHeap);
+            var effect = hero.GetEffects().FirstOrDefault(_effect => _effect is Effects.Pudge.FleshHeap);
 
             if (effect != default)
             {
                 effect.IsVisible = true;
             }
 
-            base.LevelUp();
+            base.LevelUp(hero);
         }
 
-        public override bool Execute(ArraySegment<string> arguments, ICommandSender sender, out string response)
+        public override bool Execute(Hero hero, ArraySegment<string> arguments, out string response)
         {
-            if (!base.Execute(arguments, sender, out response, false))
-            {
-                return false;
-            }
+            hero.EnableEffect(new FleshHeapShield(hero.Player));
 
-            Hero.EnableEffect(new FleshHeapShield(Hero.Player));
+            response = "Flesh heap enabled.";
 
             return true;
         }

@@ -9,23 +9,30 @@ using System.Threading.Tasks;
 
 namespace DotaHeroes.API.Features
 {
-    [CommandHandler(typeof(ClientCommandHandler))]
-    [CommandHandler(typeof(RemoteAdminCommandHandler))]
     public abstract class ActiveAbility : Ability, ICommand
     {
-        public string Command { get; set; }
+        public virtual string Command { get; set; }
 
         public virtual string[] Aliases { get; set; } = Array.Empty<string>();
 
-        public ActiveAbility() { }
-
-        public ActiveAbility(Player owner)
-        { 
-            Owner = owner;
-
-            Command = Name;
+        public ActiveAbility() : base()
+        {
+            if (string.IsNullOrEmpty(Command))
+            {
+                Command = Name;
+            }
         }
 
-        public abstract bool Execute(ArraySegment<string> arguments, ICommandSender sender, out string response);
+        public abstract bool Execute(Hero hero, ArraySegment<string> arguments, out string response);
+
+        public bool Execute(ArraySegment<string> arguments, ICommandSender sender, out string response)
+        {
+            if (!base.Execute(sender, out response, out Hero hero, true))
+            {
+                return false;
+            }
+
+            return Execute(hero, arguments, out response);
+        }
     }
 }

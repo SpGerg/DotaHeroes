@@ -33,7 +33,7 @@ namespace DotaHeroes.API.Features.Objects
 
         public void Update()
         {
-            transform.position = Owner.transform.position;
+            transform.position = Owner.Hero.Player.Transform.position;
 
             if (Owner.Hero.GetEffectOrDefault<Rot>() == default)
             {

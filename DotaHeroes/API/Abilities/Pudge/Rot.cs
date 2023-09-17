@@ -15,9 +15,11 @@ using UnityEngine;
 
 namespace DotaHeroes.API.Abilities.Pudge
 {
+    [CommandHandler(typeof(ClientCommandHandler))]
+    [CommandHandler(typeof(RemoteAdminCommandHandler))]
     public class Rot : ToggleAbility, ICastRange, IValues
     {
-        public override string Name => "Rot";
+        public override string Name => "rot";
 
         public override string Description => "A toxic cloud that deals intense damage and slows movement--harming not only enemy units but Pudge himself.";
 
@@ -41,33 +43,35 @@ namespace DotaHeroes.API.Abilities.Pudge
 
         public override bool IsActive { get; set; }
 
-        public Rot(Player owner) : base(owner)
+        public Rot() : base()
         {
         }
 
-        public override bool Execute(ArraySegment<string> arguments, ICommandSender sender, out string response)
+        public override bool Execute(Hero hero, ArraySegment<string> arguments, out string response)
         {
-            if (!base.Execute(arguments, sender, out response, false)) {
-                return false;
-            }
+            var player = hero.Player;
 
             if (!IsActive)
             {
+                response = "Rot is disabled";
+
                 return true;
             }
 
-            Primitive primitive = Primitive.Create(Owner.Position, Owner.Rotation.eulerAngles, Vector3.one, true);
+            Primitive primitive = Primitive.Create(player.Position, player.Rotation.eulerAngles, Vector3.one, true);
             primitive.Color = new Color(199, 139, 0, 128);
             primitive.Type = PrimitiveType.Cube;
             var meatHookObject = primitive.AdminToyBase.gameObject.AddComponent<RotObject>();
             meatHookObject.Initialization(
-                Owner.GameObject.GetComponent<HeroController>(),
-                (int)Values["range"][Level],
+                player.GameObject.GetComponent<HeroController>(),
+                (int)Values["cast_range"][Level],
                 (int)Values["damage"][Level],
                 DamageType.Magical);
             var collider = primitive.AdminToyBase.gameObject.AddComponent<BoxCollider>();
             collider.isTrigger = true;
             primitive.Spawn();
+
+            response = "Rot is enabled";
 
             return true;
         }

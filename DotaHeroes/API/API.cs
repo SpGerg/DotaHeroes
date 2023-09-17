@@ -11,9 +11,21 @@ namespace DotaHeroes.API
     {
         private static Dictionary<string, Hero> Players { get; } = new Dictionary<string, Hero>();
 
-        public static void AddPlayer(string userId, Hero hero)
+        private static Dictionary<string, Hero> RegisteredHeroes = new Dictionary<string, Hero>();
+ 
+        public static void SetOrAddPlayer(string userId, Hero hero)
         {
-            Players.Add(userId, hero);
+            Players[userId] = hero;
+        }
+
+        public static void SetOrAddHero(Hero hero)
+        {
+            RegisteredHeroes[hero.HeroName] = hero;
+        }
+
+        public static IReadOnlyDictionary<string, Hero> GetHeroes()
+        {
+            return new Dictionary<string, Hero>(RegisteredHeroes);
         }
 
         public static Hero GetHeroOrDefault(string userId)

@@ -28,12 +28,6 @@ namespace DotaHeroes.API.Features
 
         public abstract int MaxLevel { get; }
 
-        public virtual Cooldown Cooldown { get; } = new Cooldown(3);
-
-        public Player Owner { get; protected set; }
-
-        public Hero Hero { get; protected set; }
-
         public bool IsStop { 
             get
             {
@@ -73,52 +67,70 @@ namespace DotaHeroes.API.Features
 
         public Ability() { }
 
-        public Ability(Player owner)
-        {
-            Owner = owner;
-            Hero = API.GetHeroOrDefault(owner.UserId);
-        }
-
-        public virtual void LevelUp()
+        public virtual void LevelUp(Hero hero)
         {
             Level++;
-            if (this is IValues)
+            if (this is IValues && (this as IValues).Values.ContainsKey("cooldowns"))
             {
-                Cooldown.Duration = (int)(this as IValues).Values["cooldown"][Level];
+                var cooldown = Cooldown.GetCooldownOrDefault(hero.Player.UserId, Name);
+
+                if (cooldown == default)
+                {
+                    cooldown = Cooldown.AddCooldown(hero.Player.UserId, new CooldownInfo(Name, 3, true));
+                }
+
+                cooldown.Duration = (int)(this as IValues).Values["cooldown"][Level];
             }
-            
         }
-        public virtual bool Execute(ArraySegment<string> arguments, ICommandSender sender, out string response, bool isCooldown)
+        protected virtual bool Execute(ICommandSender sender, out string response, out Hero hero, bool isCooldown = false)
         {
             if (sender is not PlayerCommandSender)
             {
                 response = "You cannot use this ability in console.";
+                hero = null;
 
                 return false;
             }
 
-            if (Player.Get(sender) != Owner)
+            var player = Player.Get(sender);
+
+            var _hero = API.GetHeroOrDefault(player.UserId);
+
+            if (_hero == default)
+            {
+                response = "You are not hero. (Im mean in game, ok?)";
+                hero = null;
+
+                return false;
+            }
+
+            hero = _hero;
+
+            if (_hero.Abilities.FirstOrDefault(ability => ability.Name == Name) == default)
             {
                 response = "You havent this ability.";
+                return false;
+            }
+
+            var cooldown = Cooldown.GetCooldownOrDefault(hero.Player.UserId, Name);
+
+            if (cooldown == default)
+            {
+                cooldown = Cooldown.AddCooldown(hero.Player.UserId, new CooldownInfo(Name, 3, true));
+            }
+
+            if (!cooldown.IsCompleted)
+            {
+                response = $"Ability {Name} on cooldown.";
 
                 return false;
             }
 
             response = $"Ability {Name} was used.";
 
-            if (!Cooldown.IsCompleted)
-            {
-                return false;
-            }
-
-            if (this is ToggleAbility)
-            {
-                (this as ToggleAbility).IsActive = !(this as ToggleAbility).IsActive;
-            }
-
             if (isCooldown)
             {
-                Cooldown.Run();
+                cooldown.Run();
             }
 
             return true;

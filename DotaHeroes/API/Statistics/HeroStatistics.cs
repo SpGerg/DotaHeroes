@@ -71,7 +71,7 @@ namespace DotaHeroes.API.Statistics
                 intelligence = value;
                 HealthAndMana.MaximumMana = Constants.MaximumManaFromIntelligence * value;
                 HealthAndMana.ManaRegeneration = Constants.ManaRegenerationFromIntelligence * value;
-                Resistance.EffectResistance = Constants.MagicResistanceFromIntelligence * value;
+                Resistance.BaseEffectResistance = Constants.MagicResistanceFromIntelligence * value;
 
                 if (Attribute == AttributeType.Intelligence)
                 {
