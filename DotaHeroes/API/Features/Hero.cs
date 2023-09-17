@@ -93,9 +93,14 @@ namespace DotaHeroes.API.Features
                 return false;
             }
 
-            if (ability is ActiveAbility || ability is ToggleAbility)
+            if (ability is ActiveAbility)
             {
                 (ability as ActiveAbility).Execute(this, new ArraySegment<string>(), out string response);
+            }
+
+            if (ability is ToggleAbility)
+            {
+                (ability as ToggleAbility).Execute(this, new ArraySegment<string>(), out string response);
             }
 
             return true;
