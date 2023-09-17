@@ -13,7 +13,6 @@ using UnityEngine;
 
 namespace DotaHeroes.API.Abilities.Pudge
 {
-    [CommandHandler(typeof(ClientCommandHandler))]
     public class MeatHook : ActiveAbility, ICastRange, ICost, IValues
     {
         public override string Name => "Meat hook";
@@ -43,10 +42,6 @@ namespace DotaHeroes.API.Abilities.Pudge
         public int HealthCost { get; set; } = -1;
 
         public override int MaxLevel => 4;
-
-        public override string Command => "meathook";
-
-        public override string[] Aliases => Array.Empty<string>();
 
         public MeatHook() : base()
         {

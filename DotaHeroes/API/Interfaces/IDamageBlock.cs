@@ -7,9 +7,10 @@ using System.Threading.Tasks;
 
 namespace DotaHeroes.API.Interfaces
 {
-    public interface IDamageObject
+    public interface IDamageBlock
     {
-        int Damage { get; set; }
-        DamageType DamageType { get; set; }
+        int DamageBlock { get; set; }
+
+        IReadOnlyList<DamageType> DamageTypesToBlock { get; } //None - all of damage types
     }
 }

@@ -9,17 +9,21 @@ using System.Threading.Tasks;
 
 namespace DotaHeroes.API.Features
 {
+    [CommandHandler(typeof(ClientCommandHandler))]
+    [CommandHandler(typeof(RemoteAdminCommandHandler))]
     public abstract class ActiveAbility : Ability, ICommand
     {
-        public abstract string Command { get; }
+        public string Command { get; set; }
 
-        public abstract string[] Aliases { get; }
+        public virtual string[] Aliases { get; set; } = Array.Empty<string>();
 
         public ActiveAbility() { }
 
         public ActiveAbility(Player owner)
         { 
             Owner = owner;
+
+            Command = Name;
         }
 
         public abstract bool Execute(ArraySegment<string> arguments, ICommandSender sender, out string response);

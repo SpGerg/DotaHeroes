@@ -13,7 +13,7 @@ using static UnityEngine.UI.GridLayoutGroup;
 
 namespace DotaHeroes.API.Features.Objects
 {
-    public class RotObject : MonoBehaviour, IDamageObject, ICastRange
+    public class RotObject : MonoBehaviour, IDamage, ICastRange
     {
         public HeroController Owner { get; private set; }
 

@@ -1,4 +1,5 @@
 ﻿using CommandSystem;
+using DotaHeroes.API.Effects.Pudge;
 using DotaHeroes.API.Enums;
 using DotaHeroes.API.Features;
 using Exiled.API.Features;
@@ -12,10 +13,6 @@ namespace DotaHeroes.API.Abilities.Pudge
 {
     public class FleshHeap : ActiveAbility
     {
-        public override string Command => "fleshheap";
-
-        public override string[] Aliases => Array.Empty<string>();
-
         public override string Name => "Flesh heap";
 
         public override string Description => "Flesh heap";
@@ -32,9 +29,28 @@ namespace DotaHeroes.API.Abilities.Pudge
 
         public FleshHeap(Player player) : base(player) { }
 
+        public override void LevelUp()
+        {
+            var effect = Hero.GetEffects().FirstOrDefault(_effect => _effect is Effects.Pudge.FleshHeap);
+
+            if (effect != default)
+            {
+                effect.IsVisible = true;
+            }
+
+            base.LevelUp();
+        }
+
         public override bool Execute(ArraySegment<string> arguments, ICommandSender sender, out string response)
         {
-            throw new NotImplementedException();
+            if (!base.Execute(arguments, sender, out response, false))
+            {
+                return false;
+            }
+
+            Hero.EnableEffect(new FleshHeapShield(Hero.Player));
+
+            return true;
         }
     }
 }

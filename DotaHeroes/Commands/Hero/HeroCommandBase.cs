@@ -15,9 +15,9 @@ namespace DotaHeroes.Commands
     {
         public abstract string Command { get; }
 
-        public abstract string[] Aliases { get; }
-
         public abstract string Description { get; }
+
+        public abstract string[] Aliases { get; }
 
         public bool Execute(ArraySegment<string> arguments, ICommandSender sender, out string response)
         {

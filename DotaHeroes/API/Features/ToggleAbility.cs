@@ -10,19 +10,23 @@ using System.Threading.Tasks;
 
 namespace DotaHeroes.API.Features
 {
+    [CommandHandler(typeof(ClientCommandHandler))]
+    [CommandHandler(typeof(RemoteAdminCommandHandler))]
     public abstract class ToggleAbility : Ability, ICommand
     {
+        public string Command { get; }
+
+        public virtual string[] Aliases { get; } = Array.Empty<string>();
+
         public abstract bool IsActive { get; set; }
-
-        public abstract string Command { get; }
-
-        public abstract string[] Aliases { get; }
 
         public ToggleAbility() { }
 
         public ToggleAbility(Player owner)
         {
             Owner = owner;
+
+            Command = Name;
         }
 
         public abstract bool Execute(ArraySegment<string> arguments, ICommandSender sender, out string response);

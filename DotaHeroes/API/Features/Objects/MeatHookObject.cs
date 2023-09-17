@@ -15,7 +15,7 @@ using UnityEngine;
 
 namespace DotaHeroes.API.Features.Objects
 {
-    public class MeatHookObject : MonoBehaviour, ICastRange, IDamageObject
+    public class MeatHookObject : MonoBehaviour, ICastRange, IDamage
     {
         public HeroController Owner { get; private set; }
 

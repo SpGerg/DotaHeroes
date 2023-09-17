@@ -14,7 +14,7 @@ namespace DotaHeroes.API.Effects.Pudge
     {
         public override string Name => "Rot";
 
-        public override string Description => "Rot";
+        public override string Description { get; protected set; } = "Rot";
 
         public override EffectClassType EffectClassType => EffectClassType.Negative;
 

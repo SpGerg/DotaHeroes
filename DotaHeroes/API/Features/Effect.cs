@@ -1,5 +1,7 @@
 ﻿using DotaHeroes.API.Enums;
+using DotaHeroes.API.Interfaces;
 using Exiled.API.Features;
+using MEC;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +14,7 @@ namespace DotaHeroes.API.Features
     {
         public abstract string Name { get; }
 
-        public abstract string Description { get; }
+        public abstract string Description { get; protected set; }
 
         public abstract EffectClassType EffectClassType { get; }
 
@@ -34,6 +36,14 @@ namespace DotaHeroes.API.Features
 
         public virtual bool Enable()
         {
+            if (this is IEffectDuration)
+            {
+                Timing.CallDelayed((this as IEffectDuration).Duration, () =>
+                {
+                    Hero.DisableEffect(this);
+                });
+            }
+
             return true;
         }
 

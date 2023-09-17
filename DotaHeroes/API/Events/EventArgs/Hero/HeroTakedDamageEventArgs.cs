@@ -1,8 +1,6 @@
 ﻿using DotaHeroes.API.Enums;
 using DotaHeroes.API.Events.EventArgs.Interfaces;
 using DotaHeroes.API.Interfaces;
-using Exiled.API.Features;
-using Exiled.Events.EventArgs.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,25 +9,23 @@ using System.Threading.Tasks;
 
 namespace DotaHeroes.API.Events.EventArgs.Hero
 {
-    public class HeroAttackingEventArgs : IHeroEvent, IDamage, IDeniableEvent
+    public class HeroTakedDamageEventArgs : IHeroEvent, IDamage
     {
         public Features.Hero Hero { get; set; }
 
-        public Features.Hero Target { get; set; }
+        public Features.Hero Attacker { get; set; }
 
         public int Damage { get; set; }
 
         public DamageType DamageType { get; set; }
 
-        public bool IsAllowed { get; set; }
-
-        public HeroAttackingEventArgs(Features.Hero hero, Features.Hero target, int damage, bool isAllowed, DamageType damageType)
+        public HeroTakedDamageEventArgs(Features.Hero hero, Features.Hero attacker, int damage, DamageType damageType)
         {
             Hero = hero;
-            Target = target;
+            Attacker = attacker;
             Damage = damage;
-            IsAllowed = isAllowed;
             DamageType = damageType;
         }
+
     }
 }

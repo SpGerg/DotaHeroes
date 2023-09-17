@@ -1,5 +1,6 @@
 ﻿using CustomPlayerEffects;
 using DotaHeroes.API.Enums;
+using DotaHeroes.API.Features;
 using DotaHeroes.API.Interfaces;
 using Exiled.API.Features;
 using MEC;
@@ -11,11 +12,11 @@ using System.Threading.Tasks;
 
 namespace DotaHeroes.API.Effects
 {
-    public class Stun : Effect, IEffectDuration
+    public class Stun : Features.Effect, IEffectDuration
     {
         public override string Name => "Stun";
 
-        public override string Description => "Prevents the owner from moving, attacking and using abilities";
+        public override string Description { get; protected set; } = "Prevents the owner from moving, attacking and using abilities";
 
         public override DispelType DispelType { get; set; } = DispelType.Strong;
 

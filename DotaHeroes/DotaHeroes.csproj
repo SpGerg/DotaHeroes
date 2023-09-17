@@ -125,6 +125,10 @@
     <Compile Include="API\Abilities\Pudge\MeatHook.cs" />
     <Compile Include="API\Abilities\Pudge\Rot.cs" />
     <Compile Include="API\Effects\Pudge\FleshHeap.cs" />
+    <Compile Include="API\Effects\Pudge\FleshHeapShield.cs" />
+    <Compile Include="API\Events\EventArgs\Hero\HeroTakingDamageEventArgs.cs" />
+    <Compile Include="API\Events\EventArgs\Hero\HeroTakedDamageEventArgs.cs" />
+    <Compile Include="API\Events\EventArgs\Interfaces\IHeroEvent.cs" />
     <Compile Include="API\Features\Ability.cs" />
     <Compile Include="API\API.cs" />
     <Compile Include="API\Constants.cs" />
@@ -152,7 +156,8 @@
     <Compile Include="API\Features\Hud.cs" />
     <Compile Include="API\Features\ActiveAbility.cs" />
     <Compile Include="API\Interfaces\ICastRange.cs" />
-    <Compile Include="API\Interfaces\IDamageObject.cs" />
+    <Compile Include="API\Interfaces\IDamageBlock.cs" />
+    <Compile Include="API\Interfaces\IDamage.cs" />
     <Compile Include="API\Interfaces\IEffectDuration.cs" />
     <Compile Include="API\Interfaces\IEffectValue.cs" />
     <Compile Include="API\Interfaces\ICost.cs" />
@@ -172,6 +177,7 @@
     <Compile Include="Commands\Hero\HeroCommandBase.cs" />
     <Compile Include="Commands\Hero\Attack.cs" />
     <Compile Include="Config.cs" />
+    <Compile Include="Events\Internal\HeroHandler.cs" />
     <Compile Include="Events\Internal\PlayerHandler.cs" />
     <Compile Include="Plugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

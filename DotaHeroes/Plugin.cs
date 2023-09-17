@@ -1,4 +1,5 @@
 ﻿using DotaHeroes.API;
+using DotaHeroes.API.Features;
 using DotaHeroes.Events.Internal;
 using Exiled.API.Features;
 using System;
@@ -7,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Player = Exiled.Events.Handlers.Player;
+using Hero = DotaHeroes.API.Events.Handlers.Hero;
 
 namespace DotaHeroes
 {
@@ -17,6 +19,7 @@ namespace DotaHeroes
             Hud.RunUpdate();
 
             Player.Spawned += PlayerHandler.OnSpawned;
+            Hero.TakedDamage += HeroHandler.OnHeroTakedDamage;
 
             base.OnEnabled();
         }

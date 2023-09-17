@@ -1,5 +1,6 @@
 ﻿using DotaHeroes.API.Enums;
 using DotaHeroes.API.Features;
+using Exiled.API.Features;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,11 +13,15 @@ namespace DotaHeroes.API.Effects.Pudge
     {
         public override string Name => "Flesh heap";
 
-        public override string Description => "Flesh heap";
+        public override string Description { get; protected set; } = "Flesh heap";
 
         public override EffectClassType EffectClassType => EffectClassType.Positive;
 
         public int Count { get; protected set; }
+
+        public FleshHeap() : base() { }
+
+        public FleshHeap(Player owner) : base(owner) { }
 
         public override bool Enable()
         {
@@ -34,13 +39,6 @@ namespace DotaHeroes.API.Effects.Pudge
 
         public override bool Execute()
         {
-            var fleshHeap = Hero.Abilities.FirstOrDefault(ability => ability.Name == "Flesh heap");
-
-            if (fleshHeap != default)
-            {
-                IsVisible = true;
-            }
-
             Count++;
 
             return base.Execute();

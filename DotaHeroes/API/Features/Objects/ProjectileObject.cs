@@ -10,7 +10,7 @@ using UnityEngine;
 
 namespace DotaHeroes.API.Features.Objects
 {
-    public class ProjectileObject : MonoBehaviour, IDamageObject
+    public class ProjectileObject : MonoBehaviour, IDamage
     {
         public HeroController Target { get; set; }
 

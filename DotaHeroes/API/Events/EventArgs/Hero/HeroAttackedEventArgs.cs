@@ -1,4 +1,7 @@
-﻿using Exiled.API.Features;
+﻿using DotaHeroes.API.Enums;
+using DotaHeroes.API.Events.EventArgs.Interfaces;
+using DotaHeroes.API.Interfaces;
+using Exiled.API.Features;
 using Exiled.Events.EventArgs.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -8,10 +11,22 @@ using System.Threading.Tasks;
 
 namespace DotaHeroes.API.Events.EventArgs.Hero
 {
-    public class HeroAttackedEventArgs : IPlayerEvent
+    public class HeroAttackedEventArgs : IHeroEvent, IDamage
     {
-        public Player Player { get; set; }
+        public Features.Hero Hero { get; set; }
 
-        public Player Target { get; set; }
+        public Features.Hero Target { get; set; }
+
+        public int Damage { get; set; }
+
+        public DamageType DamageType { get; set; }
+
+        public HeroAttackedEventArgs(Features.Hero hero, Features.Hero target, int damage, DamageType damageType)
+        {
+            Hero = hero;
+            Target = target;
+            Damage = damage;
+            DamageType = damageType;
+        }
     }
 }
