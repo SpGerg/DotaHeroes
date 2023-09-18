@@ -10,6 +10,7 @@ using UnityEngine;
 
 namespace DotaHeroes.API.Features.Objects
 {
+    [RequireComponent(typeof(BoxCollider))]
     public class ProjectileObject : MonoBehaviour, IDamage
     {
         public HeroController Target { get; set; }

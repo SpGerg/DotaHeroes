@@ -29,9 +29,11 @@ namespace DotaHeroes.API.Heroes
 
         public override HeroClassType HeroClassType { get; set; } = HeroClassType.Melee;
 
-        public Pudge(Player player) : base(player)
+        public Pudge() : base()
         {
             SideType = SideType.Dire;
         }
+
+        public Pudge(Player player, SideType sideType) : base(player, sideType) { }
     }
 }

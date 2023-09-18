@@ -1,4 +1,5 @@
 ﻿using DotaHeroes.API.Enums;
+using DotaHeroes.API.Events.Handlers;
 using DotaHeroes.API.Features.Components;
 using DotaHeroes.API.Features.Objects;
 using DotaHeroes.API.Interfaces;
@@ -25,7 +26,7 @@ namespace DotaHeroes.API.Features
 
         public virtual RoleTypeId Model => RoleTypeId.Tutorial;
 
-        public Player Player { get; }
+        public Player Player { get; private set; }
 
         public SideType SideType { get; set; } = SideType.None;
 
@@ -33,7 +34,7 @@ namespace DotaHeroes.API.Features
 
         public List<ProjectileObject> ProjectilesFollow { get; }
 
-        public HeroController HeroController { get; }
+        public HeroController HeroController { get; private set; }
 
         public int Level { get; set; }
 
@@ -64,14 +65,9 @@ namespace DotaHeroes.API.Features
             }
         }
 
-        public Hero(Player player)
+        public Hero()
         {
-            Player = player;
-
-            Effects = new List<Effect>();
-            API.SetOrAddPlayer(player.UserId, this);
-
-            HeroController = Player.GameObject.GetComponent<HeroController>();
+            Player = null;
         }
 
         public Hero(Player player, SideType sideType)
@@ -84,6 +80,18 @@ namespace DotaHeroes.API.Features
             API.SetOrAddPlayer(player.UserId, this);
 
             HeroController = Player.GameObject.GetComponent<HeroController>();
+
+            foreach (var ability in Abilities)
+            {
+                if (ability is IValues)
+                {
+                    var values = (ability as IValues).Values;
+                    if (values.ContainsKey("cooldown"))
+                    {
+                        Cooldowns.AddCooldown(player.UserId, new CooldownInfo(ability.Name, (int)values["cooldown"][ability.Level]));
+                    }
+                }
+            }
         }
 
         public void ApplyDispel(DispelType dispelType)
@@ -268,6 +276,49 @@ namespace DotaHeroes.API.Features
             result = effect;
 
             return true;
+        }
+
+        public override string ToString()
+        {
+            var stringBuilder = StringBuilderPool.Shared.Rent();
+
+            stringBuilder.AppendLine("Hero: ");
+            stringBuilder.AppendLine("Name: " + HeroName);
+            stringBuilder.AppendLine("Hero statistics: " + HeroStatistics.ToString());
+
+            if (Effects.Count > 0)
+            {
+                stringBuilder.AppendLine(new string('—', 16));
+                stringBuilder.AppendLine("Effects: ");
+
+                foreach (var effect in Effects)
+                {
+                    if (effect.IsVisible)
+                    {
+                        stringBuilder.AppendLine(effect.ToString());
+
+                        stringBuilder.AppendLine($"— {effect.Description}");
+                    }
+                }
+            }
+
+            return StringBuilderPool.Shared.ToStringReturn(stringBuilder);
+        }
+
+        public static Hero Clone(Player player, SideType sideType, HeroController heroController, Hero hero)
+        {
+            var copy = hero;
+
+            if (copy.Player == null)
+            {
+                copy.Player = player;
+                copy.HeroController = heroController;
+                copy.SideType = sideType;
+
+                API.SetOrAddPlayer(player.UserId, copy);
+            }
+
+            return copy;
         }
     }
 }

@@ -147,7 +147,7 @@
     <Compile Include="API\Events\Handlers\Hero.cs" />
     <Compile Include="API\Extensions\EnumExtension.cs" />
     <Compile Include="API\Features\Components\HeroController.cs" />
-    <Compile Include="API\Features\Cooldown.cs" />
+    <Compile Include="API\Features\Cooldowns.cs" />
     <Compile Include="API\Features\Objects\MeatHookObject.cs" />
     <Compile Include="API\Features\Objects\ProjectileObject.cs" />
     <Compile Include="API\Features\Objects\RotObject.cs" />

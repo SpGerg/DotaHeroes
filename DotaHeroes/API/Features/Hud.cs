@@ -12,8 +12,6 @@ namespace DotaHeroes.API.Features
 {
     public static class Hud
     {
-        public static Dictionary<string, List<string>> Players = new Dictionary<string, List<string>>();
-
         public static void RunUpdate()
         {
             Timing.RunCoroutine(UpdateCoroutine());
@@ -32,37 +30,20 @@ namespace DotaHeroes.API.Features
                         continue;
                     }
 
-                    player.Broadcast(4, $"<size=16><align=Left>{CreateHeroInfo(hero)}</align></size>");
+                    var cooldowns = Cooldowns.GetCooldownInfo(player.UserId);
+
+                    if (string.IsNullOrEmpty(cooldowns))
+                    {
+                        player.ShowHint($"<size=16><align=Left>{hero}</align></size>", 1.5f);
+                    }
+                    else
+                    {
+                        player.ShowHint($"<size=16><align=Left>{hero}</align></size><size=16><align=Right>{cooldowns}</align></size>", 1.5f);
+                    }
                 }
 
-                yield return Timing.WaitForSeconds(3);
+                yield return Timing.WaitForSeconds(1);
             }
-        }
-
-        public static string CreateHeroInfo(Hero hero)
-        {
-            var stringBuilder = StringBuilderPool.Shared.Rent();
-            var effects = hero.GetEffects();
-
-            stringBuilder.AppendLine("Hero: ");
-            stringBuilder.AppendLine("Name: " + hero.HeroName);
-            stringBuilder.AppendLine("Hero statistics: " + hero.HeroStatistics.ToString());
-
-            stringBuilder.AppendLine(new string('—', 16));
-
-            stringBuilder.AppendLine("Effects: ");
-
-            foreach (var effect in effects)
-            {
-                if (effect.IsVisible)
-                {
-                    stringBuilder.AppendLine(effect.ToString());
-
-                    stringBuilder.AppendLine($"— {effect.Description}");
-                }
-            }
-
-            return StringBuilderPool.Shared.ToStringReturn(stringBuilder);
         }
     }
 }

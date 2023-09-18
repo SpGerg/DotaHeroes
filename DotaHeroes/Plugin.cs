@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Player = Exiled.Events.Handlers.Player;
 using Hero = DotaHeroes.API.Events.Handlers.Hero;
+using DotaHeroes.API.Heroes;
 
 namespace DotaHeroes
 {
@@ -16,6 +17,7 @@ namespace DotaHeroes
     {
         public override void OnEnabled()
         {
+            API.API.RegisterHero(new Pudge());
             Hud.RunUpdate();
 
             Player.Spawned += PlayerHandler.OnSpawned;
@@ -27,6 +29,7 @@ namespace DotaHeroes
         public override void OnDisabled()
         {
             Player.Spawned -= PlayerHandler.OnSpawned;
+            Hero.TakedDamage -= HeroHandler.OnHeroTakedDamage;
 
             base.OnDisabled();
         }

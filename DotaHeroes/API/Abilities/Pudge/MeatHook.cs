@@ -7,6 +7,7 @@ using DotaHeroes.API.Features.Objects;
 using DotaHeroes.API.Interfaces;
 using Exiled.API.Features;
 using Exiled.API.Features.Toys;
+using MEC;
 using RemoteAdmin;
 using System;
 using System.Collections.Generic;
@@ -35,7 +36,7 @@ namespace DotaHeroes.API.Abilities.Pudge
             { "damage", new List<float> { 120, 180, 210, 240 } },
             { "mana_cost", new List<float> { 120, 130, 140, 150 } },
             { "cooldown", new List<float> { 12, 11, 9, 8 } },
-            { "cast_range", new List<float> { 40, 60, 80, 100 } },
+            { "cast_range", new List<float> { 20, 30, 40, 50 } },
         };
 
         public int Range { get; set; } = 1200;
@@ -57,18 +58,18 @@ namespace DotaHeroes.API.Abilities.Pudge
 
             Primitive primitive = Primitive.Create(player.Position, player.Rotation.eulerAngles, Vector3.one, false);
             primitive.Type = PrimitiveType.Cube;
+            primitive.MovementSmoothing = 60;
+            primitive.Collidable = false;
             var meatHookObject = primitive.AdminToyBase.gameObject.AddComponent<MeatHookObject>();
             meatHookObject.Initialization(
                 player.GameObject.GetComponent<HeroController>(),
                 Features.Utils.GetTargetPositionFromMouse(player.Transform.position, player.CameraTransform.forward, (int)Values["cast_range"][Level]),
                 (int)Values["cast_range"][Level],
-                35,
+                30,
                 (int)Values["damage"][Level],
                 DamageType.Pure);
             var rigidbody = primitive.AdminToyBase.gameObject.AddComponent<Rigidbody>();
             rigidbody.isKinematic = true;
-            var collider = primitive.AdminToyBase.gameObject.AddComponent<BoxCollider>();
-            collider.isTrigger = true;
             player.EnableEffect<Ensnared>();
             primitive.Spawn();
 

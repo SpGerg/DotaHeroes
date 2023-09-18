@@ -2,6 +2,7 @@
 using DotaHeroes.API.Enums;
 using DotaHeroes.API.Features.Components;
 using DotaHeroes.API.Interfaces;
+using Mirror;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +14,7 @@ using static UnityEngine.UI.GridLayoutGroup;
 
 namespace DotaHeroes.API.Features.Objects
 {
-    public class RotObject : MonoBehaviour, IDamage, ICastRange
+    public class RotObject : NetworkBehaviour, IDamage, ICastRange
     {
         public HeroController Owner { get; private set; }
 

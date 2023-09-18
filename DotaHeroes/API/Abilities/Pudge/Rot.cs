@@ -33,7 +33,6 @@ namespace DotaHeroes.API.Abilities.Pudge
         {
             { "damage", new List<float> { 40, 60, 80, 100 } },
             { "mana_cost", new List<float> { 0, 0, 0, 0 } },
-            { "cooldown", new List<float> { 0, 0, 0, 0 } },
             { "cast_range", new List<float> { 1.5f, 2, 4, 5 } },
         };
 
@@ -59,16 +58,18 @@ namespace DotaHeroes.API.Abilities.Pudge
             }
 
             Primitive primitive = Primitive.Create(player.Position, player.Rotation.eulerAngles, Vector3.one, true);
-            primitive.Color = new Color(199, 139, 0, 128);
+            primitive.MovementSmoothing = 60;
+            primitive.Color = new Color(199, 139, 0, 64);
             primitive.Type = PrimitiveType.Cube;
+            primitive.Collidable = false;
             var meatHookObject = primitive.AdminToyBase.gameObject.AddComponent<RotObject>();
             meatHookObject.Initialization(
                 player.GameObject.GetComponent<HeroController>(),
                 (int)Values["cast_range"][Level],
                 (int)Values["damage"][Level],
                 DamageType.Magical);
-            var collider = primitive.AdminToyBase.gameObject.AddComponent<BoxCollider>();
-            collider.isTrigger = true;
+            var rigidbody = primitive.AdminToyBase.gameObject.AddComponent<Rigidbody>();
+            rigidbody.isKinematic = true;
             primitive.Spawn();
 
             response = "Rot is enabled";

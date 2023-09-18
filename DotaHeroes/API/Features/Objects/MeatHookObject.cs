@@ -15,7 +15,7 @@ using UnityEngine;
 
 namespace DotaHeroes.API.Features.Objects
 {
-    public class MeatHookObject : MonoBehaviour, ICastRange, IDamage
+    public class MeatHookObject : NetworkBehaviour, ICastRange, IDamage
     {
         public HeroController Owner { get; private set; }
 
@@ -88,6 +88,7 @@ namespace DotaHeroes.API.Features.Objects
 
                 HeroTarget?.Hero.Player.DisableEffect<Ensnared>();
                 Owner.Hero.Player.DisableEffect<Ensnared>();
+
                 Timing.CallDelayed(0.2f, () =>
                 {
                     HeroTarget.Hero.Player.IsGodModeEnabled = false;
@@ -99,7 +100,7 @@ namespace DotaHeroes.API.Features.Objects
         {
             if (isMovingToTarget && collider.TryGetComponent(out HeroController heroController))
             {
-                if (heroController == Owner)
+                if (heroController.Hero.Player.UserId == Owner.Hero.Player.UserId)
                 {
                     return;
                 }

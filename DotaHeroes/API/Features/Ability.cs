@@ -72,11 +72,11 @@ namespace DotaHeroes.API.Features
             Level++;
             if (this is IValues && (this as IValues).Values.ContainsKey("cooldowns"))
             {
-                var cooldown = Cooldown.GetCooldownOrDefault(hero.Player.UserId, Name);
+                var cooldown = Cooldowns.GetCooldown(hero.Player.UserId, Name);
 
                 if (cooldown == default)
                 {
-                    cooldown = Cooldown.AddCooldown(hero.Player.UserId, new CooldownInfo(Name, 3, true));
+                    cooldown = Cooldowns.AddCooldown(hero.Player.UserId, new CooldownInfo(Name, 3));
                 }
 
                 cooldown.Duration = (int)(this as IValues).Values["cooldown"][Level];
@@ -112,26 +112,35 @@ namespace DotaHeroes.API.Features
                 return false;
             }
 
-            var cooldown = Cooldown.GetCooldownOrDefault(hero.Player.UserId, Name);
-
-            if (cooldown == default)
+            if ((this as IValues).Values.ContainsKey("cooldown"))
             {
-                cooldown = Cooldown.AddCooldown(hero.Player.UserId, new CooldownInfo(Name, 3, true));
+                var cooldown = Cooldowns.GetCooldown(hero.Player.UserId, Name);
+
+                if (cooldown == default)
+                {
+                    cooldown = Cooldowns.AddCooldown(hero.Player.UserId, new CooldownInfo(Name, 3));
+                }
+
+                if (!cooldown.IsReady)
+                {
+                    Log.Info(cooldown.Cooldown);
+                    response = $"Ability {Name} on cooldown.";
+
+                    return false;
+                }
+
+                response = $"Ability {Name} was used.";
+
+                if (isCooldown && this is IValues)
+                {
+                    if ((this as IValues).Values.ContainsKey("cooldown"))
+                    {
+                        cooldown.Run();
+                    }
+                }
             }
 
-            if (!cooldown.IsCompleted)
-            {
-                response = $"Ability {Name} on cooldown.";
-
-                return false;
-            }
-
-            response = $"Ability {Name} was used.";
-
-            if (isCooldown)
-            {
-                cooldown.Run();
-            }
+            response = string.Empty;
 
             return true;
         }

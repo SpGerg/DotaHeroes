@@ -49,7 +49,7 @@ namespace DotaHeroes.API.Abilities.Pudge
 
             RaycastHit hit;
 
-            if (!Physics.Raycast(player.Transform.position, player.Transform.forward, out hit, Range))
+            if (!Physics.Raycast(player.Transform.position, player.CameraTransform.forward, out hit, Range))
             {
                 response = "Target not found";
 

@@ -1,6 +1,7 @@
 ﻿using DotaHeroes.API;
 using DotaHeroes.API.Enums;
 using DotaHeroes.API.Statistics;
+using Exiled.API.Features;
 using NorthwoodLib.Pools;
 using System;
 using System.Collections.Generic;
@@ -110,6 +111,7 @@ namespace DotaHeroes.API.Statistics
             Attack = new AttackStatistics();
             Armor = new ArmorStatistics();
             Resistance = new ResistanceStatistics();
+            SpeedStatistics = new SpeedStatistics(0);
         }
 
         public HeroStatistics(AttributeType attribute, HealthAndManaStatistics healthAndManaStatistics, AttackStatistics attackStatistics, ArmorStatistics armorStatistics, ResistanceStatistics resistanceStatistics, SpeedStatistics speedStatistics)

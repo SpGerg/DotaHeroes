@@ -22,6 +22,7 @@ namespace DotaHeroes.API.Statistics
         {
             MagicResistance = magicResistance;
             BaseEffectResistance = baseEffectResistance;
+            ResistanceModifiers = new List<float>();
         }
 
         public float GetEffectResistance()
@@ -39,8 +40,6 @@ namespace DotaHeroes.API.Statistics
             {
                 result *= (1 - modifier / 10);
             }
-
-            Log.Info(result);
 
             return result;
         }
