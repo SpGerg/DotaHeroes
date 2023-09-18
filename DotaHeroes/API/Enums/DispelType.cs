@@ -11,5 +11,7 @@ namespace DotaHeroes.API.Enums
         None = 0,
         Basic = 1,
         Strong = 2,
+        Dead = 3,
+        NotDispelling = 4
     }
 }

@@ -52,6 +52,11 @@ namespace DotaHeroes.API.Features
             return true;
         }
 
+        public virtual bool Dispel()
+        {
+            return false;
+        }
+
         public virtual bool Disable()
         {
             return true;

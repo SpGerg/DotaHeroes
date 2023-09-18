@@ -53,6 +53,8 @@ namespace DotaHeroes.API.Features
 
                 if (isDead)
                 {
+                    ApplyDispel(DispelType.Dead);
+
                     Player.Role.Set(RoleTypeId.Spectator);
                 }
                 else
@@ -82,6 +84,66 @@ namespace DotaHeroes.API.Features
             API.SetOrAddPlayer(player.UserId, this);
 
             HeroController = Player.GameObject.GetComponent<HeroController>();
+        }
+
+        public void ApplyDispel(DispelType dispelType)
+        {
+            if (dispelType == DispelType.NotDispelling)
+            {
+                return;
+            }
+
+            if (dispelType == DispelType.Dead)
+            {
+                foreach (var effect in Effects)
+                {
+                    if (effect.DispelType != DispelType.None)
+                    {
+                        effect.Dispel();
+                        DisableEffect(effect);
+                    }
+                }
+
+                return;
+            }
+
+            if (dispelType == DispelType.Strong)
+            {
+                foreach (var effect in Effects)
+                {
+                    if (effect.DispelType == DispelType.None)
+                    {
+                        continue;
+                    }
+
+                    if (effect.DispelType == DispelType.Basic || effect.DispelType == DispelType.Strong)
+                    {
+                        effect.Dispel();
+                        DisableEffect(effect);
+                    }
+                }
+
+                return;
+            }
+
+            if (dispelType == DispelType.Basic)
+            {
+                foreach (var effect in Effects)
+                {
+                    if (effect.DispelType == DispelType.None)
+                    {
+                        continue;
+                    }
+
+                    if (effect.DispelType == DispelType.Basic)
+                    {
+                        effect.Dispel();
+                        DisableEffect(effect);
+                    }
+                }
+
+                return;
+            }
         }
 
         public bool ExecuteAbility(string name)
@@ -120,7 +182,7 @@ namespace DotaHeroes.API.Features
 
         public void EnableEffect(Effect _effect)
         {
-            if (TryGetEffect(_effect ,out Effect result))
+            if (TryGetEffect(_effect, out Effect result))
             {
                 return;
             }
