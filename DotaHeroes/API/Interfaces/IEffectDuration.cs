@@ -8,6 +8,6 @@ namespace DotaHeroes.API.Interfaces
 {
     public interface IEffectDuration
     {
-        int Duration { get; }
+        float? Duration { get; }
     }
 }

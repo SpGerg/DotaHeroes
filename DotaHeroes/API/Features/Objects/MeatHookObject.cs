@@ -31,6 +31,8 @@ namespace DotaHeroes.API.Features.Objects
 
         public int Damage { get; set; }
 
+        public bool IsEnded { get; set; }
+
         public DamageType DamageType { get; set; }
 
         private bool isMovingToTarget { get; set; } = true;
@@ -77,14 +79,14 @@ namespace DotaHeroes.API.Features.Objects
                 HeroTarget?.Hero.Player.Teleport(transform.position);
             }
 
-            if (Vector3.Distance(transform.position, Target) < 3)
+            if (Vector3.Distance(transform.position, Target) < 0.5f)
             {
                 isMovingToTarget = false;
             }
 
-            if (isDestroying && Vector3.Distance(transform.position, usePosition) < 3)
+            if (isDestroying && Vector3.Distance(transform.position, usePosition) < 0.5f)
             {
-                NetworkServer.UnSpawn(gameObject);
+                IsEnded = true;
 
                 HeroTarget?.Hero.Player.DisableEffect<Ensnared>();
                 Owner.Hero.Player.DisableEffect<Ensnared>();
@@ -116,7 +118,7 @@ namespace DotaHeroes.API.Features.Objects
                     return;
                 }
 
-                heroController.TakeDamage(Damage, DamageType);
+                heroController.Hero.TakeDamage(Damage, DamageType);
             }
         }
     }

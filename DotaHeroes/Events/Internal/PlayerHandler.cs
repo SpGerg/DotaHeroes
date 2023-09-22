@@ -4,6 +4,7 @@ using DotaHeroes.API.Features;
 using DotaHeroes.API.Features.Components;
 using DotaHeroes.API.Heroes;
 using Exiled.API.Extensions;
+using Exiled.API.Features.Roles;
 using Exiled.Events.EventArgs.Player;
 using System;
 using System.Collections.Generic;
@@ -17,10 +18,23 @@ namespace DotaHeroes.Events.Internal
     {
         internal static void OnSpawned(SpawnedEventArgs ev)
         {
-            var heroController = ev.Player.GameObject.AddComponent<HeroController>();
+            HeroController heroController;
+
+            if (!ev.Player.GameObject.TryGetComponent(out heroController))
+            {
+                heroController = ev.Player.GameObject.AddComponent<HeroController>();
+            }
+
+            if (heroController.Hero != null && ev.Player.Role is not SpectatorRole)
+            {
+                var healthAndMana  = heroController.Hero.HeroStatistics.HealthAndMana;
+                heroController.Hero.IsHeroDead = false;
+                healthAndMana.Health = healthAndMana.MaximumHealth;
+                return;
+            }
+
             var hero = API.API.GetRegisteredHeroes().GetRandomValue().Value;
-            heroController.Hero = Hero.Clone(ev.Player, SideType.Dire, heroController, hero);
-            
+            heroController.Hero = hero.Create(ev.Player, SideType.Dire);
         }
     }
 }

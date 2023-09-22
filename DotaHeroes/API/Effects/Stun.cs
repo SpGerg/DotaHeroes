@@ -20,7 +20,7 @@ namespace DotaHeroes.API.Effects
 
         public override DispelType DispelType { get; set; } = DispelType.Strong;
 
-        public int Duration => 3;
+        public float? Duration { get; set; } = 5;
 
         public override EffectClassType EffectClassType => EffectClassType.Negative;
 
@@ -34,7 +34,7 @@ namespace DotaHeroes.API.Effects
         {
             Owner.EnableEffect<Ensnared>();
 
-            Timing.CallDelayed(Duration, () =>
+            Timing.CallDelayed((float)Duration, () =>
             {
                 Owner.DisableEffect<Ensnared>();
             });

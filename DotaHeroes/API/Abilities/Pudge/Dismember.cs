@@ -1,5 +1,6 @@
 ﻿using CommandSystem;
 using CustomPlayerEffects;
+using DotaHeroes.API.Effects;
 using DotaHeroes.API.Enums;
 using DotaHeroes.API.Features;
 using DotaHeroes.API.Features.Components;
@@ -33,6 +34,8 @@ namespace DotaHeroes.API.Abilities.Pudge
 
         public override int MaxLevel => 4;
 
+        public const float Duration = 3.5f;
+
         public int Range { get; set; } = 1;
 
         public IReadOnlyDictionary<string, List<float>> Values => new Dictionary<string, List<float>>()
@@ -56,41 +59,41 @@ namespace DotaHeroes.API.Abilities.Pudge
                 return false;
             }
 
-            var target = Player.Get(hit.collider.gameObject);
-
-            if (target == null)
+            if (!hit.collider.gameObject.TryGetComponent(out HeroController heroController))
             {
-                response = "Target is not player.";
-                return true;
+                response = "Target is not hero.";
+
+                return false;
             }
 
             player.EnableEffect<Ensnared>();
-            target.EnableEffect<Ensnared>();
+            heroController.Hero.EnableEffect(new Stun(player)
+            {
+                Duration = Duration
+            });
 
-            response = "You eating " + target.Nickname;
+            response = "You eating " + heroController.Hero.Player.Nickname;
 
             var damage = Values["damage"][Level];
 
-            Timing.RunCoroutine(DamageCoroutine(damage, DamageType.Magical, hero));
+            Timing.RunCoroutine(DamageCoroutine(hero, heroController.Hero, damage, DamageType.Magical));
 
             return true;
         }
 
-        private IEnumerator<float> DamageCoroutine(float damage, DamageType damageType, Hero target)
+        private IEnumerator<float> DamageCoroutine(Hero player, Hero target, float damage, DamageType damageType)
         {
-            var player = target.Player;
-
             for (int i = 0; i < (damage / 8); i += (int)damage / 8)
             {
                 if (IsStop)
                 {
-                    player.EnableEffect<Ensnared>();
+                    player.Player.DisableEffect<Ensnared>();
+                    target.DisableEffect<Stun>();
 
                     yield break;
                 }
 
-                player.DisableEffect<Ensnared>();
-                target.HeroController.TakeDamage(i, DamageType.Magical);
+                target.TakeDamage(i, DamageType.Magical);
 
                 yield return Timing.WaitForSeconds(0.1f);
             }

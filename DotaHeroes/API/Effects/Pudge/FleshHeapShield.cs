@@ -25,7 +25,7 @@ namespace DotaHeroes.API.Effects.Pudge
 
         public IReadOnlyList<DamageType> DamageTypesToBlock => new List<DamageType>() { DamageType.None };
 
-        public int Duration => 7;
+        public float? Duration => 7;
 
         public FleshHeapShield() : base() { }
 

@@ -73,8 +73,22 @@ namespace DotaHeroes.API.Abilities.Pudge
             player.EnableEffect<Ensnared>();
             primitive.Spawn();
 
+            Timing.RunCoroutine(WaitForHookEndCoroutine(primitive, meatHookObject));
+
             response = "Hook him!";
             return true;
+        }
+
+        private IEnumerator<float> WaitForHookEndCoroutine(Primitive primitive, MeatHookObject meatHookObject)
+        {
+            while (!meatHookObject.IsEnded)
+            {
+                yield return Timing.WaitForOneFrame;
+            }
+
+            yield return Timing.WaitForSeconds(0.35f);
+
+            primitive.Destroy();
         }
     }
 }

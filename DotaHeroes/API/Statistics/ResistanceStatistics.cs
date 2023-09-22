@@ -12,22 +12,29 @@ namespace DotaHeroes.API.Statistics
     {
         public float MagicResistance { get; set; }
 
-        public float BaseEffectResistance { get; set; }
+        public float EffectResistance { get; set; }
 
         public List<float> ResistanceModifiers { get; set; }
 
-        public ResistanceStatistics() { }
+        public const float BaseResistance = 25;
+
+        public ResistanceStatistics()
+        {
+            MagicResistance = BaseResistance;
+            EffectResistance = BaseResistance;
+            ResistanceModifiers = new List<float>();
+        }
 
         public ResistanceStatistics(float magicResistance, float baseEffectResistance)
         {
             MagicResistance = magicResistance;
-            BaseEffectResistance = baseEffectResistance;
+            EffectResistance = baseEffectResistance;
             ResistanceModifiers = new List<float>();
         }
 
         public float GetEffectResistance()
         {
-            return Mathf.Clamp(1 - (1 - BaseEffectResistance / 10) * GetEffectResistanceFromModifiers(), 0, 99);
+            return Mathf.Clamp(1 - (1 - BaseResistance / 10) * GetEffectResistanceFromModifiers(), 0, 99);
         }
 
         private float GetEffectResistanceFromModifiers()

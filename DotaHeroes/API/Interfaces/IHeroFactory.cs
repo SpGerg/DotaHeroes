@@ -1,17 +1,18 @@
 ﻿using DotaHeroes.API.Enums;
+using DotaHeroes.API.Features;
 using Exiled.API.Features;
-using Mirror;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using UnityEngine;
 
-namespace DotaHeroes.API.Features.Components
+namespace DotaHeroes.API.Interfaces
 {
-    public class HeroController : NetworkBehaviour
+    public interface IHeroFactory
     {
-        public Hero Hero { get; set; }
+        Hero Create();
+
+        Hero Create(Player player, SideType sideType);
     }
 }

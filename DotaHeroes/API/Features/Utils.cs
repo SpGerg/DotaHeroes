@@ -14,6 +14,7 @@ namespace DotaHeroes.API.Features
         public static Vector3 GetTargetPositionFromMouse(Vector3 position, Vector3 direction, int range)
         {
             Ray r = new(position, direction);
+
             return r.GetPoint(range);
         }
 

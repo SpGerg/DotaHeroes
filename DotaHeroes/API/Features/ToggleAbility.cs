@@ -29,7 +29,23 @@ namespace DotaHeroes.API.Features
             }
         }
 
-        public abstract bool Execute(Hero hero, ArraySegment<string> arguments, out string response);
+        public abstract bool Activate(Hero hero, ArraySegment<string> arguments, out string response);
+
+        public abstract bool Deactivate(Hero hero, ArraySegment<string> arguments, out string response);
+
+        public bool Execute(Hero hero, ArraySegment<string> arguments, out string response)
+        {
+            IsActive = !IsActive;
+
+            if (IsActive)
+            {
+                return Activate(hero, arguments, out response);
+            }
+            else
+            {
+                return Deactivate(hero, arguments, out response);
+            }
+        }
 
         public bool Execute(ArraySegment<string> arguments, ICommandSender sender, out string response)
         {
@@ -40,7 +56,14 @@ namespace DotaHeroes.API.Features
 
             IsActive = !IsActive;
 
-            return Execute(hero, arguments, out response);
+            if (IsActive)
+            {
+                return Activate(hero, arguments, out response);
+            }
+            else
+            {
+                return Deactivate(hero, arguments, out response);
+            }
         }
     }
 }

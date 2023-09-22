@@ -1,17 +1,21 @@
 ﻿using CommandSystem;
+using DotaHeroes.API.Effects.Pudge;
 using DotaHeroes.API.Enums;
+using DotaHeroes.API.Events.Handlers;
 using DotaHeroes.API.Features;
 using DotaHeroes.API.Features.Components;
 using DotaHeroes.API.Features.Objects;
 using DotaHeroes.API.Interfaces;
 using Exiled.API.Features;
 using Exiled.API.Features.Toys;
+using MEC;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
+using Hero = DotaHeroes.API.Features.Hero;
 
 namespace DotaHeroes.API.Abilities.Pudge
 {
@@ -31,7 +35,7 @@ namespace DotaHeroes.API.Abilities.Pudge
 
         public IReadOnlyDictionary<string, List<float>> Values => new Dictionary<string, List<float>>()
         {
-            { "damage", new List<float> { 40, 60, 80, 100 } },
+            { "damage", new List<float> { 1, 1, 1, 1 } },
             { "mana_cost", new List<float> { 0, 0, 0, 0 } },
             { "cast_range", new List<float> { 1.5f, 2, 4, 5 } },
         };
@@ -42,39 +46,76 @@ namespace DotaHeroes.API.Abilities.Pudge
 
         public override bool IsActive { get; set; }
 
+
         public Rot() : base()
         {
         }
 
-        public override bool Execute(Hero hero, ArraySegment<string> arguments, out string response)
+        public override bool Activate(Hero hero, ArraySegment<string> arguments, out string response)
         {
-            var player = hero.Player;
-
-            if (!IsActive)
+            if (!hero.Values.ContainsKey("is_rot"))
             {
-                response = "Rot is disabled";
-
-                return true;
+                hero.Values.Add("is_rot", true);
+            }
+            else
+            {
+                hero.Values["is_rot"] = true;
             }
 
-            Primitive primitive = Primitive.Create(player.Position, player.Rotation.eulerAngles, Vector3.one, true);
-            primitive.MovementSmoothing = 60;
-            primitive.Color = new Color(199, 139, 0, 64);
-            primitive.Type = PrimitiveType.Cube;
-            primitive.Collidable = false;
-            var meatHookObject = primitive.AdminToyBase.gameObject.AddComponent<RotObject>();
-            meatHookObject.Initialization(
-                player.GameObject.GetComponent<HeroController>(),
-                (int)Values["cast_range"][Level],
-                (int)Values["damage"][Level],
-                DamageType.Magical);
-            var rigidbody = primitive.AdminToyBase.gameObject.AddComponent<Rigidbody>();
-            rigidbody.isKinematic = true;
-            primitive.Spawn();
+            Timing.RunCoroutine(RotCoroutine(hero));
 
             response = "Rot is enabled";
 
             return true;
+        }
+
+        public override bool Deactivate(Hero hero, ArraySegment<string> arguments, out string response)
+        {
+            hero.Values["is_rot"] = false;
+
+            response = "Rot is disabled";
+
+            return true;
+        }
+
+        private IEnumerator<float> RotCoroutine(Hero owner)
+        {
+            while ((bool)owner.Values["is_rot"])
+            {
+                foreach (var player in Player.List)
+                {
+                    var hero = API.GetHeroOrDefault(player.UserId);
+
+                    if (hero == default)
+                    {
+                        continue;
+                    }
+
+                    if (Vector3.Distance(owner.Player.Transform.position, player.Transform.position) < Values["cast_range"][Level])
+                    {
+                        hero.EnableEffect(new Effects.Pudge.Rot(player));
+                        hero.GetEffectOrDefault<Effects.Pudge.Rot>().DamageOverTime.Damage = (int)Values["damage"][Level];
+                    }
+                    else
+                    {
+                        hero.DisableEffect<Effects.Pudge.Rot>();
+                    }
+                }
+
+                yield return Timing.WaitForSeconds(0.5f);
+            }
+
+            foreach (var player in Player.List)
+            {
+                var hero = API.GetHeroOrDefault(player.UserId);
+
+                if (hero == default)
+                {
+                    continue;
+                }
+
+                hero.DisableEffect<Effects.Pudge.Rot>();
+            }
         }
     }
 }

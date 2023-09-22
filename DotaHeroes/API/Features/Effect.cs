@@ -38,7 +38,7 @@ namespace DotaHeroes.API.Features
         {
             if (this is IEffectDuration)
             {
-                Timing.CallDelayed((this as IEffectDuration).Duration, () =>
+                Timing.CallDelayed((float)(this as IEffectDuration).Duration, () =>
                 {
                     Hero.DisableEffect(this);
                 });

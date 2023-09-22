@@ -12,14 +12,9 @@ namespace DotaHeroes.Events.Internal
     {
         internal static void OnHeroTakedDamage(HeroTakedDamageEventArgs ev)
         {
-            foreach (var effect in ev.Hero.GetEffects())
-            {
-                if (effect is IDamageBlock)
-                {
-                    var damageBlock = ((IDamageBlock)effect);
-                    ev.Damage = API.Features.Utils.BlockDamage(ev.Damage, ev.DamageType, damageBlock.DamageBlock, damageBlock.DamageTypesToBlock);
-                }
-            }
+            var effect = ev.Hero.GetEffects().FirstOrDefault(effect => effect is IDamageBlock);
+            var damageBlock = effect as IDamageBlock;
+            ev.Damage = API.Features.Utils.BlockDamage(ev.Damage, ev.DamageType, damageBlock.DamageBlock, damageBlock.DamageTypesToBlock);
         }
     }
 }

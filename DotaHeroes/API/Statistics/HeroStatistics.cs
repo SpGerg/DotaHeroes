@@ -1,5 +1,6 @@
 ﻿using DotaHeroes.API;
 using DotaHeroes.API.Enums;
+using DotaHeroes.API.Features;
 using DotaHeroes.API.Statistics;
 using Exiled.API.Features;
 using NorthwoodLib.Pools;
@@ -13,7 +14,7 @@ namespace DotaHeroes.API.Statistics
 {
     public class HeroStatistics
     {
-        public int Strength
+        public float Strength
         {
             get
             {
@@ -27,7 +28,7 @@ namespace DotaHeroes.API.Statistics
                 
                 if (Attribute == AttributeType.Strength)
                 {
-                    Attack.BaseAttackDamage = value;
+                    Attack.BaseAttackDamage = (int)value;
                 }
 
                 if (Attribute == AttributeType.Universal)
@@ -37,7 +38,7 @@ namespace DotaHeroes.API.Statistics
             }
         }
 
-        public int Agility
+        public float Agility
         {
             get
             {
@@ -47,11 +48,11 @@ namespace DotaHeroes.API.Statistics
             {
                 agility = value;
                 Armor.BaseArmor = Constants.ArmorFromAgility * value;
-                Attack.AttackSpeed = Constants.AttackSpeedFromAgility * value;
+                Attack.AttackSpeed = (int)(Constants.AttackSpeedFromAgility * value);
 
                 if (Attribute == AttributeType.Agility)
                 {
-                    Attack.BaseAttackDamage = value;
+                    Attack.BaseAttackDamage = (int)value;
                 }
 
                 if (Attribute == AttributeType.Universal)
@@ -61,7 +62,7 @@ namespace DotaHeroes.API.Statistics
             }
         }
 
-        public int Intelligence
+        public float Intelligence
         {
             get
             {
@@ -72,11 +73,11 @@ namespace DotaHeroes.API.Statistics
                 intelligence = value;
                 HealthAndMana.MaximumMana = Constants.MaximumManaFromIntelligence * value;
                 HealthAndMana.ManaRegeneration = Constants.ManaRegenerationFromIntelligence * value;
-                Resistance.BaseEffectResistance = Constants.MagicResistanceFromIntelligence * value;
+                Resistance.EffectResistance = Constants.MagicResistanceFromIntelligence * value;
 
                 if (Attribute == AttributeType.Intelligence)
                 {
-                    Attack.BaseAttackDamage = value;
+                    Attack.BaseAttackDamage = (int)value;
                 }
 
                 if (Attribute == AttributeType.Universal)
@@ -86,6 +87,12 @@ namespace DotaHeroes.API.Statistics
             }
         }
 
+        public float StrengthFromLevel { get; }
+
+        public float AgilityFromLevel { get; }
+
+        public float IntelligenceFromLevel { get; }
+
         public HealthAndManaStatistics HealthAndMana { get; }
 
         public AttackStatistics Attack { get; }
@@ -94,36 +101,61 @@ namespace DotaHeroes.API.Statistics
 
         public ArmorStatistics Armor { get; }
 
-        public SpeedStatistics SpeedStatistics { get; }
+        public SpeedStatistics Speed { get; }
 
         public AttributeType Attribute { get; set; }
 
-        private int strength;
+        public Hero Hero { get; }
 
-        private int agility;
+        private float strength;
 
-        private int intelligence;
+        private float agility;
 
-        public HeroStatistics(AttributeType attribute)
+        private float intelligence;
+
+        public HeroStatistics(Hero hero, AttributeType attribute)
         {
             Attribute = attribute;
             HealthAndMana = new HealthAndManaStatistics();
             Attack = new AttackStatistics();
             Armor = new ArmorStatistics();
             Resistance = new ResistanceStatistics();
-            SpeedStatistics = new SpeedStatistics(0);
+            Speed = new SpeedStatistics(hero, 0);
         }
 
-        public HeroStatistics(AttributeType attribute, HealthAndManaStatistics healthAndManaStatistics, AttackStatistics attackStatistics, ArmorStatistics armorStatistics, ResistanceStatistics resistanceStatistics, SpeedStatistics speedStatistics)
+        public HeroStatistics(AttributeType attribute, float strengthFromLevel, float agilityFromLevel, float intelligenceFromLevel, HealthAndManaStatistics healthAndManaStatistics, AttackStatistics attackStatistics, ArmorStatistics armorStatistics, ResistanceStatistics resistanceStatistics, SpeedStatistics speedStatistics)
         {
+            StrengthFromLevel = strengthFromLevel;
+            AgilityFromLevel = agilityFromLevel;
+            IntelligenceFromLevel = intelligenceFromLevel;
             Attribute = attribute;
             HealthAndMana = healthAndManaStatistics;
             Attack = attackStatistics;
             Armor = armorStatistics;
             Resistance = resistanceStatistics;
-            SpeedStatistics = speedStatistics;
+            Speed = speedStatistics;
         }
 
+        public HeroStatistics(HeroStatistics heroStatistics, Hero hero)
+        {
+            StrengthFromLevel = heroStatistics.StrengthFromLevel;
+            AgilityFromLevel = heroStatistics.AgilityFromLevel;
+            IntelligenceFromLevel = heroStatistics.IntelligenceFromLevel;
+            Attribute = heroStatistics.Attribute;
+            HealthAndMana = heroStatistics.HealthAndMana;
+            Attack = heroStatistics.Attack;
+            Armor = heroStatistics.Armor;
+            Resistance = heroStatistics.Resistance;
+            Speed = heroStatistics.Speed;
+            Hero = hero;
+        }
+
+        public void LevelUp()
+        {
+            Strength += StrengthFromLevel;
+            Agility += AgilityFromLevel;
+            Intelligence += IntelligenceFromLevel;
+        }
 
         public override string ToString()
         {
@@ -132,7 +164,7 @@ namespace DotaHeroes.API.Statistics
             stringBuilder.AppendLine(Attack.ToString());
             stringBuilder.AppendLine(Armor.ToString());
             stringBuilder.AppendLine(Resistance.ToString());
-            stringBuilder.AppendLine(SpeedStatistics.ToString());
+            stringBuilder.AppendLine(Speed.ToString());
             stringBuilder.AppendLine(Attribute.ToString());
 
             return StringBuilderPool.Shared.ToStringReturn(stringBuilder);

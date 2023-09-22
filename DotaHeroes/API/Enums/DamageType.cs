@@ -11,6 +11,7 @@ namespace DotaHeroes.API.Enums
         None = 0,
         Physical = 1,
         Magical = 2,
-        Pure = 3
+        Pure = 3,
+        EmotionalDamage = 4
     }
 }

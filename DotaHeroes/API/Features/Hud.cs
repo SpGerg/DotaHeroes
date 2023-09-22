@@ -21,15 +21,11 @@ namespace DotaHeroes.API.Features
         {
             while (true)
             {
-                foreach (var player in Player.List)
+                foreach (var hero in API.GetHeroes().Values)
                 {
-                    var hero = API.GetHeroOrDefault(player.UserId);
+                    if (hero.IsHeroDead) continue;
 
-                    if (hero == default)
-                    {
-                        continue;
-                    }
-
+                    var player = hero.Player;
                     var cooldowns = Cooldowns.GetCooldownInfo(player.UserId);
 
                     if (string.IsNullOrEmpty(cooldowns))

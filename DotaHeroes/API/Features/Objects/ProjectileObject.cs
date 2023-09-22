@@ -51,7 +51,7 @@ namespace DotaHeroes.API.Features.Objects
 
             if (transform.position == lastPosition)
             {
-                Target.TakeDamage(Damage, DamageType);
+                Target.Hero.TakeDamage(Damage, DamageType);
 
                 Destroy(gameObject);
             }
