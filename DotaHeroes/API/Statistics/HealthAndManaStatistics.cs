@@ -8,9 +8,32 @@ namespace DotaHeroes.API.Statistics
 {
     public class HealthAndManaStatistics
     {
-        public float MaximumMana { get; set; }
+        public float MaximumHealth {
+            get
+            {
+                return maximumHealth;
+            }
+            set
+            {
+                var oldValue = maximumHealth;
+                maximumHealth = value;
+                Health += maximumHealth - oldValue;
+            }
+        }
 
-        public float MaximumHealth { get; set; }
+        public float MaximumMana
+        {
+            get
+            {
+                return maximumMana;
+            }
+            set
+            {
+                var oldValue = maximumMana;
+                maximumMana = value;
+                Mana += maximumMana - oldValue;
+            }
+        }
 
         public float Health { get; set; }
 
@@ -20,7 +43,19 @@ namespace DotaHeroes.API.Statistics
 
         public float ManaRegeneration { get; set; }
 
+        private float maximumMana;
+
+        private float maximumHealth;
+
         public HealthAndManaStatistics() { }
+
+        public HealthAndManaStatistics(float maximumHealth, float maximumMana)
+        {
+            MaximumMana = maximumMana;
+            MaximumHealth = maximumHealth;
+            Health = maximumHealth;
+            Mana = maximumMana;
+        }
 
         public HealthAndManaStatistics(float maximumHealth, float maximumMana, float health, float mana)
         {
@@ -42,7 +77,7 @@ namespace DotaHeroes.API.Statistics
 
         public override string ToString()
         {
-            return $"Health: <color=Red>{Health}</color> Regen: <color=Red>{HealthRegeneration}</color> Mana: <color=#00FFFF>{Mana}</color> Regen: <color=Red>{ManaRegeneration}</color>";
+            return $"Health: <color=Red>{(int)Health}</color> Regen: <color=Red>{Math.Round(HealthRegeneration, 1)}</color> Mana: <color=#00FFFF>{(int)Mana}</color> Regen: <color=Red>{Math.Round(ManaRegeneration, 1)}</color>";
         }
     }
 }

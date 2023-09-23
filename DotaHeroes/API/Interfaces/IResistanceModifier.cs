@@ -8,6 +8,8 @@ namespace DotaHeroes.API.Interfaces
 {
     public interface IResistanceModifier
     {
-        float Resistance { get; }
+        float MagicResistance { get; }
+
+        float EffectResistance { get; }
     }
 }

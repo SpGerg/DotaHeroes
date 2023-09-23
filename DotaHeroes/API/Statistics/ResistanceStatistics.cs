@@ -1,4 +1,5 @@
-﻿using Exiled.API.Features;
+﻿using DotaHeroes.API.Interfaces;
+using Exiled.API.Features;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,7 +15,7 @@ namespace DotaHeroes.API.Statistics
 
         public float EffectResistance { get; set; }
 
-        public List<float> ResistanceModifiers { get; set; }
+        public List<IResistanceModifier> ResistanceModifiers { get; set; }
 
         public const float BaseResistance = 25;
 
@@ -22,30 +23,40 @@ namespace DotaHeroes.API.Statistics
         {
             MagicResistance = BaseResistance;
             EffectResistance = BaseResistance;
-            ResistanceModifiers = new List<float>();
+            ResistanceModifiers = new List<IResistanceModifier>();
         }
 
         public ResistanceStatistics(float magicResistance, float baseEffectResistance)
         {
             MagicResistance = magicResistance;
             EffectResistance = baseEffectResistance;
-            ResistanceModifiers = new List<float>();
+            ResistanceModifiers = new List<IResistanceModifier>();
         }
 
         public float GetEffectResistance()
         {
-            return Mathf.Clamp(1 - (1 - BaseResistance / 10) * GetEffectResistanceFromModifiers(), 0, 99);
+            return Mathf.Clamp(1 - (1 - EffectResistance / 10) * GetEffectResistanceFromModifiers(), 0, 99) * 10;
+        }
+
+        public float GetEffectDuration(float originalDuration)
+        {
+            return originalDuration * (100 - GetEffectResistance());
+        }
+
+        public float GetMagicResistance(float intelligence)
+        {
+            return MagicResistance + (intelligence / 10);
         }
 
         private float GetEffectResistanceFromModifiers()
         {
             ResistanceModifiers.Sort();
 
-            float result = 0;
+            float result = 1;
 
             foreach (var modifier in ResistanceModifiers)
             {
-                result *= (1 - modifier / 10);
+                result *= (1 - modifier.EffectResistance / 10);
             }
 
             return result;
@@ -53,7 +64,12 @@ namespace DotaHeroes.API.Statistics
 
         public override string ToString()
         {
-            return $"Magic resistance: {MagicResistance} Effect resistance: {GetEffectResistance()}";
+            return $"Effect resistance: {GetEffectResistance()}";
+        }
+
+        public string ToString(float intelligence)
+        {
+            return $"Magic resistance: {GetMagicResistance(intelligence)} Effect resistance: {GetEffectResistance()}";
         }
     }
 }

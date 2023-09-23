@@ -10,21 +10,21 @@ namespace DotaHeroes.API.Statistics
     {
         public float BaseArmor { get; set; }
 
-        public float MoreArmor { get; set; }
+        public float ExtraArmor { get; set; }
 
         public ArmorStatistics() { }
 
         public ArmorStatistics(float baseArmor, float moreArmor)
         {
             BaseArmor = baseArmor;
-            MoreArmor = moreArmor;
+            ExtraArmor = moreArmor;
         }
 
         public override string ToString()
         {
-            if (MoreArmor > 0)
+            if (ExtraArmor > 0)
             {
-                return $"Armor: {BaseArmor} + <color=Green>{MoreArmor}</color>";
+                return $"Armor: {BaseArmor} + <color=Green>{ExtraArmor}</color>";
             }
 
             return $"Armor: {BaseArmor}";

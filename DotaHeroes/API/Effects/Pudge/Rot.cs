@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace DotaHeroes.API.Effects.Pudge
 {
-    public class Rot : Features.Effect
+    public class Rot : Features.Effect, IDamage
     {
         public override string Name => "Rot";
 
@@ -22,18 +22,24 @@ namespace DotaHeroes.API.Effects.Pudge
 
         public override DispelType DispelType { get; set; } = DispelType.NotDispelling;
 
-        public DamageOverTime DamageOverTime => new DamageOverTime(30, DamageType.Magical, -1, 1f);
+        private DamageOverTime DamageOverTime;
+
+        public int Damage { get; set; }
+
+        public DamageType DamageType { get; set; }
 
         public Rot() : base() { }
 
         public Rot(Player owner) : base(owner)
         {
-            
+            DamageOverTime = new DamageOverTime(30, DamageType.Magical, -1, 1f);
         }
 
         public override bool Enable()
         {
             Hero.HeroStatistics.Speed.Speed -= 10;
+            DamageOverTime.Damage = Damage;
+            DamageOverTime.DamageType = DamageType;
             DamageOverTime.Run(Hero);
              
             base.Enable();

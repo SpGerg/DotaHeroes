@@ -39,6 +39,11 @@ namespace DotaHeroes.API.Statistics
 
         private sbyte speed;
 
+        public SpeedStatistics(Hero hero)
+        {
+            Hero = hero;
+        }
+
         public SpeedStatistics(Hero hero, sbyte speed)
         {
             Hero = hero;

@@ -28,6 +28,8 @@ namespace DotaHeroes.API.Features
 
         public abstract int MaxLevel { get; }
 
+        public bool IsEnabled { get; set; } = true;
+
         public bool IsStop { 
             get
             {
@@ -82,8 +84,17 @@ namespace DotaHeroes.API.Features
                 cooldown.Duration = (int)(this as IValues).Values["cooldown"][Level];
             }
         }
+
         protected virtual bool Execute(ICommandSender sender, out string response, out Hero hero, bool isCooldown = false)
         {
+            if (!IsEnabled)
+            {
+                response = "Ability is disabled";
+                hero = null;
+
+                return false;
+            }
+
             if (sender is not PlayerCommandSender)
             {
                 response = "You cannot use this ability in console.";

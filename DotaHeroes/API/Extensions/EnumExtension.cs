@@ -11,15 +11,15 @@ namespace DotaHeroes.API.Extensions
 {
     public static class EnumExtension
     {
-        public static string ToStringWithSpaces(this TargetType targetType)
+        public static string ToStringWithSpaces(this Enum _enum)
         {
             StringBuilder stringBuilder = StringBuilderPool.Shared.Rent();
 
             string line = string.Empty;
 
-            foreach (char letter in targetType.ToString())
+            foreach (char letter in _enum.ToString())
             {
-                if (letter == targetType.ToString()[0])
+                if (letter == _enum.ToString()[0])
                 {
                     line += letter;
 

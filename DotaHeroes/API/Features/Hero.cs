@@ -54,11 +54,6 @@ namespace DotaHeroes.API.Features
 
                 if (isHeroDead)
                 {
-                    if (Player.Role is SpectatorRole)
-                    {
-                        return;
-                    }
-
                     ApplyDispel(DispelType.Dead);
 
                     Player.Role.Set(RoleTypeId.Spectator);
@@ -303,15 +298,12 @@ namespace DotaHeroes.API.Features
         public bool TryGetEffect<T>(out T result) where T : Effect, new()
         {
             var effect = GetEffectOrDefault<T>();
+            result = effect;
 
             if (effect == default)
             {
-                result = null;
-
                 return false;
             }
-
-            result = effect;
 
             return true;
         }
@@ -319,19 +311,17 @@ namespace DotaHeroes.API.Features
         public bool TryGetEffect(Effect _effect, out Effect result)
         {
             var effect = GetEffectOrDefault(_effect);
+            result = effect;
 
             if (effect == default)
             {
-                result = null;
-
                 return false;
             }
 
-            result = effect;
             return true;
         }
 
-        public virtual int TakeDamage(int damage, DamageType damageType)
+        public virtual decimal TakeDamage(int damage, DamageType damageType)
         {
             var takingDamage = new HeroTakingDamageEventArgs(this, null, damage, damageType, true);
             Events.Handlers.Hero.TakingDamage.InvokeSafely(takingDamage);
@@ -341,19 +331,20 @@ namespace DotaHeroes.API.Features
                 return -1;
             }
 
-            int total_damage = 0;
+            decimal total_damage = 0;
 
             switch (damageType)
             {
                 case DamageType.None: break;
                 case DamageType.Physical:
-                    float armor = HeroStatistics.Armor.BaseArmor + HeroStatistics.Armor.MoreArmor;
-                    float armor_percent = (0.052f * armor) / (0.9f + 0.048f * armor);
+                    decimal armor = (decimal)(HeroStatistics.Armor.BaseArmor + HeroStatistics.Armor.ExtraArmor);
+                    decimal armor_percent = (0.052m * armor) / (0.9m + 0.048m * armor);
                     total_damage = (int)(damage - ((damage / 100) * armor_percent));
 
                     break;
                 case DamageType.Magical:
-                    total_damage = (int)(damage - (damage / 100) * HeroStatistics.Resistance.MagicResistance);
+                    decimal percent = (damage / 100m);
+                    total_damage = damage - percent * (decimal)HeroStatistics.Resistance.GetMagicResistance(HeroStatistics.Intelligence);
 
                     break;
                 case DamageType.Pure:
@@ -364,7 +355,7 @@ namespace DotaHeroes.API.Features
                     break;
             }
 
-            ReduceHealthAndCheckForDead(total_damage);
+            ReduceHealthAndCheckForDead((float)total_damage);
 
             var takedDamage = new HeroTakedDamageEventArgs(this, null, damage, damageType);
             Events.Handlers.Hero.TakedDamage.InvokeSafely(takedDamage);
@@ -372,7 +363,7 @@ namespace DotaHeroes.API.Features
             return total_damage;
         }
 
-        public virtual int TakeDamage(Hero attacker, int damage, DamageType damageType)
+        public virtual decimal TakeDamage(Hero attacker, int damage, DamageType damageType)
         {
             var takingDamage = new HeroTakingDamageEventArgs(this, attacker, damage, damageType, true);
             Events.Handlers.Hero.TakingDamage.InvokeSafely(takingDamage);
@@ -383,6 +374,22 @@ namespace DotaHeroes.API.Features
             Events.Handlers.Hero.TakedDamage.InvokeSafely(takedDamage);
 
             return result;
+        }
+
+
+        private void ReduceHealthAndCheckForDead(float damage)
+        {
+            HeroStatistics.HealthAndMana.Health -= damage;
+
+            if (HeroStatistics.HealthAndMana.Health < 0)
+            {
+                IsHeroDead = true;
+            }
+        }
+
+        public virtual void Heal(int heal)
+        {
+            HeroStatistics.HealthAndMana.Health += heal;
         }
 
         public virtual void Attack(Hero target)
@@ -399,6 +406,7 @@ namespace DotaHeroes.API.Features
                     var toggle = ability as ToggleAbility;
 
                     toggle.IsActive = false;
+                    toggle.Deactivate(this, new ArraySegment<string>(), out string response);
                 }
             }
 
@@ -409,16 +417,6 @@ namespace DotaHeroes.API.Features
         }
 
         public virtual void Respawn() { }
-
-        private void ReduceHealthAndCheckForDead(float damage)
-        {
-            HeroStatistics.HealthAndMana.Health -= damage;
-
-            if (HeroStatistics.HealthAndMana.Health < 0)
-            {
-                IsHeroDead = true;
-            }
-        }
 
         public override string ToString()
         {

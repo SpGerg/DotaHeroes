@@ -131,7 +131,7 @@
     <Compile Include="API\Events\EventArgs\Interfaces\IHeroEvent.cs" />
     <Compile Include="API\Features\Ability.cs" />
     <Compile Include="API\API.cs" />
-    <Compile Include="API\Constants.cs" />
+    <Compile Include="API\Features\Constants.cs" />
     <Compile Include="API\Features\CooldownInfo.cs" />
     <Compile Include="API\Features\DamageOverTime.cs" />
     <Compile Include="API\Features\Effect.cs" />

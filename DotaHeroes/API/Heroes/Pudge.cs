@@ -28,27 +28,33 @@ namespace DotaHeroes.API.Heroes
             SideType = SideType.Dire;
 
             HeroStatistics = new HeroStatistics(AttributeType.Strength,
+            30,
             3.0f,
+            14,
             1.5f,
+            16,
             0.5f,
-            new HealthAndManaStatistics(120, 75, 120, 75),
+            new HealthAndManaStatistics(10, 75),
             new AttackStatistics(48, 0, 100, 0.6f),
             new ArmorStatistics(),
-            new ResistanceStatistics(25, 25),
-            new SpeedStatistics(this, 0));
+            new ResistanceStatistics(),
+            new SpeedStatistics(this));
         }
 
         public Pudge(Player player, SideType sideType) : base(player, sideType)
         {
             HeroStatistics = new HeroStatistics(AttributeType.Strength,
+            30,
             3.0f,
+            14,
             1.5f,
+            16,
             0.5f,
-            new HealthAndManaStatistics(120, 75, 120, 75),
+            new HealthAndManaStatistics(10, 75),
             new AttackStatistics(48, 0, 100, 0.6f),
             new ArmorStatistics(),
             new ResistanceStatistics(),
-            new SpeedStatistics(this, 0));
+            new SpeedStatistics(this));
         }
 
         public override Hero Create()

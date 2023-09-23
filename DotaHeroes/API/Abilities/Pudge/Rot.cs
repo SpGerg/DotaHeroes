@@ -35,7 +35,7 @@ namespace DotaHeroes.API.Abilities.Pudge
 
         public IReadOnlyDictionary<string, List<float>> Values => new Dictionary<string, List<float>>()
         {
-            { "damage", new List<float> { 1, 1, 1, 1 } },
+            { "damage", new List<float> { 10, 15, 20, 25 } },
             { "mana_cost", new List<float> { 0, 0, 0, 0 } },
             { "cast_range", new List<float> { 1.5f, 2, 4, 5 } },
         };
@@ -82,19 +82,17 @@ namespace DotaHeroes.API.Abilities.Pudge
         {
             while ((bool)owner.Values["is_rot"])
             {
-                foreach (var player in Player.List)
+                foreach (var hero in API.GetHeroes().Values)
                 {
-                    var hero = API.GetHeroOrDefault(player.UserId);
-
-                    if (hero == default)
-                    {
-                        continue;
-                    }
-
+                    var player = hero.Player;
                     if (Vector3.Distance(owner.Player.Transform.position, player.Transform.position) < Values["cast_range"][Level])
                     {
-                        hero.EnableEffect(new Effects.Pudge.Rot(player));
-                        hero.GetEffectOrDefault<Effects.Pudge.Rot>().DamageOverTime.Damage = (int)Values["damage"][Level];
+                        if (hero.TryGetEffect(out Effects.Pudge.Rot result)) continue;
+
+                        var rot = new Effects.Pudge.Rot(player);
+                        rot.Damage = (int)Values["damage"][Level];
+                        rot.DamageType = DamageType.Magical;
+                        hero.EnableEffect(rot);
                     }
                     else
                     {
@@ -105,15 +103,8 @@ namespace DotaHeroes.API.Abilities.Pudge
                 yield return Timing.WaitForSeconds(0.5f);
             }
 
-            foreach (var player in Player.List)
+            foreach (var hero in API.GetHeroes().Values)
             {
-                var hero = API.GetHeroOrDefault(player.UserId);
-
-                if (hero == default)
-                {
-                    continue;
-                }
-
                 hero.DisableEffect<Effects.Pudge.Rot>();
             }
         }
