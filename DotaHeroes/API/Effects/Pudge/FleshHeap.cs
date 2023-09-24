@@ -18,7 +18,39 @@ namespace DotaHeroes.API.Effects.Pudge
 
         public override EffectClassType EffectClassType => EffectClassType.Positive;
 
-        public int Count { get; protected set; }
+        public int Count {
+            get
+            {
+                return count;
+            }
+            set
+            {
+                count = value;
+
+                Hero.HeroStatistics.Strength -= GivenStrength;
+                Hero.HeroStatistics.Strength += StrengthToGive * count;
+                GivenStrength += StrengthToGive;
+            }
+        }
+
+        public int StrengthToGive
+        {
+            get
+            {
+                return strengthToGive;
+            }
+            set
+            {
+                strengthToGive = value;
+                Count = Count;
+            }
+        }
+
+        public int GivenStrength { get; protected set; }
+
+        private int count;
+
+        private int strengthToGive;
 
         public FleshHeap() : base() { }
 

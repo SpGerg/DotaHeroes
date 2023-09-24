@@ -13,6 +13,7 @@ namespace DotaHeroes.Events.Internal
         internal static void OnHeroTakedDamage(HeroTakedDamageEventArgs ev)
         {
             var effect = ev.Hero.GetEffects().FirstOrDefault(effect => effect is IDamageBlock);
+
             if (effect == default)
             {
                 return;

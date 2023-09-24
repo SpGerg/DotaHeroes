@@ -2,6 +2,7 @@
 using DotaHeroes.API.Effects.Pudge;
 using DotaHeroes.API.Enums;
 using DotaHeroes.API.Features;
+using DotaHeroes.API.Interfaces;
 using Exiled.API.Features;
 using System;
 using System.Collections.Generic;
@@ -13,7 +14,7 @@ namespace DotaHeroes.API.Abilities.Pudge
 {
     [CommandHandler(typeof(ClientCommandHandler))]
     [CommandHandler(typeof(RemoteAdminCommandHandler))]
-    public class FleshHeap : ActiveAbility
+    public class FleshHeap : ActiveAbility, IValues
     {
         public override string Name => "Flesh heap";
 
@@ -29,15 +30,22 @@ namespace DotaHeroes.API.Abilities.Pudge
 
         public override int MaxLevel => 4;
 
+        public IReadOnlyDictionary<string, List<float>> Values => new Dictionary<string, List<float>>()
+        {
+            { "mana_cost", new List<float> { 120, 130, 140, 150 } },
+            { "cooldown", new List<float> { 12, 11, 9, 8 } },
+        };
+
         public FleshHeap() : base() { }
 
         public override void LevelUp(Hero hero)
         {
-            var effect = hero.GetEffects().FirstOrDefault(_effect => _effect is Effects.Pudge.FleshHeap);
+            var effect = hero.GetEffects().FirstOrDefault(_effect => _effect is Effects.Pudge.FleshHeap) as Effects.Pudge.FleshHeap;
 
             if (effect != default)
             {
                 effect.IsVisible = true;
+                effect.Count++;
             }
 
             base.LevelUp(hero);

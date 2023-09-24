@@ -41,7 +41,7 @@ namespace DotaHeroes.API.Features
             }
         }
 
-        public static string GetCooldownInfo(string userId)
+        public static string ToStringIsCooldown(string userId, string name)
         {
             if (!cooldowns.ContainsKey(userId))
             {
@@ -54,19 +54,19 @@ namespace DotaHeroes.API.Features
                 return string.Empty;
             }
 
-            var stringBuilder = StringBuilderPool.Shared.Rent();
-
-            foreach (var cooldown in cooldowns[userId].Values)
+            if (!cooldowns[userId].ContainsKey(name))
             {
-                if (cooldown.IsReady)
-                {
-                    stringBuilder.AppendLine($"{cooldown.Name}: <color=Green>Ready</color>");
-                    continue;
-                }
-                stringBuilder.AppendLine($"{cooldown.Name}: {cooldown.Cooldown}");
+                return string.Empty;
             }
 
-            return StringBuilderPool.Shared.ToStringReturn(stringBuilder);
+            var cooldown = cooldowns[userId][name];
+
+            if (cooldown.IsReady)
+            {
+                return $"{cooldown.Name}: <color=Green>Ready</color>";
+            }
+
+            return $"{cooldown.Name}: {cooldown.Cooldown}";
         }
     }
 }

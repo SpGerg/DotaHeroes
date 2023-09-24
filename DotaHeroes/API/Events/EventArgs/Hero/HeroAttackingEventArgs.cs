@@ -23,13 +23,13 @@ namespace DotaHeroes.API.Events.EventArgs.Hero
 
         public bool IsAllowed { get; set; }
 
-        public HeroAttackingEventArgs(Features.Hero hero, Features.Hero target, int damage, bool isAllowed, DamageType damageType)
+        public HeroAttackingEventArgs(Features.Hero hero, Features.Hero target, int damage, DamageType damageType, bool isAllowed)
         {
             Hero = hero;
             Target = target;
             Damage = damage;
-            IsAllowed = isAllowed;
             DamageType = damageType;
+            IsAllowed = isAllowed;
         }
     }
 }

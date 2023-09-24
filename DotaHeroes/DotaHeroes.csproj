@@ -126,6 +126,14 @@
     <Compile Include="API\Abilities\Pudge\Rot.cs" />
     <Compile Include="API\Effects\Pudge\FleshHeap.cs" />
     <Compile Include="API\Effects\Pudge\FleshHeapShield.cs" />
+    <Compile Include="API\Events\EventArgs\Hero\HeroDiedEventArgs.cs" />
+    <Compile Include="API\Events\EventArgs\Hero\HeroDispelledEventArgs.cs" />
+    <Compile Include="API\Events\EventArgs\Hero\HeroDispellingEventArgs.cs" />
+    <Compile Include="API\Events\EventArgs\Hero\HeroDyingEventArgs.cs" />
+    <Compile Include="API\Events\EventArgs\Hero\HeroHealedEventArgs.cs" />
+    <Compile Include="API\Events\EventArgs\Hero\HeroHealingEventArgs.cs" />
+    <Compile Include="API\Events\EventArgs\Hero\HeroRespawnedEventArgs.cs" />
+    <Compile Include="API\Events\EventArgs\Hero\HeroRespawningEventArgs.cs" />
     <Compile Include="API\Events\EventArgs\Hero\HeroTakingDamageEventArgs.cs" />
     <Compile Include="API\Events\EventArgs\Hero\HeroTakedDamageEventArgs.cs" />
     <Compile Include="API\Events\EventArgs\Interfaces\IHeroEvent.cs" />

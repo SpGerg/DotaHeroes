@@ -1,5 +1,6 @@
 ﻿using CommandSystem;
 using DotaHeroes.API.Enums;
+using DotaHeroes.API.Events.Handlers;
 using DotaHeroes.API.Extensions;
 using DotaHeroes.API.Features;
 using DotaHeroes.API.Interfaces;
@@ -11,6 +12,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UnityEngine;
 
 namespace DotaHeroes.API.Features
 {
@@ -123,7 +125,7 @@ namespace DotaHeroes.API.Features
                 return false;
             }
 
-            if ((this as IValues).Values.ContainsKey("cooldown"))
+            if (this is IValues && (this as IValues).Values.ContainsKey("cooldown"))
             {
                 var cooldown = Cooldowns.GetCooldown(hero.Player.UserId, Name);
 
@@ -134,7 +136,6 @@ namespace DotaHeroes.API.Features
 
                 if (!cooldown.IsReady)
                 {
-                    Log.Info(cooldown.Cooldown);
                     response = $"Ability {Name} on cooldown.";
 
                     return false;
@@ -165,11 +166,25 @@ namespace DotaHeroes.API.Features
         {
             StringBuilder stringBuilder = StringBuilderPool.Shared.Rent();
 
-            stringBuilder.Append("Name: " + Name);
-            stringBuilder.Append("Description: " + Description);
-            stringBuilder.Append("Lore: " + Lore);
-            stringBuilder.Append("Ability Type: " + AbilityType.ToString());
-            stringBuilder.Append("Target Type: " + TargetType.ToStringWithSpaces());
+            stringBuilder.AppendLine("Name: " + Name);
+            stringBuilder.AppendLine("Description: " + Description);
+            stringBuilder.AppendLine("Lore: " + Lore);
+            stringBuilder.AppendLine("Ability Type: " + AbilityType.ToString());
+            stringBuilder.AppendLine("Target Type: " + TargetType.ToString());
+
+            return StringBuilderPool.Shared.ToStringReturn(stringBuilder);
+        }
+
+        public string ToString(Hero hero)
+        {
+            StringBuilder stringBuilder = StringBuilderPool.Shared.Rent();
+
+            stringBuilder.AppendLine("Name: " + Name);
+            stringBuilder.AppendLine("Description: " + Description);
+            stringBuilder.AppendLine("Lore: " + Lore);
+            stringBuilder.AppendLine("Ability Type: " + AbilityType.ToString());
+            stringBuilder.AppendLine("Target Type: " + TargetType.ToString());
+            stringBuilder.AppendLine("Cooldown: " + Cooldowns.ToStringIsCooldown(hero.Player.UserId, Name));
 
             return StringBuilderPool.Shared.ToStringReturn(stringBuilder);
         }

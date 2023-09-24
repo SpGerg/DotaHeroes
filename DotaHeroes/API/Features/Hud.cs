@@ -26,16 +26,14 @@ namespace DotaHeroes.API.Features
                     if (hero.IsHeroDead) continue;
 
                     var player = hero.Player;
-                    var cooldowns = Cooldowns.GetCooldownInfo(player.UserId);
+                    var abilites = StringBuilderPool.Shared.Rent();
 
-                    if (string.IsNullOrEmpty(cooldowns))
+                    foreach (var ability in hero.Abilities)
                     {
-                        player.ShowHint($"<size=16><align=Left>{hero}</align></size>", 1.5f);
+                        abilites.AppendLine(ability.ToString(hero));
                     }
-                    else
-                    {
-                        player.ShowHint($"<size=16><align=Left>{hero}</align></size><size=16><align=Right>{cooldowns}</align></size>", 1.5f);
-                    }
+
+                    player.ShowHint($"<size=16><align=Left>{hero}</align></size><size=12><align=Right>{StringBuilderPool.Shared.ToStringReturn(abilites)}</align></size>", 1.5f);
                 }
 
                 yield return Timing.WaitForSeconds(1);

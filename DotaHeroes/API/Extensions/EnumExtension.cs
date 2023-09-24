@@ -11,6 +11,7 @@ namespace DotaHeroes.API.Extensions
 {
     public static class EnumExtension
     {
+        /*
         public static string ToStringWithSpaces(this Enum _enum)
         {
             StringBuilder stringBuilder = StringBuilderPool.Shared.Rent();
@@ -40,6 +41,7 @@ namespace DotaHeroes.API.Extensions
 
             return StringBuilderPool.Shared.ToStringReturn(stringBuilder);
         }
+        */
 
         public static string ToStringWithColor(this DamageType damageType)
         {

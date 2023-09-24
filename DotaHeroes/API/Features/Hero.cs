@@ -24,13 +24,13 @@ namespace DotaHeroes.API.Features
 
         public abstract HeroClassType HeroClassType { get; set; }
 
-        public HeroStatistics HeroStatistics { get; protected set; }
-
         public virtual List<Ability> Abilities => new List<Ability>();
 
         public virtual RoleTypeId Model => RoleTypeId.Tutorial;
 
         public Player Player { get; private set; }
+
+        public HeroStatistics HeroStatistics { get; protected set; }
 
         public SideType SideType { get; set; } = SideType.None;
 
@@ -107,12 +107,14 @@ namespace DotaHeroes.API.Features
             }
         }
 
-        public void ApplyDispel(DispelType dispelType)
+        public void ApplyDispel(DispelType dispelType, Hero dispeller)
         {
             if (dispelType == DispelType.NotDispelling)
             {
                 return;
             }
+
+            var dispelledEffects = new List<Effect>();
 
             if (dispelType == DispelType.Dead)
             {
@@ -120,8 +122,7 @@ namespace DotaHeroes.API.Features
                 {
                     if (effect.DispelType != DispelType.None)
                     {
-                        effect.Dispel();
-                        DisableEffect(effect);
+                        dispelledEffects.Add(effect);
                     }
                 }
 
@@ -139,8 +140,7 @@ namespace DotaHeroes.API.Features
 
                     if (effect.DispelType == DispelType.Basic || effect.DispelType == DispelType.Strong)
                     {
-                        effect.Dispel();
-                        DisableEffect(effect);
+                        dispelledEffects.Add(effect);
                     }
                 }
 
@@ -158,13 +158,31 @@ namespace DotaHeroes.API.Features
 
                     if (effect.DispelType == DispelType.Basic)
                     {
-                        effect.Dispel();
-                        DisableEffect(effect);
+                        dispelledEffects.Add(effect);
                     }
                 }
 
                 return;
             }
+
+            var dispelling = new HeroDispellingEventArgs(this, dispeller, dispelledEffects, dispelType, true);
+            Events.Handlers.Hero.OnHeroDispelling(dispelling);
+
+            if (!dispelling.IsAllowed) return;
+
+            foreach (var effect in dispelling.EffectsToDispel)
+            {
+                effect.Dispel();
+                Effects.Remove(effect);
+            }
+
+            var dispelled = new HeroDispelledEventArgs(this, dispeller, dispelledEffects, dispelType);
+            Events.Handlers.Hero.OnHeroDispelled(dispelled);
+        }
+
+        public void ApplyDispel(DispelType dispelType)
+        {
+            ApplyDispel(dispelType, null);
         }
 
         public bool ExecuteAbility(string name)
@@ -324,12 +342,9 @@ namespace DotaHeroes.API.Features
         public virtual decimal TakeDamage(int damage, DamageType damageType)
         {
             var takingDamage = new HeroTakingDamageEventArgs(this, null, damage, damageType, true);
-            Events.Handlers.Hero.TakingDamage.InvokeSafely(takingDamage);
+            Events.Handlers.Hero.OnHeroTakingDamage(takingDamage);
 
-            if (!takingDamage.IsAllowed)
-            {
-                return -1;
-            }
+            if (!takingDamage.IsAllowed) return -1;
 
             decimal total_damage = 0;
 
@@ -358,7 +373,7 @@ namespace DotaHeroes.API.Features
             ReduceHealthAndCheckForDead((float)total_damage);
 
             var takedDamage = new HeroTakedDamageEventArgs(this, null, damage, damageType);
-            Events.Handlers.Hero.TakedDamage.InvokeSafely(takedDamage);
+            Events.Handlers.Hero.OnHeroTakedDamage(takedDamage);
 
             return total_damage;
         }
@@ -366,12 +381,12 @@ namespace DotaHeroes.API.Features
         public virtual decimal TakeDamage(Hero attacker, int damage, DamageType damageType)
         {
             var takingDamage = new HeroTakingDamageEventArgs(this, attacker, damage, damageType, true);
-            Events.Handlers.Hero.TakingDamage.InvokeSafely(takingDamage);
+            Events.Handlers.Hero.OnHeroTakingDamage(takingDamage);
 
             var result = TakeDamage(damage, damageType);
 
             var takedDamage = new HeroTakedDamageEventArgs(this, attacker, damage, damageType);
-            Events.Handlers.Hero.TakedDamage.InvokeSafely(takedDamage);
+            Events.Handlers.Hero.OnHeroTakedDamage(takedDamage);
 
             return result;
         }
@@ -386,19 +401,44 @@ namespace DotaHeroes.API.Features
                 IsHeroDead = true;
             }
         }
+        public virtual void Heal(int heal, Hero hero)
+        {
+            var healing = new HeroHealingEventArgs(this, hero, heal, true);
+            Events.Handlers.Hero.OnHeroHealing(healing);
+
+            if (!healing.IsAllowed) return;
+
+            HeroStatistics.HealthAndMana.Health += healing.Heal;
+
+            var healed = new HeroHealedEventArgs(this, hero, healing.Heal);
+            Events.Handlers.Hero.OnHeroHealed(healed);
+        }
 
         public virtual void Heal(int heal)
         {
-            HeroStatistics.HealthAndMana.Health += heal;
+            Heal(heal, null);
         }
 
         public virtual void Attack(Hero target)
         {
-            target.TakeDamage(HeroStatistics.Attack.FullDamage, DamageType.Physical);
+            var attacking = new HeroAttackingEventArgs(this, target, HeroStatistics.Attack.FullDamage, DamageType.Physical, true);
+            Events.Handlers.Hero.OnHeroAttacking(attacking);
+
+            if (!attacking.IsAllowed) return;
+
+            target.TakeDamage(attacking.Damage, attacking.DamageType);
+
+            var attacked = new HeroAttackedEventArgs(this, target, HeroStatistics.Attack.FullDamage, DamageType.Physical);
+            Events.Handlers.Hero.OnHeroAttacked(attacked);
         }
 
         public virtual void Dead()
-        { 
+        {
+            var dying = new HeroDyingEventArgs(this, true);
+            Events.Handlers.Hero.OnHeroDying(dying);
+
+            if (!dying.IsAllowed) return;
+
             foreach (var ability in Abilities)
             {
                 if (ability is ToggleAbility)
@@ -414,6 +454,9 @@ namespace DotaHeroes.API.Features
             {
                 DisableEffect(effect);
             }
+
+            var died = new HeroDiedEventArgs(this);
+            Events.Handlers.Hero.OnHeroDied(died);
         }
 
         public virtual void Respawn() { }
