@@ -41,7 +41,7 @@ namespace DotaHeroes.Commands.Hero
                 return true;
             }
 
-            var heroAttacking = new HeroAttackingEventArgs(hero, target.Hero, hero.HeroStatistics.Attack.FullDamage, true, DamageType.Physical);
+            var heroAttacking = new HeroAttackingEventArgs(hero, target.Hero, hero.HeroStatistics.Attack.FullDamage, DamageType.Physical, true);
             API.Events.Handlers.Hero.Attacking.InvokeSafely(heroAttacking);
 
             if (!heroAttacking.IsAllowed)
