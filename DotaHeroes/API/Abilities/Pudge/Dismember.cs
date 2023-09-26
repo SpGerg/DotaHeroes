@@ -18,7 +18,7 @@ namespace DotaHeroes.API.Abilities.Pudge
 {
     [CommandHandler(typeof(ClientCommandHandler))]
     [CommandHandler(typeof(RemoteAdminCommandHandler))]
-    public class Dismember : ActiveAbility, ICastRange, IValues
+    public class Dismember : ActiveAbility, IValues
     {
         public override string Name => "Dismember";
 

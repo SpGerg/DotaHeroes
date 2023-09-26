@@ -17,7 +17,7 @@ namespace DotaHeroes.API.Abilities.Pudge
 {
     [CommandHandler(typeof(ClientCommandHandler))]
     [CommandHandler(typeof(RemoteAdminCommandHandler))]
-    public class MeatHook : ActiveAbility, ICastRange, ICost, IValues
+    public class MeatHook : ActiveAbility, ICost, IValues
     {
         public override string Name => "Meat hook";
 
@@ -58,6 +58,7 @@ namespace DotaHeroes.API.Abilities.Pudge
 
             Primitive primitive = Primitive.Create(player.Position, player.Rotation.eulerAngles, Vector3.one, false);
             primitive.Type = PrimitiveType.Cube;
+            primitive.Scale = new Vector3(-1, -1, -1);
             primitive.MovementSmoothing = 60;
             primitive.Collidable = false;
             var meatHookObject = primitive.AdminToyBase.gameObject.AddComponent<MeatHookObject>();

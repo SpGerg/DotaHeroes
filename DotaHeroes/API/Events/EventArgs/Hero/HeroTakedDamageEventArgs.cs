@@ -11,9 +11,9 @@ namespace DotaHeroes.API.Events.EventArgs.Hero
 {
     public class HeroTakedDamageEventArgs : IHeroEvent, IDamage
     {
-        public Features.Hero Hero { get; set; }
+        public Features.Hero Hero { get; }
 
-        public Features.Hero Attacker { get; set; }
+        public Features.Hero Attacker { get; }
 
         public int Damage { get; set; }
 

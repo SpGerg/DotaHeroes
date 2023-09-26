@@ -9,6 +9,7 @@ using DotaHeroes.API.Interfaces;
 using Exiled.API.Features;
 using Exiled.API.Features.Toys;
 using MEC;
+using Mirror;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,7 +22,7 @@ namespace DotaHeroes.API.Abilities.Pudge
 {
     [CommandHandler(typeof(ClientCommandHandler))]
     [CommandHandler(typeof(RemoteAdminCommandHandler))]
-    public class Rot : ToggleAbility, ICastRange, IValues
+    public class Rot : ToggleAbility, IValues
     {
         public override string Name => "rot";
 
@@ -35,20 +36,19 @@ namespace DotaHeroes.API.Abilities.Pudge
 
         public IReadOnlyDictionary<string, List<float>> Values => new Dictionary<string, List<float>>()
         {
-            { "damage", new List<float> { 10, 15, 20, 25 } },
+            { "damage", new List<float> { 30, 50, 80, 110 } },
             { "mana_cost", new List<float> { 0, 0, 0, 0 } },
-            { "cast_range", new List<float> { 1.5f, 2, 4, 5 } },
         };
 
         public override int MaxLevel => 4;
 
-        public int Range { get; set; } = 5;
-
         public override bool IsActive { get; set; }
 
+        public float Damage { get; private set; }
 
         public Rot() : base()
         {
+            Damage = (int)Values["damage"][Level];
         }
 
         public override bool Activate(Hero hero, ArraySegment<string> arguments, out string response)
@@ -65,8 +65,14 @@ namespace DotaHeroes.API.Abilities.Pudge
             Timing.RunCoroutine(RotCoroutine(hero));
 
             response = "Rot is enabled";
-
             return true;
+        }
+
+        public override void LevelUp(Hero hero)
+        {
+            Damage = (int)Values["damage"][Level];
+
+            base.LevelUp(hero);
         }
 
         public override bool Deactivate(Hero hero, ArraySegment<string> arguments, out string response)
@@ -74,7 +80,6 @@ namespace DotaHeroes.API.Abilities.Pudge
             hero.Values["is_rot"] = false;
 
             response = "Rot is disabled";
-
             return true;
         }
 
@@ -84,23 +89,13 @@ namespace DotaHeroes.API.Abilities.Pudge
             {
                 foreach (var hero in API.GetHeroes().Values)
                 {
-                    var player = hero.Player;
-                    if (Vector3.Distance(owner.Player.Transform.position, player.Transform.position) < Values["cast_range"][Level])
-                    {
-                        if (hero.TryGetEffect(out Effects.Pudge.Rot result)) continue;
-
-                        var rot = new Effects.Pudge.Rot(player);
-                        rot.Damage = (int)Values["damage"][Level];
-                        rot.DamageType = DamageType.Magical;
-                        hero.EnableEffect(rot);
-                    }
-                    else
-                    {
-                        hero.DisableEffect<Effects.Pudge.Rot>();
-                    }
+                    var rot = new Effects.Pudge.Rot(hero.Player);
+                    rot.Damage = (int)Damage;
+                    rot.DamageType = DamageType.Magical;
+                    hero.EnableEffect(rot);
                 }
 
-                yield return Timing.WaitForSeconds(0.5f);
+                yield return Timing.WaitForSeconds(1);
             }
 
             foreach (var hero in API.GetHeroes().Values)

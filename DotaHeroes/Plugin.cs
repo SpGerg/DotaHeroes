@@ -18,18 +18,25 @@ namespace DotaHeroes
         public override void OnEnabled()
         {
             API.API.RegisterHero(new Pudge());
-            Hud.RunUpdate();
 
-            Player.Spawned += PlayerHandler.OnSpawned;
-            Hero.TakedDamage += HeroHandler.OnHeroTakedDamage;
+            Player.Spawned += PlayerHandler.SetHero;
+            Hero.TakingDamage += HeroHandler.BlockingDamage;
+            Hero.TakedDamage += HeroHandler.UpdateHudOnTakedDamage;
+            Hero.Healed += HeroHandler.UpdateHudOnHealed;
+            Hero.ReceivingEffect += HeroHandler.UpdateHudHeathOnReceivingEffect;
+            Hero.Disabled += HeroHandler.UpdateHudHeathOnDisabledEffect;
 
             base.OnEnabled();
         }
 
         public override void OnDisabled()
         {
-            Player.Spawned -= PlayerHandler.OnSpawned;
-            Hero.TakedDamage -= HeroHandler.OnHeroTakedDamage;
+            Player.Spawned -= PlayerHandler.SetHero;
+            Hero.TakingDamage -= HeroHandler.BlockingDamage;
+            Hero.Healed -= HeroHandler.UpdateHudOnHealed;
+            Hero.ReceivingEffect -= HeroHandler.UpdateHudHeathOnReceivingEffect;
+            Hero.Disabled -= HeroHandler.UpdateHudHeathOnDisabledEffect;
+            Hero.TakedDamage -= HeroHandler.UpdateHudOnTakedDamage;
 
             base.OnDisabled();
         }

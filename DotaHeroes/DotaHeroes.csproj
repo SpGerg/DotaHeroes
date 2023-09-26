@@ -130,6 +130,8 @@
     <Compile Include="API\Events\EventArgs\Hero\HeroDispelledEventArgs.cs" />
     <Compile Include="API\Events\EventArgs\Hero\HeroDispellingEventArgs.cs" />
     <Compile Include="API\Events\EventArgs\Hero\HeroDyingEventArgs.cs" />
+    <Compile Include="API\Events\EventArgs\Hero\HeroDisabledEffectEventArgs.cs" />
+    <Compile Include="API\Events\EventArgs\Hero\HeroReceivingEffectEventArgs.cs" />
     <Compile Include="API\Events\EventArgs\Hero\HeroHealedEventArgs.cs" />
     <Compile Include="API\Events\EventArgs\Hero\HeroHealingEventArgs.cs" />
     <Compile Include="API\Events\EventArgs\Hero\HeroRespawnedEventArgs.cs" />
@@ -164,7 +166,6 @@
     <Compile Include="API\Enums\DispelType.cs" />
     <Compile Include="API\Features\Hud.cs" />
     <Compile Include="API\Features\ActiveAbility.cs" />
-    <Compile Include="API\Interfaces\ICastRange.cs" />
     <Compile Include="API\Interfaces\IDamageBlock.cs" />
     <Compile Include="API\Interfaces\IDamage.cs" />
     <Compile Include="API\Interfaces\IEffectDuration.cs" />

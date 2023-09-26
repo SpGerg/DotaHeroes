@@ -32,6 +32,7 @@ namespace DotaHeroes.API.Abilities.Pudge
 
         public IReadOnlyDictionary<string, List<float>> Values => new Dictionary<string, List<float>>()
         {
+            { "damage_block", new List<float> { 8, 14, 20, 26 } },
             { "mana_cost", new List<float> { 120, 130, 140, 150 } },
             { "cooldown", new List<float> { 12, 11, 9, 8 } },
         };
@@ -53,7 +54,8 @@ namespace DotaHeroes.API.Abilities.Pudge
 
         public override bool Execute(Hero hero, ArraySegment<string> arguments, out string response)
         {
-            hero.EnableEffect(new FleshHeapShield(hero.Player));
+            var blockDamage = hero.EnableEffect(new FleshHeapShield(hero.Player)) as FleshHeapShield;
+            blockDamage.DamageBlock = (int)Values["damage_block"][Level];
 
             response = "Flesh heap enabled.";
 

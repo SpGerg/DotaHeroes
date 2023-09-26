@@ -12,31 +12,21 @@ namespace DotaHeroes.API.Features
 {
     public static class Hud
     {
-        public static void RunUpdate()
+        public static void Update()
         {
-            Timing.RunCoroutine(UpdateCoroutine());
-        }
-
-        private static IEnumerator<float> UpdateCoroutine()
-        {
-            while (true)
+            foreach (var hero in API.GetHeroes().Values)
             {
-                foreach (var hero in API.GetHeroes().Values)
+                if (hero.IsHeroDead) continue;
+
+                var player = hero.Player;
+                var abilites = StringBuilderPool.Shared.Rent();
+
+                foreach (var ability in hero.Abilities)
                 {
-                    if (hero.IsHeroDead) continue;
-
-                    var player = hero.Player;
-                    var abilites = StringBuilderPool.Shared.Rent();
-
-                    foreach (var ability in hero.Abilities)
-                    {
-                        abilites.AppendLine(ability.ToString(hero));
-                    }
-
-                    player.ShowHint($"<size=16><align=Left>{hero}</align></size><size=12><align=Right>{StringBuilderPool.Shared.ToStringReturn(abilites)}</align></size>", 1.5f);
+                    abilites.AppendLine(ability.ToString(hero));
                 }
 
-                yield return Timing.WaitForSeconds(1);
+                player.ShowHint($"<size=16><align=Left>{hero}</align></size><size=12><align=Right>{StringBuilderPool.Shared.ToStringReturn(abilites)}</align></size>", short.MaxValue);
             }
         }
     }

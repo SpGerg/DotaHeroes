@@ -11,9 +11,9 @@ namespace DotaHeroes.API.Events.EventArgs.Hero
 {
     public class HeroDispelledEventArgs : IHeroEvent
     {
-        public Features.Hero Hero { get; set; }
+        public Features.Hero Hero { get; }
 
-        public Features.Hero Dispeller { get; set; }
+        public Features.Hero Dispeller { get; }
 
         public List<Effect> EffectsToDispel { get; set; }
 

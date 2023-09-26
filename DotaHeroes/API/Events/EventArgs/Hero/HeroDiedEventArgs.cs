@@ -9,7 +9,7 @@ namespace DotaHeroes.API.Events.EventArgs.Hero
 {
     public class HeroDiedEventArgs : IHeroEvent
     {
-        public Features.Hero Hero { get; set; }
+        public Features.Hero Hero { get; }
 
         public HeroDiedEventArgs(Features.Hero hero)
         {

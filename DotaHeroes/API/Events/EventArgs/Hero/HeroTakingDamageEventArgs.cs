@@ -12,9 +12,9 @@ namespace DotaHeroes.API.Events.EventArgs.Hero
 {
     public class HeroTakingDamageEventArgs : IHeroEvent, IDamage, IDeniableEvent
     {
-        public Features.Hero Hero { get; set; }
+        public Features.Hero Hero { get; }
 
-        public Features.Hero Attacker { get; set; }
+        public Features.Hero Attacker { get; }
 
         public int Damage { get; set; }
 

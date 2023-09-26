@@ -1,4 +1,5 @@
 ﻿using DotaHeroes.API.Events.EventArgs.Interfaces;
+using DotaHeroes.API.Features;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,16 +8,16 @@ using System.Threading.Tasks;
 
 namespace DotaHeroes.API.Events.EventArgs.Hero
 {
-    public class HeroRespawnedEventArgs : IHeroEvent
+    public class HeroDisabledEffectEventArgs : IHeroEvent
     {
         public Features.Hero Hero { get; }
 
-        public Features.Hero Killer { get; }
+        public Effect Effect { get; }
 
-        public HeroRespawnedEventArgs(Features.Hero hero, Features.Hero killer)
+        public HeroDisabledEffectEventArgs(Features.Hero hero, Effect effect)
         {
             Hero = hero;
-            Killer = killer;
+            Effect = effect;
         }
     }
 }

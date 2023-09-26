@@ -24,10 +24,10 @@ namespace DotaHeroes.API.Statistics
         {
             if (ExtraArmor > 0)
             {
-                return $"Armor: {BaseArmor} + <color=Green>{ExtraArmor}</color>";
+                return $"Armor: {(int)BaseArmor} + <color=Green>{(int)ExtraArmor}</color>";
             }
 
-            return $"Armor: {BaseArmor}";
+            return $"Armor: {(int)BaseArmor}";
         }
     }
 }

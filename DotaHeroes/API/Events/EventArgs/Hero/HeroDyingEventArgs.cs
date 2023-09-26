@@ -10,7 +10,7 @@ namespace DotaHeroes.API.Events.EventArgs.Hero
 {
     public class HeroDyingEventArgs : IHeroEvent, IDeniableEvent
     {
-        public Features.Hero Hero { get; set; }
+        public Features.Hero Hero { get; }
 
         public bool IsAllowed { get; set; }
 

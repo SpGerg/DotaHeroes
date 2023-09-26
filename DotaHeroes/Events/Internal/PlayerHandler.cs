@@ -16,7 +16,7 @@ namespace DotaHeroes.Events.Internal
 {
     internal static class PlayerHandler
     {
-        internal static void OnSpawned(SpawnedEventArgs ev)
+        internal static void SetHero(SpawnedEventArgs ev)
         {
             HeroController heroController;
 
@@ -35,6 +35,8 @@ namespace DotaHeroes.Events.Internal
 
             var hero = API.API.GetRegisteredHeroes().GetRandomValue().Value;
             heroController.Hero = hero.Create(ev.Player, SideType.Dire);
+
+            Hud.Update();
         }
     }
 }

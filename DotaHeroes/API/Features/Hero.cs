@@ -54,10 +54,6 @@ namespace DotaHeroes.API.Features
 
                 if (isHeroDead)
                 {
-                    ApplyDispel(DispelType.Dead);
-
-                    Player.Role.Set(RoleTypeId.Spectator);
-
                     Dead();
                 }
                 else
@@ -231,16 +227,7 @@ namespace DotaHeroes.API.Features
 
         public T EnableEffect<T>() where T : Effect, new()
         {
-            if (TryGetEffect(out T result))
-            {
-                return result;
-            }
-
-            var effect = new T();
-            effect.Enable();
-            Effects.Add(effect);
-
-            return effect;
+            return (T)EnableEffect(new T());
         }
 
         public Effect EnableEffect(Effect _effect)
@@ -250,10 +237,15 @@ namespace DotaHeroes.API.Features
                 return result;
             }
 
-            _effect.Enable();
-            Effects.Add(_effect);
+            var receivingEffect = new HeroReceivingEffectEventArgs(this, _effect, true);
+            Events.Handlers.Hero.OnHeroReceivingEffect(receivingEffect);
 
-            return _effect;
+            if (!receivingEffect.IsAllowed) return null;
+
+            receivingEffect.Effect.Enable();
+            Effects.Add(receivingEffect.Effect);
+
+            return receivingEffect.Effect;
         }
 
         public void ExecuteEffect<T>() where T : Effect, new()
@@ -276,13 +268,15 @@ namespace DotaHeroes.API.Features
             result.Execute();
         }
 
-
         public void DisableEffect<T>() where T : Effect, new()
         {
             if (!TryGetEffect(out T result))
             {
                 return;
             }
+
+            var disabledEffect = new HeroDisabledEffectEventArgs(this, result);
+            Events.Handlers.Hero.OnHeroDisabledEffect(disabledEffect);
 
             result.Disable();
             Effects.Remove(result);
@@ -293,6 +287,9 @@ namespace DotaHeroes.API.Features
             {
                 return;
             }
+
+            var disabledEffect = new HeroDisabledEffectEventArgs(this, effect);
+            Events.Handlers.Hero.OnHeroDisabledEffect(disabledEffect);
 
             result.Disable();
             Effects.Remove(result);
@@ -346,6 +343,7 @@ namespace DotaHeroes.API.Features
 
             if (!takingDamage.IsAllowed) return -1;
 
+            int _damage = takingDamage.Damage;
             decimal total_damage = 0;
 
             switch (damageType)
@@ -354,25 +352,25 @@ namespace DotaHeroes.API.Features
                 case DamageType.Physical:
                     decimal armor = (decimal)(HeroStatistics.Armor.BaseArmor + HeroStatistics.Armor.ExtraArmor);
                     decimal armor_percent = (0.052m * armor) / (0.9m + 0.048m * armor);
-                    total_damage = (int)(damage - ((damage / 100) * armor_percent));
+                    total_damage = (int)(_damage - ((_damage / 100) * armor_percent));
 
                     break;
                 case DamageType.Magical:
-                    decimal percent = (damage / 100m);
-                    total_damage = damage - percent * (decimal)HeroStatistics.Resistance.GetMagicResistance(HeroStatistics.Intelligence);
+                    decimal percent = (_damage / 100m);
+                    total_damage = _damage - percent * (decimal)HeroStatistics.Resistance.GetMagicResistance(HeroStatistics.Intelligence);
 
                     break;
                 case DamageType.Pure:
-                    total_damage = damage;
+                    total_damage = _damage;
                     break;
                 default:
-                    total_damage = damage;
+                    total_damage = _damage;
                     break;
             }
 
             ReduceHealthAndCheckForDead((float)total_damage);
 
-            var takedDamage = new HeroTakedDamageEventArgs(this, null, damage, damageType);
+            var takedDamage = new HeroTakedDamageEventArgs(this, null, _damage, damageType);
             Events.Handlers.Hero.OnHeroTakedDamage(takedDamage);
 
             return total_damage;
@@ -434,6 +432,10 @@ namespace DotaHeroes.API.Features
 
         public virtual void Dead()
         {
+            ApplyDispel(DispelType.Dead);
+
+            Player.Role.Set(RoleTypeId.Spectator);
+
             var dying = new HeroDyingEventArgs(this, true);
             Events.Handlers.Hero.OnHeroDying(dying);
 

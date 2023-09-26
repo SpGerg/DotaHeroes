@@ -10,9 +10,9 @@ namespace DotaHeroes.API.Events.EventArgs.Hero
 {
     public class HeroHealingEventArgs : IHeroEvent, IDeniableEvent
     {
-        public Features.Hero Hero { get; set; }
+        public Features.Hero Hero { get; }
 
-        public Features.Hero Healer { get; set; }
+        public Features.Hero Healer { get; }
 
         public float Heal { get; set; }
 

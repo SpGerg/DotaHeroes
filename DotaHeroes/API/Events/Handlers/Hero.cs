@@ -31,6 +31,10 @@ namespace DotaHeroes.API.Events.Handlers
 
         public static Event<HeroRespawnedEventArgs> Respawned { get; set; } = new();
 
+        public static Event<HeroReceivingEffectEventArgs> ReceivingEffect { get; set; } = new();
+
+        public static Event<HeroDisabledEffectEventArgs> Disabled { get; set; } = new();
+
         public static Event<HeroDispellingEventArgs> Dispelling { get; set; } = new();
 
         public static Event<HeroDispelledEventArgs> Dispelled { get; set; } = new();
@@ -54,6 +58,10 @@ namespace DotaHeroes.API.Events.Handlers
         public static void OnHeroRespawning(HeroRespawningEventArgs ev) => Respawning.InvokeSafely(ev);
 
         public static void OnHeroRespawned(HeroRespawnedEventArgs ev) => Respawned.InvokeSafely(ev);
+
+        public static void OnHeroReceivingEffect(HeroReceivingEffectEventArgs ev) => ReceivingEffect.InvokeSafely(ev);
+
+        public static void OnHeroDisabledEffect(HeroDisabledEffectEventArgs ev) => Disabled.InvokeSafely(ev);
 
         public static void OnHeroDispelling(HeroDispellingEventArgs ev) => Dispelling.InvokeSafely(ev);
 

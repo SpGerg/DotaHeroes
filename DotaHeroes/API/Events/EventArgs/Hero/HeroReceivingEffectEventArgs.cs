@@ -1,4 +1,5 @@
 ﻿using DotaHeroes.API.Events.EventArgs.Interfaces;
+using DotaHeroes.API.Features;
 using Exiled.Events.EventArgs.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -8,18 +9,18 @@ using System.Threading.Tasks;
 
 namespace DotaHeroes.API.Events.EventArgs.Hero
 {
-    public class HeroRespawningEventArgs : IHeroEvent, IDeniableEvent
+    public class HeroReceivingEffectEventArgs : IHeroEvent, IDeniableEvent
     {
         public Features.Hero Hero { get; }
 
-        public Features.Hero Killer { get; }
+        public Effect Effect { get; }
 
         public bool IsAllowed { get; set; }
 
-        public HeroRespawningEventArgs(Features.Hero hero, Features.Hero killer, bool isAllowed)
+        public HeroReceivingEffectEventArgs(Features.Hero hero, Effect effect, bool isAllowed)
         {
             Hero = hero;
-            Killer = killer;
+            Effect = effect;
             IsAllowed = isAllowed;
         }
     }
