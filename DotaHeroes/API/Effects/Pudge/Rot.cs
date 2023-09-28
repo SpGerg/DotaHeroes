@@ -30,9 +30,9 @@ namespace DotaHeroes.API.Effects.Pudge
 
         public Rot() : base() { }
 
-        public Rot(Player owner) : base(owner)
+        public Rot(Hero owner) : base(owner)
         {
-            DamageOverTime = new DamageOverTime(30, DamageType.Magical, -1, 1f);
+            DamageOverTime = new DamageOverTime(owner, 30, DamageType.Magical, -1, 1f);
         }
 
         public override bool Enable()
@@ -40,7 +40,7 @@ namespace DotaHeroes.API.Effects.Pudge
             Hero.HeroStatistics.Speed.Speed -= 10;
             DamageOverTime.Damage = Damage;
             DamageOverTime.DamageType = DamageType;
-            DamageOverTime.Run(Hero);
+            DamageOverTime.Run();
              
             base.Enable();
 

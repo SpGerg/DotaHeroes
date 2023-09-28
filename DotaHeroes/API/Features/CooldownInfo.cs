@@ -41,13 +41,21 @@ namespace DotaHeroes.API.Features
         }
 
         private float useTime { get; set; }
-        
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CooldownInfo" /> class.
+        /// </summary>
+        /// <param name="name"><inheritdoc cref="Name" /></param>
+        /// <param name="duration"><inheritdoc cref="Duration" /></param>
         public CooldownInfo(string name, int duration)
         {
             Name = name;
             Duration = duration;
         }
 
+        /// <summary>
+        /// Run. RUN.
+        /// </summary>
         public void Run()
         {
             useTime = Time.time;

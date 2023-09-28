@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace DotaHeroes.API.Enums
 {
+    ///<summary>Target type</summary>
     public enum TargetType
     {
         None = 0,

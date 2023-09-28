@@ -26,6 +26,10 @@ namespace DotaHeroes.API.Features
 
         public virtual void Removed() { }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Item" /> class.
+        /// </summary>
+        /// <param name="owner"><inheritdoc cref="Owner" /></param>
         public Item(Player owner)
         {
             Owner = owner;

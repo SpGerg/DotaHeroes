@@ -4,37 +4,33 @@ using DotaHeroes.API.Features;
 using DotaHeroes.API.Features.Components;
 using DotaHeroes.API.Heroes;
 using Exiled.API.Extensions;
+using Exiled.API.Features;
 using Exiled.API.Features.Roles;
 using Exiled.Events.EventArgs.Player;
+using PlayerRoles;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UnityEngine;
 
 namespace DotaHeroes.Events.Internal
 {
     internal static class PlayerHandler
     {
-        internal static void SetHero(SpawnedEventArgs ev)
+        internal static void SetHero(ChangingRoleEventArgs ev)
         {
-            HeroController heroController;
-
-            if (!ev.Player.GameObject.TryGetComponent(out heroController))
-            {
-                heroController = ev.Player.GameObject.AddComponent<HeroController>();
-            }
-
-            if (heroController.Hero != null && ev.Player.Role is not SpectatorRole)
-            {
-                var healthAndMana  = heroController.Hero.HeroStatistics.HealthAndMana;
-                heroController.Hero.IsHeroDead = false;
-                healthAndMana.Health = healthAndMana.MaximumHealth;
-                return;
-            }
-
+            var player = ev.Player;
             var hero = API.API.GetRegisteredHeroes().GetRandomValue().Value;
-            heroController.Hero = hero.Create(ev.Player, SideType.Dire);
+            var createdHero = hero.Create(player, SideType.Dire);
+
+            ev.NewRole = createdHero.Model;
+            HeroController heroController = player.GameObject.AddComponent<HeroController>();
+            heroController.Hero = createdHero;
+            createdHero.Respawn();
+
+            Log.Info($"Player {player.Nickname} hero is {hero.HeroName}");
 
             Hud.Update();
         }

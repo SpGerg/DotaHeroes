@@ -9,6 +9,9 @@ using System.Threading.Tasks;
 
 namespace DotaHeroes.API.Events.EventArgs.Hero
 {
+    /// <summary>
+    /// Contains all information before hero receiving effect.
+    /// </summary>
     public class HeroReceivingEffectEventArgs : IHeroEvent, IDeniableEvent
     {
         public Features.Hero Hero { get; }
@@ -17,6 +20,12 @@ namespace DotaHeroes.API.Events.EventArgs.Hero
 
         public bool IsAllowed { get; set; }
 
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="HeroReceivingEffectEventArgs" /> class.
+        /// </summary>
+        /// <param name="hero"><inheritdoc cref="Hero" /></param>
+        /// <param name="effect"><inheritdoc cref="Effect" /></param>
+        /// <param name="isAllowed"><inheritdoc cref="IsAllowed" /></param>
         public HeroReceivingEffectEventArgs(Features.Hero hero, Effect effect, bool isAllowed)
         {
             Hero = hero;

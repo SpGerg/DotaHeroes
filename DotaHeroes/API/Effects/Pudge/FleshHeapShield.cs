@@ -29,6 +29,6 @@ namespace DotaHeroes.API.Effects.Pudge
 
         public FleshHeapShield() : base() { }
 
-        public FleshHeapShield(Player owner) : base(owner) { }
+        public FleshHeapShield(Hero owner) : base(owner) { }
     }
 }

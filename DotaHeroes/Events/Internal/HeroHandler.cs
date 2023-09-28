@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UnityEngine;
 
 namespace DotaHeroes.Events.Internal
 {
@@ -23,10 +24,28 @@ namespace DotaHeroes.Events.Internal
             foreach (var effect in damageBlocks)
             {
                 var effectDamageBlock = effect as IDamageBlock;
-                total_damage = API.Features.Utils.BlockDamage(total_damage, ev.DamageType, effectDamageBlock.DamageBlock, effectDamageBlock.DamageTypesToBlock);
+                total_damage = API.Features.Utils.BlockDamage(total_damage, ev.DamageType, effectDamageBlock);
             }
 
             ev.Damage = total_damage;
+        }
+
+        internal static void AddFleshHeapStackOnDied(HeroDiedEventArgs ev)
+        {
+            foreach (var hero in API.API.GetHeroes().Values)
+            {
+                if (hero.IsHeroDead) continue;
+
+                var effect = hero.GetEffectOrDefault<API.Effects.Pudge.FleshHeap>();
+
+                if (effect == default) continue;
+
+                if (Vector3.Distance(ev.Hero.Player.Position, hero.Player.Position) < 10)
+                {
+                    effect.Execute();
+                    return;
+                }
+            }
         }
 
         internal static void UpdateHudOnTakedDamage(HeroTakedDamageEventArgs ev)
@@ -35,16 +54,6 @@ namespace DotaHeroes.Events.Internal
         }
 
         internal static void UpdateHudOnHealed(HeroHealedEventArgs ev)
-        {
-            Hud.Update();
-        }
-
-        internal static void UpdateHudHeathOnReceivingEffect(HeroReceivingEffectEventArgs ev)
-        {
-            Hud.Update();
-        }
-
-        internal static void UpdateHudHeathOnDisabledEffect(HeroDisabledEffectEventArgs ev)
         {
             Hud.Update();
         }

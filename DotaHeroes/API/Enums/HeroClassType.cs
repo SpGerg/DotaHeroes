@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace DotaHeroes.API.Enums
 {
+    ///<summary>Hero class type</summary>
     public enum HeroClassType
     {
         Ranged = 0,

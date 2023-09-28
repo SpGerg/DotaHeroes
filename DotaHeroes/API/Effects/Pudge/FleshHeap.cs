@@ -54,7 +54,7 @@ namespace DotaHeroes.API.Effects.Pudge
 
         public FleshHeap() : base() { }
 
-        public FleshHeap(Player owner) : base(owner) { }
+        public FleshHeap(Hero owner) : base(owner) { }
 
         public override bool Enable()
         {

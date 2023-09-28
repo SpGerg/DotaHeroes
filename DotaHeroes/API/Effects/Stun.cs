@@ -26,17 +26,17 @@ namespace DotaHeroes.API.Effects
 
         public Stun() : base() { }   
 
-        public Stun(Player owner) : base(owner)
+        public Stun(Hero owner) : base(owner)
         {
         }
 
         public override bool Enable()
         {
-            Owner.EnableEffect<Ensnared>();
+            Owner.Player.EnableEffect<Ensnared>();
 
             Timing.CallDelayed((float)Duration, () =>
             {
-                Owner.DisableEffect<Ensnared>();
+                Owner.Player.DisableEffect<Ensnared>();
             });
 
             return true;

@@ -69,24 +69,33 @@ namespace DotaHeroes.API.Features
 
         private int level;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Ability" /> class.
+        /// </summary>
         public Ability() { }
 
+        /// <summary>
+        /// Level up, if class is inheritance from IValues and contains cooldowns. Automatically set cooldown duration.
+        /// </summary>
         public virtual void LevelUp(Hero hero)
         {
             Level++;
             if (this is IValues && (this as IValues).Values.ContainsKey("cooldowns"))
             {
-                var cooldown = Cooldowns.GetCooldown(hero.Player.UserId, Name);
+                var cooldown = Cooldowns.GetCooldown(hero.Player.Id, Name);
 
                 if (cooldown == default)
                 {
-                    cooldown = Cooldowns.AddCooldown(hero.Player.UserId, new CooldownInfo(Name, 3));
+                    cooldown = Cooldowns.AddCooldown(hero.Player.Id, new CooldownInfo(Name, 3));
                 }
 
                 cooldown.Duration = (int)(this as IValues).Values["cooldown"][Level];
             }
         }
 
+        /// <summary>
+        /// Protected execute.
+        /// </summary>
         protected virtual bool Execute(ICommandSender sender, out string response, out Hero hero, bool isCooldown = false)
         {
             if (!IsEnabled)
@@ -107,7 +116,7 @@ namespace DotaHeroes.API.Features
 
             var player = Player.Get(sender);
 
-            var _hero = API.GetHeroOrDefault(player.UserId);
+            var _hero = API.GetHeroOrDefault(player.Id);
 
             if (_hero == default)
             {
@@ -125,13 +134,30 @@ namespace DotaHeroes.API.Features
                 return false;
             }
 
+            response = string.Empty;
+            return true;
+        }
+
+        /// <summary>
+        /// Stop. sToP.
+        /// </summary>
+        public virtual void Stop()
+        {
+
+        }
+
+        /// <summary>
+        /// Check and run cooldown.
+        /// </summary>
+        protected bool CheckAndRunCooldown(Hero hero, out string response)
+        {
             if (this is IValues && (this as IValues).Values.ContainsKey("cooldown"))
             {
-                var cooldown = Cooldowns.GetCooldown(hero.Player.UserId, Name);
+                var cooldown = Cooldowns.GetCooldown(hero.Player.Id, Name);
 
                 if (cooldown == default)
                 {
-                    cooldown = Cooldowns.AddCooldown(hero.Player.UserId, new CooldownInfo(Name, 3));
+                    cooldown = Cooldowns.AddCooldown(hero.Player.Id, new CooldownInfo(Name, 3));
                 }
 
                 if (!cooldown.IsReady)
@@ -141,27 +167,16 @@ namespace DotaHeroes.API.Features
                     return false;
                 }
 
-                response = $"Ability {Name} was used.";
-
-                if (isCooldown && this is IValues)
-                {
-                    if ((this as IValues).Values.ContainsKey("cooldown"))
-                    {
-                        cooldown.Run();
-                    }
-                }
+                cooldown.Run();
             }
 
-            response = string.Empty;
-
+            response = $"Ability {Name} was used.";
             return true;
         }
 
-        public virtual void Stop()
-        {
-
-        }
-
+        /// <summary>
+        /// To string.
+        /// </summary>
         public override string ToString()
         {
             StringBuilder stringBuilder = StringBuilderPool.Shared.Rent();
@@ -175,6 +190,9 @@ namespace DotaHeroes.API.Features
             return StringBuilderPool.Shared.ToStringReturn(stringBuilder);
         }
 
+        /// <summary>
+        /// To string with hero.
+        /// </summary>
         public string ToString(Hero hero)
         {
             StringBuilder stringBuilder = StringBuilderPool.Shared.Rent();
@@ -184,7 +202,7 @@ namespace DotaHeroes.API.Features
             stringBuilder.AppendLine("Lore: " + Lore);
             stringBuilder.AppendLine("Ability Type: " + AbilityType.ToString());
             stringBuilder.AppendLine("Target Type: " + TargetType.ToString());
-            stringBuilder.AppendLine("Cooldown: " + Cooldowns.ToStringIsCooldown(hero.Player.UserId, Name));
+            stringBuilder.AppendLine("Cooldown: " + Cooldowns.ToStringIsCooldown(hero.Player.Id, Name));
 
             return StringBuilderPool.Shared.ToStringReturn(stringBuilder);
         }

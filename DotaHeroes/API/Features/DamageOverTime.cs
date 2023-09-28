@@ -12,6 +12,8 @@ namespace DotaHeroes.API.Features
 {
     public class DamageOverTime : IDamage
     {
+        public Hero Hero { get; set; }
+
         public int Damage { get; set; }
 
         public DamageType DamageType { get; set; }
@@ -22,31 +24,47 @@ namespace DotaHeroes.API.Features
 
         public bool IsEnabled { get; set; }
 
-        public DamageOverTime(int damage, DamageType damageType, int timesDamage, float interval)
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="DamageOverTime" /> class.
+        /// </summary>
+        /// <param name="hero"><inheritdoc cref="Hero" /></param>
+        /// <param name="damage"><inheritdoc cref="Damage" /></param>
+        /// <param name="damageType"><inheritdoc cref="DamageType" /></param>
+        /// <param name="timesDamage"><inheritdoc cref="TimesDamage" /></param>
+        /// <param name="interval"><inheritdoc cref="Interval" /></param>
+        public DamageOverTime(Hero hero, int damage, DamageType damageType, int timesDamage, float interval)
         {
+            Hero = hero;
             Damage = damage;
             DamageType = damageType;
             TimesDamage = timesDamage;
             Interval = interval;
         }
 
-        public void Run(Hero hero)
+        /// <summary>
+        ///     Run a damage coroutine, and stop other damage coroutine.
+        /// </summary>
+        /// <param name="hero">Hero</param>
+        public void Run()
         {
-            IsEnabled = false;
             IsEnabled = true;
 
-            Timing.RunCoroutine(DamageCoroutine(hero));
+            Timing.RunCoroutine(DamageCoroutine());
         }
-        
-        private IEnumerator<float> DamageCoroutine(Hero hero)
+
+        /// <summary>
+        ///     Damage coroutine
+        /// </summary>
+        /// <param name="hero">Hero</param>
+        private IEnumerator<float> DamageCoroutine()
         {
             if (TimesDamage <= -1)
             {
                 while (true)
                 {
-                    if (!IsEnabled || hero.IsHeroDead) yield break;
+                    if (!IsEnabled || Hero.IsHeroDead) yield break;
 
-                    hero.TakeDamage(hero, Damage, DamageType);
+                    Hero.TakeDamage(Hero, Damage, DamageType);
 
                     yield return Timing.WaitForSeconds(Interval);
                 }
@@ -54,9 +72,9 @@ namespace DotaHeroes.API.Features
 
             for (int i = 0;i < TimesDamage;i++)
             {
-                if (!IsEnabled || hero.IsHeroDead) yield break;
+                if (!IsEnabled || Hero.IsHeroDead) yield break;
 
-                hero.TakeDamage(hero, Damage, DamageType);
+                Hero.TakeDamage(Hero, Damage, DamageType);
 
                 yield return Timing.WaitForSeconds(Interval);
             }

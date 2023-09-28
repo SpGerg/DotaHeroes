@@ -11,6 +11,9 @@ using System.Threading.Tasks;
 
 namespace DotaHeroes.API.Events.EventArgs.Hero
 {
+    /// <summary>
+    /// Contains all information after a hero attack.
+    /// </summary>
     public class HeroAttackedEventArgs : IHeroEvent, IDamage
     {
         public Features.Hero Hero { get; }
@@ -21,6 +24,13 @@ namespace DotaHeroes.API.Events.EventArgs.Hero
 
         public DamageType DamageType { get; set; }
 
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="HeroAttackingEventArgs" /> class.
+        /// </summary>
+        /// <param name="hero"><inheritdoc cref="Hero" /></param>
+        /// <param name="target"><inheritdoc cref="Target" /></param>
+        /// <param name="damage"><inheritdoc cref="Damage" /></param>
+        /// <param name="damageType"><inheritdoc cref="DamageType" /></param>
         public HeroAttackedEventArgs(Features.Hero hero, Features.Hero target, int damage, DamageType damageType)
         {
             Hero = hero;

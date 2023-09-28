@@ -126,6 +126,7 @@
     <Compile Include="API\Abilities\Pudge\Rot.cs" />
     <Compile Include="API\Effects\Pudge\FleshHeap.cs" />
     <Compile Include="API\Effects\Pudge\FleshHeapShield.cs" />
+    <Compile Include="API\Enums\HeroStateType.cs" />
     <Compile Include="API\Events\EventArgs\Hero\HeroDiedEventArgs.cs" />
     <Compile Include="API\Events\EventArgs\Hero\HeroDispelledEventArgs.cs" />
     <Compile Include="API\Events\EventArgs\Hero\HeroDispellingEventArgs.cs" />
@@ -171,10 +172,10 @@
     <Compile Include="API\Interfaces\IEffectDuration.cs" />
     <Compile Include="API\Interfaces\IEffectValue.cs" />
     <Compile Include="API\Interfaces\ICost.cs" />
-    <Compile Include="API\Features\PassiveAbility.cs" />
     <Compile Include="API\Enums\SideType.cs" />
     <Compile Include="API\Features\ToggleAbility.cs" />
     <Compile Include="API\Interfaces\IHeroFactory.cs" />
+    <Compile Include="API\Interfaces\IPassiveAbility.cs" />
     <Compile Include="API\Interfaces\IPierceDebuffImmunity.cs" />
     <Compile Include="API\Interfaces\IResistanceModifier.cs" />
     <Compile Include="API\Interfaces\IValues.cs" />

@@ -6,13 +6,10 @@ using System.Threading.Tasks;
 
 namespace DotaHeroes.API.Enums
 {
-    ///<summary>Dispel type</summary>
-    public enum DispelType
+    ///<summary>Hero state type</summary>
+    public enum HeroStateType
     {
         None = 0,
-        Basic = 1,
-        Strong = 2,
-        Dead = 3,
-        NotDispelling = 4
+        Casting = 2
     }
 }

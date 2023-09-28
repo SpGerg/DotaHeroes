@@ -12,6 +12,9 @@ namespace DotaHeroes.API.Features
 {
     public static class Hud
     {
+        /// <summary>
+        /// Update hud.
+        /// </summary>
         public static void Update()
         {
             foreach (var hero in API.GetHeroes().Values)

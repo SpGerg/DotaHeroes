@@ -85,14 +85,21 @@ namespace DotaHeroes.API.Abilities.Pudge
 
         private IEnumerator<float> RotCoroutine(Hero owner)
         {
-            while ((bool)owner.Values["is_rot"])
+            while ((bool)owner.Values["is_rot"] && !owner.IsHeroDead)
             {
                 foreach (var hero in API.GetHeroes().Values)
                 {
-                    var rot = new Effects.Pudge.Rot(hero.Player);
-                    rot.Damage = (int)Damage;
-                    rot.DamageType = DamageType.Magical;
-                    hero.EnableEffect(rot);
+                    if (Vector3.Distance(hero.Player.Position, owner.Player.Position) < 2)
+                    {
+                        var rot = new Effects.Pudge.Rot(hero);
+                        rot.Damage = (int)Damage;
+                        rot.DamageType = DamageType.Magical;
+                        hero.EnableEffect(rot);
+                    }
+                    else
+                    {
+                        hero.DisableEffect<Effects.Pudge.Rot>();
+                    }
                 }
 
                 yield return Timing.WaitForSeconds(1);

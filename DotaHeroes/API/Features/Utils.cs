@@ -1,4 +1,5 @@
 ﻿using DotaHeroes.API.Enums;
+using DotaHeroes.API.Interfaces;
 using Exiled.API.Features;
 using NorthwoodLib.Pools;
 using System;
@@ -12,6 +13,9 @@ namespace DotaHeroes.API.Features
 {
     public static class Utils
     {
+        /// <summary>
+        /// Get position from player eye direction with range
+        /// </summary>
         public static Vector3 GetTargetPositionFromMouse(Vector3 position, Vector3 direction, int range)
         {
             Ray r = new(position, direction);
@@ -19,16 +23,19 @@ namespace DotaHeroes.API.Features
             return r.GetPoint(range);
         }
 
-        public static int BlockDamage(int damage, DamageType damageType, int blockDamage, IReadOnlyList<DamageType> blockDamageTypes)
+        /// <summary>
+        /// Block damage
+        /// </summary>
+        public static int BlockDamage(int damage, DamageType damageType, IDamageBlock damageBlock)
         {
-            if (blockDamageTypes.Contains(DamageType.None))
+            if (damageBlock.DamageTypesToBlock.Contains(DamageType.None))
             {
-                return damage - blockDamage;
+                return damage - damageBlock.DamageBlock;
             }
 
-            if (blockDamageTypes.Contains(damageType))
+            if (damageBlock.DamageTypesToBlock.Contains(damageType))
             {
-                return damage - blockDamage;
+                return damage - damageBlock.DamageBlock;
             }
 
             return damage;

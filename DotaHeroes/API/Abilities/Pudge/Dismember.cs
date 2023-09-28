@@ -36,7 +36,7 @@ namespace DotaHeroes.API.Abilities.Pudge
 
         public const float Duration = 3.5f;
 
-        public int Range { get; set; } = 1;
+        public int Range { get; set; } = 10;
 
         public IReadOnlyDictionary<string, List<float>> Values => new Dictionary<string, List<float>>()
         {
@@ -59,7 +59,16 @@ namespace DotaHeroes.API.Abilities.Pudge
                 return false;
             }
 
-            if (!hit.collider.gameObject.TryGetComponent(out HeroController heroController))
+            var target = Player.Get(hit.collider);
+
+            if (target == null)
+            {
+                response = "Target is not player";
+
+                return false;
+            }
+
+            if (!target.GameObject.TryGetComponent(out HeroController heroController))
             {
                 response = "Target is not hero.";
 
@@ -67,16 +76,14 @@ namespace DotaHeroes.API.Abilities.Pudge
             }
 
             player.EnableEffect<Ensnared>();
-            heroController.Hero.EnableEffect(new Stun(player)
+            heroController.Hero.EnableEffect(new Stun(heroController.Hero)
             {
                 Duration = Duration
             });
 
             response = "You eating " + heroController.Hero.Player.Nickname;
 
-            var damage = Values["damage"][Level];
-
-            Timing.RunCoroutine(DamageCoroutine(hero, heroController.Hero, damage, DamageType.Magical));
+            Timing.RunCoroutine(DamageCoroutine(hero, heroController.Hero, Values["damage"][Level], DamageType.Magical));
 
             return true;
         }
@@ -93,7 +100,9 @@ namespace DotaHeroes.API.Abilities.Pudge
                     yield break;
                 }
 
-                target.TakeDamage(i, DamageType.Magical);
+                target.Player.Position = Vector3.MoveTowards(target.Player.Position, player.Player.Position, 2 * Time.deltaTime);
+
+                target.TakeDamage(i, damageType);
 
                 yield return Timing.WaitForSeconds(0.1f);
             }

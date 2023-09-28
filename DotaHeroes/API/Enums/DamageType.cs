@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace DotaHeroes.API.Enums
 {
+    ///<summary>Damage type</summary>
     public enum DamageType
     {
         None = 0,

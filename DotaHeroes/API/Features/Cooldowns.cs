@@ -11,55 +11,64 @@ namespace DotaHeroes.API.Features
 {
     public static class Cooldowns
     {
-        private static Dictionary<string, Dictionary<string, CooldownInfo>> cooldowns = new Dictionary<string, Dictionary<string, CooldownInfo>>();
- 
-        public static CooldownInfo AddCooldown(string userId, CooldownInfo cooldownInfo)
+        private static Dictionary<int, Dictionary<string, CooldownInfo>> cooldowns = new Dictionary<int, Dictionary<string, CooldownInfo>>();
+
+        /// <summary>
+        /// Add ability cooldown for player.
+        /// </summary>
+        public static CooldownInfo AddCooldown(int id, CooldownInfo cooldownInfo)
         {
             try
             {
-                cooldowns[userId][cooldownInfo.Name] = cooldownInfo;
+                cooldowns[id][cooldownInfo.Name] = cooldownInfo;
             }
             catch (KeyNotFoundException)
             {
-                cooldowns[userId] = new Dictionary<string, CooldownInfo>();
-                cooldowns[userId][cooldownInfo.Name] = cooldownInfo;
+                cooldowns[id] = new Dictionary<string, CooldownInfo>();
+                cooldowns[id][cooldownInfo.Name] = cooldownInfo;
             }
-            return cooldowns[userId][cooldownInfo.Name];
+            return cooldowns[id][cooldownInfo.Name];
         }
 
-        public static CooldownInfo GetCooldown(string userId, string name)
+        /// <summary>
+        /// Get ability cooldown from player, if not exists create new cooldown info.
+        /// </summary>
+        public static CooldownInfo GetCooldown(int id, string name)
         {
             try
             {
-                return cooldowns[userId][name];
+                return cooldowns[id][name];
             }
             catch (KeyNotFoundException)
             {
-                cooldowns[userId] = new Dictionary<string, CooldownInfo>();
-                cooldowns[userId][name] = new CooldownInfo(name, 3);
-                return cooldowns[userId][name];
+                cooldowns[id] = new Dictionary<string, CooldownInfo>();
+                cooldowns[id][name] = new CooldownInfo(name, 3);
+                return cooldowns[id][name];
             }
         }
 
-        public static string ToStringIsCooldown(string userId, string name)
+        /// <summary>
+        /// To string is cooldown
+        /// </summary>
+        public static string ToStringIsCooldown(int id, string name)
         {
-            if (!cooldowns.ContainsKey(userId))
+            if (!cooldowns.ContainsKey(id))
             {
-                cooldowns[userId] = new Dictionary<string, CooldownInfo>();
+                cooldowns[id] = new Dictionary<string, CooldownInfo>();
                 return string.Empty;
             }
 
-            if (cooldowns[userId].Count == 0)
-            {
-                return string.Empty;
-            }
-
-            if (!cooldowns[userId].ContainsKey(name))
+            if (cooldowns[id].Count == 0)
             {
                 return string.Empty;
             }
 
-            var cooldown = cooldowns[userId][name];
+            if (!cooldowns[id].ContainsKey(name))
+            {
+                return string.Empty;
+            }
+
+            var cooldown = cooldowns[id][name];
 
             if (cooldown.IsReady)
             {

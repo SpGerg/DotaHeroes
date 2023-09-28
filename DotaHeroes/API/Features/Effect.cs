@@ -20,7 +20,7 @@ namespace DotaHeroes.API.Features
 
         public virtual DispelType DispelType { get; set; } = DispelType.None;
 
-        public Player Owner { get; }
+        public Hero Owner { get; }
 
         public Hero Hero { get; }
 
@@ -28,12 +28,19 @@ namespace DotaHeroes.API.Features
 
         public Effect() { }
 
-        public Effect(Player owner)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Effect" /> class.
+        /// </summary>
+        /// <param name="owner"><inheritdoc cref="Owner" /></param>
+        public Effect(Hero owner)
         {
             Owner = owner;
-            Hero = API.GetHeroOrDefault(owner.UserId);
+            Hero = API.GetHeroOrDefault(owner.Player.Id);
         }
 
+        /// <summary>
+        /// Enable effect.
+        /// </summary>
         public virtual bool Enable()
         {
             if (this is IEffectDuration)
@@ -47,21 +54,33 @@ namespace DotaHeroes.API.Features
             return true;
         }
 
+        /// <summary>
+        /// Execute effect.
+        /// </summary>
         public virtual bool Execute()
         {
             return true;
         }
 
+        /// <summary>
+        /// Dispel effect.
+        /// </summary>
         public virtual bool Dispel()
         {
             return false;
         }
 
+        /// <summary>
+        /// Disable effect.
+        /// </summary>
         public virtual bool Disable()
         {
             return true;
         }
 
+        /// <summary>
+        /// To string.
+        /// </summary>
         public override string ToString()
         {
             if (EffectClassType == EffectClassType.Negative)

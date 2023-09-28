@@ -19,6 +19,9 @@ namespace DotaHeroes.Commands
 
         public abstract string[] Aliases { get; }
 
+        /// <summary>
+        /// Execute
+        /// </summary>
         public bool Execute(ArraySegment<string> arguments, ICommandSender sender, out string response)
         {
             if (sender is not PlayerCommandSender)
@@ -29,7 +32,7 @@ namespace DotaHeroes.Commands
             }
 
             var player = Player.Get(sender);
-            API.Features.Hero hero = API.API.GetHeroOrDefault(player.UserId);
+            API.Features.Hero hero = API.API.GetHeroOrDefault(player.Id);
 
             if (hero == default)
             {
@@ -41,6 +44,9 @@ namespace DotaHeroes.Commands
             return Execute(hero, arguments, out response);
         }
 
+        /// <summary>
+        /// Abstract execute. ICommandSender to Hero.
+        /// </summary>
         protected abstract bool Execute(API.Features.Hero hero, ArraySegment<string> arguments, out string response);
     }
 }

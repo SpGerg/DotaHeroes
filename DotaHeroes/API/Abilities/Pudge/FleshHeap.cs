@@ -54,7 +54,7 @@ namespace DotaHeroes.API.Abilities.Pudge
 
         public override bool Execute(Hero hero, ArraySegment<string> arguments, out string response)
         {
-            var blockDamage = hero.EnableEffect(new FleshHeapShield(hero.Player)) as FleshHeapShield;
+            var blockDamage = hero.EnableEffect(new FleshHeapShield(hero)) as FleshHeapShield;
             blockDamage.DamageBlock = (int)Values["damage_block"][Level];
 
             response = "Flesh heap enabled.";
