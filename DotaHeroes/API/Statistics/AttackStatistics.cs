@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using YamlDotNet.Serialization;
 
 namespace DotaHeroes.API.Statistics
 {
@@ -12,6 +13,7 @@ namespace DotaHeroes.API.Statistics
 
         public int ExtraAttackDamage { get; set; }
 
+        [YamlIgnore]
         public int FullDamage {
             get
             {
@@ -21,11 +23,11 @@ namespace DotaHeroes.API.Statistics
 
         public int AttackSpeed { get; set; } //In future..
 
-        public float AttackRange { get; set; }
+        public decimal AttackRange { get; set; }
 
         public AttackStatistics() { }
 
-        public AttackStatistics(int baseAttackDamage, int extraAttackDamage, int attackSpeed, float attackRange)
+        public AttackStatistics(int baseAttackDamage, int extraAttackDamage, int attackSpeed, decimal attackRange)
         {
             BaseAttackDamage = baseAttackDamage;
             ExtraAttackDamage = extraAttackDamage;

@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace DotaHeroes.API.Interfaces
 {
+    /// <summary>
+    /// Effect duration
+    /// </summary>
     public interface IEffectDuration
     {
         float? Duration { get; }

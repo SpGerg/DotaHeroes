@@ -17,11 +17,9 @@ namespace DotaHeroes.API.Abilities.Pudge
 {
     [CommandHandler(typeof(ClientCommandHandler))]
     [CommandHandler(typeof(RemoteAdminCommandHandler))]
-    public class MeatHook : ActiveAbility, ICost, IValues
+    public class MeatHook : ActiveAbility, ICost, ILevelValues
     {
         public override string Name => "Meat hook";
-
-        public override string Command { get; set; } = "meathook";
 
         public override string Description => string.Empty;
 
@@ -31,21 +29,17 @@ namespace DotaHeroes.API.Abilities.Pudge
 
         public override TargetType TargetType => TargetType.ToPoint;
 
-        public IReadOnlyDictionary<string, List<float>> Values => new Dictionary<string, List<float>>()
-        {
-            { "damage", new List<float> { 120, 180, 210, 240 } },
-            { "mana_cost", new List<float> { 120, 130, 140, 150 } },
-            { "cooldown", new List<float> { 12, 11, 9, 8 } },
-            { "cast_range", new List<float> { 20, 30, 40, 50 } },
-        };
+        public Dictionary<string, List<float>> Values => Plugin.Instance.Config.Abilites["meathook"].Values;
 
-        public int Range { get; set; } = 1200;
+        public int MaxLevel { get; set; } = 4;
+
+        public int MinLevel { get; set; } = 0;
+
+        public IReadOnlyList<int> HeroLevelToLevelUp { get; set; } = new List<int>();
 
         public int ManaCost { get; set; } = 0;
 
         public int HealthCost { get; set; } = -1;
-
-        public override int MaxLevel => 4;
 
         public MeatHook() : base()
         {

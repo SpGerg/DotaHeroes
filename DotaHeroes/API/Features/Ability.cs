@@ -28,9 +28,9 @@ namespace DotaHeroes.API.Features
 
         public abstract TargetType TargetType { get; }
 
-        public abstract int MaxLevel { get; }
-
         public bool IsEnabled { get; set; } = true;
+
+        public bool IsVisible { get; set; } = true;
 
         public bool IsStop { 
             get
@@ -59,11 +59,6 @@ namespace DotaHeroes.API.Features
             set
             {
                 level = value;
-
-                if (level > MaxLevel)
-                {
-                    level = MaxLevel;
-                }
             }
         }
 
@@ -80,7 +75,7 @@ namespace DotaHeroes.API.Features
         public virtual void LevelUp(Hero hero)
         {
             Level++;
-            if (this is IValues && (this as IValues).Values.ContainsKey("cooldowns"))
+            if (this is ILevelValues && (this as ILevelValues).Values.ContainsKey("cooldowns"))
             {
                 var cooldown = Cooldowns.GetCooldown(hero.Player.Id, Name);
 
@@ -89,7 +84,7 @@ namespace DotaHeroes.API.Features
                     cooldown = Cooldowns.AddCooldown(hero.Player.Id, new CooldownInfo(Name, 3));
                 }
 
-                cooldown.Duration = (int)(this as IValues).Values["cooldown"][Level];
+                cooldown.Duration = (int)(this as ILevelValues).Values["cooldown"][Level];
             }
         }
 
@@ -151,7 +146,7 @@ namespace DotaHeroes.API.Features
         /// </summary>
         protected bool CheckAndRunCooldown(Hero hero, out string response)
         {
-            if (this is IValues && (this as IValues).Values.ContainsKey("cooldown"))
+            if (this is ILevelValues && (this as ILevelValues).Values.ContainsKey("cooldown"))
             {
                 var cooldown = Cooldowns.GetCooldown(hero.Player.Id, Name);
 
@@ -172,6 +167,22 @@ namespace DotaHeroes.API.Features
 
             response = $"Ability {Name} was used.";
             return true;
+        }
+
+        public static List<Ability> ToAbilitiesFromStringList(List<string> abilties)
+        {
+            List<Ability> result = new List<Ability>();
+
+            foreach (var ability in abilties)
+            {
+                var _ability = API.GetAbilityOrDefaultWithIgnoreCaseAndSpaces(ability);
+
+                if (_ability == default) continue;
+                
+                result.Add(_ability);
+            }
+
+            return result;
         }
 
         /// <summary>

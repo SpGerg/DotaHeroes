@@ -1,5 +1,6 @@
 ﻿using DotaHeroes.API;
 using DotaHeroes.API.Enums;
+using DotaHeroes.API.Events.Handlers;
 using DotaHeroes.API.Features;
 using DotaHeroes.API.Interfaces;
 using DotaHeroes.API.Statistics;
@@ -15,7 +16,7 @@ namespace DotaHeroes.API.Statistics
 {
     public class HeroStatistics
     {
-        public float Strength
+        public decimal Strength
         {
             get
             {
@@ -38,7 +39,7 @@ namespace DotaHeroes.API.Statistics
             }
         }
 
-        public float Agility
+        public decimal Agility
         {
             get
             {
@@ -61,7 +62,7 @@ namespace DotaHeroes.API.Statistics
             }
         }
 
-        public float Intelligence
+        public decimal Intelligence
         {
             get
             {
@@ -77,18 +78,18 @@ namespace DotaHeroes.API.Statistics
                 var maximumManaFromIntelligence = Constants.MaximumManaFromIntelligence * value;
                 var manaRegFromIntelligence = Constants.ManaRegenerationFromIntelligence * value;
 
-                HealthAndMana.MaximumMana = maximumMana + maximumManaFromIntelligence;
-                HealthAndMana.ManaRegeneration = manaReg + manaRegFromIntelligence;
+                HealthAndMana.MaximumMana = (int)(maximumMana + maximumManaFromIntelligence);
+                HealthAndMana.ManaRegeneration = (int)(manaReg + manaRegFromIntelligence);
 
                 UpdateAttackDamage(value);
             }
         }
 
-        public float StrengthFromLevel { get; }
+        public decimal StrengthFromLevel { get; }
 
-        public float AgilityFromLevel { get; }
+        public decimal AgilityFromLevel { get; }
 
-        public float IntelligenceFromLevel { get; }
+        public decimal IntelligenceFromLevel { get; }
 
         public HealthAndManaStatistics HealthAndMana { get; }
 
@@ -100,29 +101,39 @@ namespace DotaHeroes.API.Statistics
 
         public SpeedStatistics Speed { get; }
 
-        public AttributeType Attribute { get; set; }
+        public AttributeType AttributeType { get; set; }
 
-        public Hero Hero { get; }
+        public Features.Hero Hero { get; }
 
-        private float strength;
+        private decimal strength;
 
-        private float agility;
+        private decimal agility;
 
-        private float intelligence;
+        private decimal intelligence;
 
-        public HeroStatistics(Hero hero, AttributeType attribute)
+        public HeroStatistics()
         {
-            Attribute = attribute;
+            AttributeType = AttributeType.None;
             HealthAndMana = new HealthAndManaStatistics();
             Attack = new AttackStatistics();
             Armor = new ArmorStatistics();
             Resistance = new ResistanceStatistics();
-            Speed = new SpeedStatistics(hero, 0);
+            Speed = new SpeedStatistics();
         }
 
-        public HeroStatistics(AttributeType attribute, float strengthFromLevel, float agilityFromLevel, float intelligenceFromLevel, HealthAndManaStatistics healthAndManaStatistics, AttackStatistics attackStatistics, ArmorStatistics armorStatistics, ResistanceStatistics resistanceStatistics, SpeedStatistics speedStatistics)
+        public HeroStatistics(Features.Hero hero, AttributeType attribute)
         {
-            Attribute = attribute;
+            AttributeType = attribute;
+            HealthAndMana = new HealthAndManaStatistics();
+            Attack = new AttackStatistics();
+            Armor = new ArmorStatistics();
+            Resistance = new ResistanceStatistics();
+            Speed = new SpeedStatistics(hero);
+        }
+
+        public HeroStatistics(AttributeType attribute, decimal strengthFromLevel, decimal agilityFromLevel, decimal intelligenceFromLevel, HealthAndManaStatistics healthAndManaStatistics, AttackStatistics attackStatistics, ArmorStatistics armorStatistics, ResistanceStatistics resistanceStatistics, SpeedStatistics speedStatistics)
+        {
+            AttributeType = attribute;
             HealthAndMana = healthAndManaStatistics;
             Attack = attackStatistics;
             Armor = armorStatistics;
@@ -133,9 +144,9 @@ namespace DotaHeroes.API.Statistics
             IntelligenceFromLevel = intelligenceFromLevel;
         }
 
-        public HeroStatistics(AttributeType attribute, float strength, float strengthFromLevel, float agility, float agilityFromLevel, float intelligence, float intelligenceFromLevel, HealthAndManaStatistics healthAndManaStatistics, AttackStatistics attackStatistics, ArmorStatistics armorStatistics, ResistanceStatistics resistanceStatistics, SpeedStatistics speedStatistics)
+        public HeroStatistics(AttributeType attribute, decimal strength, decimal strengthFromLevel, decimal agility, decimal agilityFromLevel, decimal intelligence, decimal intelligenceFromLevel, HealthAndManaStatistics healthAndManaStatistics, AttackStatistics attackStatistics, ArmorStatistics armorStatistics, ResistanceStatistics resistanceStatistics, SpeedStatistics speedStatistics)
         {
-            Attribute = attribute;
+            AttributeType = attribute;
             HealthAndMana = healthAndManaStatistics;
             Attack = attackStatistics;
             Armor = armorStatistics;
@@ -149,12 +160,12 @@ namespace DotaHeroes.API.Statistics
             IntelligenceFromLevel = intelligenceFromLevel;
         }
 
-        public HeroStatistics(HeroStatistics heroStatistics, Hero hero)
+        public HeroStatistics(HeroStatistics heroStatistics, Features.Hero hero)
         {
             StrengthFromLevel = heroStatistics.StrengthFromLevel;
             AgilityFromLevel = heroStatistics.AgilityFromLevel;
             IntelligenceFromLevel = heroStatistics.IntelligenceFromLevel;
-            Attribute = heroStatistics.Attribute;
+            AttributeType = heroStatistics.AttributeType;
             HealthAndMana = heroStatistics.HealthAndMana;
             Attack = heroStatistics.Attack;
             Armor = heroStatistics.Armor;
@@ -170,14 +181,14 @@ namespace DotaHeroes.API.Statistics
             Intelligence += IntelligenceFromLevel;
         }
 
-        private void UpdateAttackDamage(float value)
+        private void UpdateAttackDamage(decimal value)
         {
-            if (Attribute == AttributeType.Intelligence)
+            if (AttributeType == AttributeType.Intelligence)
             {
                 Attack.BaseAttackDamage = (int)value;
             }
 
-            if (Attribute == AttributeType.Universal)
+            if (AttributeType == AttributeType.Universal)
             {
                 Attack.BaseAttackDamage = (int)((Strength + Agility + Intelligence) / Constants.UniversalDamage);
             }
@@ -191,7 +202,7 @@ namespace DotaHeroes.API.Statistics
             stringBuilder.AppendLine(Armor.ToString());
             stringBuilder.AppendLine(Resistance.ToString(Intelligence));
             stringBuilder.AppendLine(Speed.ToString());
-            stringBuilder.AppendLine(Attribute.ToString());
+            stringBuilder.AppendLine(AttributeType.ToString());
 
             return StringBuilderPool.Shared.ToStringReturn(stringBuilder);
         }

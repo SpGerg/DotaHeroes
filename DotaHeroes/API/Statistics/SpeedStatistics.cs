@@ -23,21 +23,35 @@ namespace DotaHeroes.API.Statistics
 
                 if (Hero.Player != null)
                 {
+                    Hero.Player.DisableEffect<MovementBoost>();
+
                     if (speed < 0)
                     {
                         Hero.Player.EnableEffect<Disabled>();
                     }
-                    else
+                    else if (speed == 0)
                     {
                         Hero.Player.DisableEffect<Disabled>();
+                    }
+                    else if (speed > 1)
+                    {
+                        Hero.Player.DisableEffect<Disabled>();
+
+                        Hero.Player.EnableEffect<MovementBoost>();
+                        Hero.Player.ChangeEffectIntensity<MovementBoost>((byte)speed);
                     }
                 }
             }
         }
 
-        public Hero Hero { get; }
+        public Hero Hero { get; private set; }
 
         private sbyte speed;
+
+        public SpeedStatistics()
+        {
+            Hero = null;
+        }
 
         public SpeedStatistics(Hero hero)
         {
@@ -48,6 +62,13 @@ namespace DotaHeroes.API.Statistics
         {
             Hero = hero;
             Speed = speed;
+        }
+
+        public void SetHeroIfNull(Hero hero)
+        {
+            if (Hero != null) return;
+
+            Hero = hero;
         }
 
         public override string ToString()

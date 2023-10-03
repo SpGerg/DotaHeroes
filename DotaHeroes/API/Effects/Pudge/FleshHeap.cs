@@ -18,7 +18,7 @@ namespace DotaHeroes.API.Effects.Pudge
 
         public override EffectClassType EffectClassType => EffectClassType.Positive;
 
-        public int Count {
+        public override int Stack {
             get
             {
                 return count;
@@ -42,7 +42,7 @@ namespace DotaHeroes.API.Effects.Pudge
             set
             {
                 strengthToGive = value;
-                Count = Count;
+                Stack = Stack;
             }
         }
 
@@ -72,7 +72,7 @@ namespace DotaHeroes.API.Effects.Pudge
 
         public override bool Execute()
         {
-            Count++;
+            Stack++;
 
             return base.Execute();
         }

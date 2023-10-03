@@ -72,10 +72,10 @@ namespace DotaHeroes.API.Features
 
             if (cooldown.IsReady)
             {
-                return $"{cooldown.Name}: <color=Green>Ready</color>";
+                return $"<color=Green>Ready</color>";
             }
 
-            return $"{cooldown.Name}: {cooldown.Cooldown}";
+            return $"{cooldown.Cooldown}";
         }
     }
 }

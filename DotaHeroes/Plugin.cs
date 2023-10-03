@@ -10,13 +10,23 @@ using System.Threading.Tasks;
 using Player = Exiled.Events.Handlers.Player;
 using Hero = DotaHeroes.API.Events.Handlers.Hero;
 using DotaHeroes.API.Heroes;
+using DotaHeroes.API.Abilities.Pudge;
 
 namespace DotaHeroes
 {
     public class Plugin : Plugin<Config>
     {
+        public static Plugin Instance { get; private set; }
+
         public override void OnEnabled()
         {
+            Instance = this;
+
+            API.API.RegisterAbility(new MeatHook());
+            API.API.RegisterAbility(new Rot());
+            API.API.RegisterAbility(new FleshHeap());
+            API.API.RegisterAbility(new Dismember());
+
             API.API.RegisterHero(new Pudge());
 
             Player.ChangingRole += PlayerHandler.SetHero;

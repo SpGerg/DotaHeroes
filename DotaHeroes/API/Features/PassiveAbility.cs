@@ -6,12 +6,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DotaHeroes.API.Interfaces
+namespace DotaHeroes.API.Features
 {
-    public interface IPassiveAbility
+    public abstract class PassiveAbility : Ability
     {
-        void Register(Hero owner);
+        public abstract void Register(Hero owner);
 
-        void Unregister(Hero owner);
+        public abstract void Unregister(Hero owner);
     }
 }

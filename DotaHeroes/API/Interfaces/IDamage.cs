@@ -7,9 +7,13 @@ using System.Threading.Tasks;
 
 namespace DotaHeroes.API.Interfaces
 {
+    /// <summary>
+    /// Damage and damage type
+    /// </summary>
     public interface IDamage
     {
-        int Damage { get; set; }
+        decimal Damage { get; set; }
+
         DamageType DamageType { get; set; }
     }
 }

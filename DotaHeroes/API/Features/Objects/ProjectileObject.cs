@@ -15,7 +15,7 @@ namespace DotaHeroes.API.Features.Objects
     {
         public HeroController Target { get; set; }
 
-        public int Damage { get; set; }
+        public decimal Damage { get; set; }
 
         public DamageType DamageType { get; set; }
 

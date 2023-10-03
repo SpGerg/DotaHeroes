@@ -8,13 +8,13 @@ namespace DotaHeroes.API.Statistics
 {
     public class ArmorStatistics
     {
-        public float BaseArmor { get; set; }
+        public decimal BaseArmor { get; set; }
 
-        public float ExtraArmor { get; set; }
+        public decimal ExtraArmor { get; set; }
 
         public ArmorStatistics() { }
 
-        public ArmorStatistics(float baseArmor, float moreArmor)
+        public ArmorStatistics(decimal baseArmor, decimal moreArmor)
         {
             BaseArmor = baseArmor;
             ExtraArmor = moreArmor;
@@ -24,10 +24,10 @@ namespace DotaHeroes.API.Statistics
         {
             if (ExtraArmor > 0)
             {
-                return $"Armor: {(int)BaseArmor} + <color=Green>{(int)ExtraArmor}</color>";
+                return $"Armor: {Math.Round(BaseArmor, 1)} + <color=Green>{Math.Round(ExtraArmor, 1)}</color>";
             }
 
-            return $"Armor: {(int)BaseArmor}";
+            return $"Armor: {Math.Round(BaseArmor, 1)}";
         }
     }
 }

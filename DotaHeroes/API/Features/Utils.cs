@@ -26,7 +26,7 @@ namespace DotaHeroes.API.Features
         /// <summary>
         /// Block damage
         /// </summary>
-        public static int BlockDamage(int damage, DamageType damageType, IDamageBlock damageBlock)
+        public static decimal BlockDamage(decimal damage, DamageType damageType, IDamageBlock damageBlock)
         {
             if (damageBlock.DamageTypesToBlock.Contains(DamageType.None))
             {

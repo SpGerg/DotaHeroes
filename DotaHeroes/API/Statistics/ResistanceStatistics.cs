@@ -11,13 +11,13 @@ namespace DotaHeroes.API.Statistics
 {
     public class ResistanceStatistics
     {
-        public float MagicResistance { get; set; }
+        public decimal MagicResistance { get; set; }
 
-        public float EffectResistance { get; set; }
+        public decimal EffectResistance { get; set; }
 
         public List<IResistanceModifier> ResistanceModifiers { get; set; }
 
-        public const float BaseResistance = 25;
+        public const decimal BaseResistance = 25;
 
         public ResistanceStatistics()
         {
@@ -26,7 +26,7 @@ namespace DotaHeroes.API.Statistics
             ResistanceModifiers = new List<IResistanceModifier>();
         }
 
-        public ResistanceStatistics(float magicResistance, float baseEffectResistance)
+        public ResistanceStatistics(decimal magicResistance, decimal baseEffectResistance)
         {
             MagicResistance = magicResistance;
             EffectResistance = baseEffectResistance;
@@ -35,7 +35,7 @@ namespace DotaHeroes.API.Statistics
 
         public float GetEffectResistance()
         {
-            return Mathf.Clamp(1 - (1 - EffectResistance / 10) * GetEffectResistanceFromModifiers(), 0, 99) * 10;
+            return Mathf.Clamp(1 - (1 - (float)EffectResistance / 10) * GetEffectResistanceFromModifiers(), 0, 99) * 10;
         }
 
         public float GetEffectDuration(float originalDuration)
@@ -43,7 +43,7 @@ namespace DotaHeroes.API.Statistics
             return originalDuration * (100 - GetEffectResistance());
         }
 
-        public float GetMagicResistance(float intelligence)
+        public decimal GetMagicResistance(decimal intelligence)
         {
             return MagicResistance + (intelligence / 10);
         }
@@ -67,7 +67,7 @@ namespace DotaHeroes.API.Statistics
             return $"Effect resistance: {GetEffectResistance()}";
         }
 
-        public string ToString(float intelligence)
+        public string ToString(decimal intelligence)
         {
             return $"Magic resistance: {GetMagicResistance(intelligence)} Effect resistance: {GetEffectResistance()}";
         }

@@ -10,11 +10,13 @@ using DotaHeroes.API.Statistics;
 using Exiled.API.Features;
 using Exiled.API.Features.Roles;
 using Exiled.CustomRoles.API.Features;
+using MEC;
 using NorthwoodLib.Pools;
 using PlayerRoles;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 using UnityStandardAssets.CrossPlatformInput;
 
 namespace DotaHeroes.API.Features
@@ -28,6 +30,8 @@ namespace DotaHeroes.API.Features
         public virtual List<Ability> Abilities => new List<Ability>();
 
         public virtual RoleTypeId Model => RoleTypeId.Tutorial;
+
+        public virtual List<RoleTypeId> ChangeRoles => new List<RoleTypeId> { RoleTypeId.Tutorial };
 
         public Player Player { get; private set; }
 
@@ -65,6 +69,35 @@ namespace DotaHeroes.API.Features
 
         public int Level { get; set; }
 
+        public int Experience
+        {
+            get
+            {
+                return experience;
+            }
+            set
+            {
+                experience = value;
+
+                if (experience >= Constants.ExperienceToLevelUp[Level])
+                {
+                    for (int i = Level;i < i++;i++)
+                    {
+                        experience -= Constants.ExperienceToLevelUp[Level];
+
+                        if (experience <= 0)
+                        {
+                            break;
+                        }
+
+                        LevelUp();
+                    }
+
+                    experience = 0;
+                }
+            }
+        }
+
         public bool IsHeroDead
         {
             get
@@ -79,11 +112,22 @@ namespace DotaHeroes.API.Features
 
         public Dictionary<string, object> Values { get; }
 
+        public bool IsHealthRegeneration { get; set; }
+
+        public bool IsManaRegeneration { get; set; }
+
         private List<Effect> Effects { get; }
 
         private HeroStateType heroStateType;
 
         private bool isHeroDead;
+
+        private int experience;
+
+        static Hero()
+        {
+            Timing.RunCoroutine(RegenerationCoroutine());
+        }
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="Hero" /> class.
@@ -93,6 +137,16 @@ namespace DotaHeroes.API.Features
             Player = null;
             Effects = new List<Effect>();
             Values = new Dictionary<string, object>();
+        }
+
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="Hero" /> class.
+        /// </summary>
+        /// <param name="hero"><inheritdoc cref="Player" /></param>
+        public Hero(Hero copy) : this(copy.Player, copy.SideType)
+        {
+            Effects = copy.Effects;
+            Values = copy.Values;
         }
 
         /// <summary>
@@ -108,24 +162,27 @@ namespace DotaHeroes.API.Features
             Effects = new List<Effect>();
             Values = new Dictionary<string, object>();
 
-            API.SetOrAddPlayer(player.Id, this);
+            if (Player != null)
+            {
+                API.SetOrAddPlayer(player.Id, this);
+            }
 
             HeroController = Player.GameObject.GetComponent<HeroController>();
 
             foreach (var ability in Abilities)
             {
-                if (ability is IValues)
+                if (ability is ILevelValues)
                 {
-                    var values = (ability as IValues).Values;
+                    var values = (ability as ILevelValues).Values;
                     if (values.ContainsKey("cooldown"))
                     {
                         Cooldowns.AddCooldown(player.Id, new CooldownInfo(ability.Name, (int)values["cooldown"][ability.Level]));
                     }
                 }
 
-                if (ability is IPassiveAbility)
+                if (ability is PassiveAbility)
                 {
-                    (ability as IPassiveAbility).Register(this);
+                    (ability as PassiveAbility).Register(this);
                 }
             }
         }
@@ -214,6 +271,18 @@ namespace DotaHeroes.API.Features
         public void ApplyDispel(DispelType dispelType)
         {
             ApplyDispel(dispelType, null);
+        }
+
+        /// <summary>
+        /// Level up.
+        /// </summary>
+        public void LevelUp()
+        {
+            if (Level >= 30) return;
+
+            HeroStatistics.LevelUp();
+
+            Log.Info($"Player {Player.Nickname} hero {HeroName} is level up from {Level} to {Level++}");
         }
 
         /// <summary>
@@ -432,30 +501,30 @@ namespace DotaHeroes.API.Features
         }
 
         /// <summary>
-        /// Take damage without attacker
+        /// Take damage
         /// </summary>
-        public virtual decimal TakeDamage(int damage, DamageType damageType)
+        public virtual decimal TakeDamage(Hero attacker, decimal damage, DamageType damageType)
         {
-            var takingDamage = new HeroTakingDamageEventArgs(this, null, damage, damageType, true);
+            var takingDamage = new HeroTakingDamageEventArgs(this, attacker, damage, damageType, true);
             Events.Handlers.Hero.OnHeroTakingDamage(takingDamage);
 
             if (!takingDamage.IsAllowed) return -1;
 
-            int _damage = takingDamage.Damage;
+            decimal _damage = takingDamage.Damage;
             decimal total_damage = 0;
 
             switch (damageType)
             {
                 case DamageType.None: break;
                 case DamageType.Physical:
-                    decimal armor = (decimal)(HeroStatistics.Armor.BaseArmor + HeroStatistics.Armor.ExtraArmor);
+                    decimal armor = (HeroStatistics.Armor.BaseArmor + HeroStatistics.Armor.ExtraArmor);
                     decimal armor_percent = (0.052m * armor) / (0.9m + 0.048m * armor);
                     total_damage = (int)(_damage - ((_damage / 100) * armor_percent));
 
                     break;
                 case DamageType.Magical:
                     decimal percent = (_damage / 100m);
-                    total_damage = _damage - percent * (decimal)HeroStatistics.Resistance.GetMagicResistance(HeroStatistics.Intelligence);
+                    total_damage = _damage - percent * HeroStatistics.Resistance.GetMagicResistance(HeroStatistics.Intelligence);
 
                     break;
                 case DamageType.Pure:
@@ -466,45 +535,28 @@ namespace DotaHeroes.API.Features
                     break;
             }
 
-            ReduceHealthAndCheckForDead((float)total_damage);
+            ReduceHealthAndCheckForDead(total_damage);
 
-            var takedDamage = new HeroTakedDamageEventArgs(this, null, _damage, damageType);
+            var takedDamage = new HeroTakedDamageEventArgs(this, attacker, _damage, damageType);
             Events.Handlers.Hero.OnHeroTakedDamage(takedDamage);
 
             return total_damage;
         }
 
         /// <summary>
-        /// Take damage
+        /// Take damage without attacker
         /// </summary>
-        public virtual decimal TakeDamage(Hero attacker, int damage, DamageType damageType)
+        public virtual decimal TakeDamage(decimal damage, DamageType damageType)
         {
-            var takingDamage = new HeroTakingDamageEventArgs(this, attacker, damage, damageType, true);
-            Events.Handlers.Hero.OnHeroTakingDamage(takingDamage);
-
-            var result = TakeDamage(damage, damageType);
-
-            var takedDamage = new HeroTakedDamageEventArgs(this, attacker, damage, damageType);
-            Events.Handlers.Hero.OnHeroTakedDamage(takedDamage);
+            var result = TakeDamage(null, damage, damageType);
 
             return result;
-        }
-
-
-        private void ReduceHealthAndCheckForDead(float damage)
-        {
-            HeroStatistics.HealthAndMana.Health -= damage;
-
-            if (HeroStatistics.HealthAndMana.Health < 0)
-            {
-                Dead();
-            }
         }
 
         /// <summary>
         /// Heal
         /// </summary>
-        public virtual void Heal(int heal, Hero hero)
+        public virtual void Heal(decimal heal, Hero hero)
         {
             var healing = new HeroHealingEventArgs(this, hero, heal, true);
             Events.Handlers.Hero.OnHeroHealing(healing);
@@ -576,6 +628,9 @@ namespace DotaHeroes.API.Features
             var died = new HeroDiedEventArgs(this);
             Events.Handlers.Hero.OnHeroDied(died);
 
+            IsHealthRegeneration = false;
+            IsManaRegeneration = false;
+
             IsHeroDead = true;
         }
 
@@ -587,6 +642,8 @@ namespace DotaHeroes.API.Features
             var healthAndMana = HeroStatistics.HealthAndMana;
             healthAndMana.Health = healthAndMana.MaximumHealth;
             healthAndMana.Mana = healthAndMana.MaximumMana;
+            IsHealthRegeneration = true;
+            IsManaRegeneration = true;
             IsHeroDead = false;
         }
 
@@ -597,8 +654,8 @@ namespace DotaHeroes.API.Features
         {
             var stringBuilder = StringBuilderPool.Shared.Rent();
 
-            stringBuilder.AppendLine("Hero: ");
             stringBuilder.AppendLine("Name: " + HeroName);
+            stringBuilder.AppendLine("Level: " + Level);
             stringBuilder.AppendLine("Hero statistics: " + HeroStatistics.ToString());
 
             if (Effects.Count > 0)
@@ -613,6 +670,11 @@ namespace DotaHeroes.API.Features
                         stringBuilder.AppendLine(effect.ToString());
 
                         stringBuilder.AppendLine($"— {effect.Description}");
+
+                        if (effect.Stack > -1)
+                        {
+                            stringBuilder.AppendLine(effect.Stack.ToString());
+                        }
                     }
                 }
             }
@@ -622,7 +684,54 @@ namespace DotaHeroes.API.Features
 
         public abstract Hero Create();
 
+        public abstract Hero Create(Hero copy);
+
         public abstract Hero Create(Player player, SideType sideType);
+
+        private static IEnumerator<float> RegenerationCoroutine()
+        {
+            while (true)
+            {
+                foreach (var hero in API.GetHeroes().Values)
+                {
+                    var healthAndMana = hero.HeroStatistics.HealthAndMana;
+
+                    if (hero.IsHealthRegeneration)
+                    {
+                        healthAndMana.Health += healthAndMana.HealthRegeneration;
+                    }
+
+                    if (hero.IsManaRegeneration)
+                    {
+                        healthAndMana.Mana += healthAndMana.ManaRegeneration;
+                    }
+
+                    if (healthAndMana.Health >= healthAndMana.MaximumHealth)
+                    {
+                        healthAndMana.Health = healthAndMana.MaximumHealth;
+                    }
+
+                    if (healthAndMana.Mana >= healthAndMana.MaximumMana)
+                    {
+                        healthAndMana.Mana = healthAndMana.MaximumMana;
+                    }
+
+                    Hud.Update(hero);
+                }
+                
+                yield return Timing.WaitForSeconds(1);
+            }
+        }
+
+        private void ReduceHealthAndCheckForDead(decimal damage)
+        {
+            HeroStatistics.HealthAndMana.Health -= damage;
+
+            if (HeroStatistics.HealthAndMana.Health < 0)
+            {
+                Dead();
+            }
+        }
     }
 }
 

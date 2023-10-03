@@ -8,7 +8,7 @@ namespace DotaHeroes.API.Statistics
 {
     public class HealthAndManaStatistics
     {
-        public float MaximumHealth {
+        public decimal MaximumHealth {
             get
             {
                 return maximumHealth;
@@ -21,7 +21,7 @@ namespace DotaHeroes.API.Statistics
             }
         }
 
-        public float MaximumMana
+        public decimal MaximumMana
         {
             get
             {
@@ -35,21 +35,21 @@ namespace DotaHeroes.API.Statistics
             }
         }
 
-        public float Health { get; set; }
+        public decimal Health { get; set; }
 
-        public float Mana { get; set; }
+        public decimal Mana { get; set; }
 
-        public float HealthRegeneration { get; set; }
+        public decimal HealthRegeneration { get; set; }
 
-        public float ManaRegeneration { get; set; }
+        public decimal ManaRegeneration { get; set; }
 
-        private float maximumMana;
+        private decimal maximumMana;
 
-        private float maximumHealth;
+        private decimal maximumHealth;
 
         public HealthAndManaStatistics() { }
 
-        public HealthAndManaStatistics(float maximumHealth, float maximumMana)
+        public HealthAndManaStatistics(int maximumHealth, int maximumMana)
         {
             MaximumMana = maximumMana;
             MaximumHealth = maximumHealth;
@@ -57,7 +57,7 @@ namespace DotaHeroes.API.Statistics
             Mana = maximumMana;
         }
 
-        public HealthAndManaStatistics(float maximumHealth, float maximumMana, float health, float mana)
+        public HealthAndManaStatistics(int maximumHealth, int maximumMana, int health, int mana)
         {
             MaximumMana = maximumMana;
             MaximumHealth = maximumHealth;
@@ -65,7 +65,7 @@ namespace DotaHeroes.API.Statistics
             Mana = mana;
         }
 
-        public HealthAndManaStatistics(float maximumHealth, float maximumMana, float health, float mana, float healthReg, float manaReg)
+        public HealthAndManaStatistics(int maximumHealth, int maximumMana, int health, int mana, int healthReg, int manaReg)
         {
             MaximumMana = maximumMana;
             MaximumHealth = maximumHealth;
@@ -77,7 +77,7 @@ namespace DotaHeroes.API.Statistics
 
         public override string ToString()
         {
-            return $"Health: <color=Red>{(int)Health}</color> Regen: <color=Red>{Math.Round(HealthRegeneration, 1)}</color> Mana: <color=#00FFFF>{(int)Mana}</color> Regen: <color=Red>{Math.Round(ManaRegeneration, 1)}</color>";
+            return $"Health: <color=Red>{Health}</color> Regen: <color=Red>{Math.Round(HealthRegeneration, 1)}</color> Mana: <color=#00FFFF>{Mana}</color> Regen: <color=Red>{Math.Round(ManaRegeneration, 1)}</color>";
         }
     }
 }

@@ -20,6 +20,8 @@ namespace DotaHeroes.API.Features
 
         public virtual DispelType DispelType { get; set; } = DispelType.None;
 
+        public virtual int Stack { get; set; } = -1;
+
         public Hero Owner { get; }
 
         public Hero Hero { get; }

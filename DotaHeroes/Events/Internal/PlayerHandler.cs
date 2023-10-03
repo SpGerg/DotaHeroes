@@ -23,6 +23,18 @@ namespace DotaHeroes.Events.Internal
         {
             var player = ev.Player;
             var hero = API.API.GetRegisteredHeroes().GetRandomValue().Value;
+
+            if (ev.NewRole is RoleTypeId.Spectator && hero != default)
+            {
+                GameObject.Destroy(hero.HeroController);
+                return;
+            }
+
+            if (!hero.ChangeRoles.Contains(ev.NewRole))
+            {
+                return;
+            }
+
             var createdHero = hero.Create(player, SideType.Dire);
 
             ev.NewRole = createdHero.Model;
@@ -32,7 +44,7 @@ namespace DotaHeroes.Events.Internal
 
             Log.Info($"Player {player.Nickname} hero is {hero.HeroName}");
 
-            Hud.Update();
+            Hud.Update(createdHero);
         }
     }
 }

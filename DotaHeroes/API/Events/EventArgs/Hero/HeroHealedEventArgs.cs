@@ -15,7 +15,7 @@ namespace DotaHeroes.API.Events.EventArgs.Hero
 
         public Features.Hero Healer { get; }
 
-        public float Heal { get; set; }
+        public decimal Heal { get; set; }
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="HeroHealedEventArgs" /> class.
@@ -23,7 +23,7 @@ namespace DotaHeroes.API.Events.EventArgs.Hero
         /// <param name="hero"><inheritdoc cref="Hero" /></param>
         /// <param name="healer"><inheritdoc cref="Healer" /></param>
         /// <param name="heal"><inheritdoc cref="Heal" /></param>
-        public HeroHealedEventArgs(Features.Hero hero, Features.Hero healer, float heal)
+        public HeroHealedEventArgs(Features.Hero hero, Features.Hero healer, decimal heal)
         {
             Hero = hero;
             Healer = healer;

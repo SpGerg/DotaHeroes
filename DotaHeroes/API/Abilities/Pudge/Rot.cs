@@ -22,9 +22,9 @@ namespace DotaHeroes.API.Abilities.Pudge
 {
     [CommandHandler(typeof(ClientCommandHandler))]
     [CommandHandler(typeof(RemoteAdminCommandHandler))]
-    public class Rot : ToggleAbility, IValues
+    public class Rot : ToggleAbility, ILevelValues
     {
-        public override string Name => "rot";
+        public override string Name => "Rot";
 
         public override string Description => "A toxic cloud that deals intense damage and slows movement--harming not only enemy units but Pudge himself.";
 
@@ -34,15 +34,15 @@ namespace DotaHeroes.API.Abilities.Pudge
 
         public override TargetType TargetType => TargetType.None;
 
-        public IReadOnlyDictionary<string, List<float>> Values => new Dictionary<string, List<float>>()
-        {
-            { "damage", new List<float> { 30, 50, 80, 110 } },
-            { "mana_cost", new List<float> { 0, 0, 0, 0 } },
-        };
-
-        public override int MaxLevel => 4;
-
         public override bool IsActive { get; set; }
+
+        public Dictionary<string, List<float>> Values => Plugin.Instance.Config.Abilites["rot"].Values;
+
+        public int MaxLevel { get; set; } = 4;
+
+        public int MinLevel { get; set; } = 0;
+
+        public IReadOnlyList<int> HeroLevelToLevelUp { get; set; } = new List<int>();
 
         public float Damage { get; private set; }
 

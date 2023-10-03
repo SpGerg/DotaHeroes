@@ -22,11 +22,11 @@ namespace DotaHeroes.API.Effects.Pudge
 
         public override DispelType DispelType { get; set; } = DispelType.NotDispelling;
 
-        private DamageOverTime DamageOverTime;
-
-        public int Damage { get; set; }
+        public decimal Damage { get; set; }
 
         public DamageType DamageType { get; set; }
+
+        private DamageOverTime DamageOverTime;
 
         public Rot() : base() { }
 

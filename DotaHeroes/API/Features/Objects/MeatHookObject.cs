@@ -1,4 +1,5 @@
 ﻿using CustomPlayerEffects;
+using DotaHeroes.API.Effects;
 using DotaHeroes.API.Enums;
 using DotaHeroes.API.Features.Components;
 using DotaHeroes.API.Interfaces;
@@ -29,15 +30,15 @@ namespace DotaHeroes.API.Features.Objects
 
         public float Speed { get; private set; }
 
-        public int Damage { get; set; }
-
-        public bool IsEnded { get; set; }
+        public decimal Damage { get; set; }
 
         public DamageType DamageType { get; set; }
 
         private bool isMovingToTarget { get; set; } = true;
 
         private Vector3 usePosition { get; set; }
+
+        public bool IsEnded { get; set; }
 
         private float moveLength { get; set; }
 
@@ -98,9 +99,15 @@ namespace DotaHeroes.API.Features.Objects
             }
         }
 
-        public void OnTriggerEnter(Collider collider)
+        public void OnCollisionEnter(Collision collision)
         {
-            if (isMovingToTarget && collider.TryGetComponent(out HeroController heroController))
+            var player = Player.Get(collision.collider);
+
+            if (player == null) return;
+            
+            if (!player.GameObject.TryGetComponent(out HeroController heroController)) return;
+
+            if (isMovingToTarget)
             {
                 if (heroController.Hero.Player.UserId == Owner.Hero.Player.UserId)
                 {
@@ -111,7 +118,7 @@ namespace DotaHeroes.API.Features.Objects
 
                 HeroTarget = heroController;
                 HeroTarget.Hero.Player.IsGodModeEnabled = true;
-                HeroTarget.Hero.Player.EnableEffect<Ensnared>();
+                HeroTarget.Hero.EnableEffect<Stun>();
 
                 if (heroController.Hero.SideType == Owner.Hero.SideType)
                 {

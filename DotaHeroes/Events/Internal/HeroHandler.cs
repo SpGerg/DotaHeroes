@@ -19,7 +19,7 @@ namespace DotaHeroes.Events.Internal
 
             var damageBlocks = ev.Hero.GetEffects().Where(effect => damageBlockType.IsAssignableFrom(effect.GetType()));
 
-            int total_damage = ev.Damage;
+            decimal total_damage = ev.Damage;
 
             foreach (var effect in damageBlocks)
             {
@@ -50,12 +50,12 @@ namespace DotaHeroes.Events.Internal
 
         internal static void UpdateHudOnTakedDamage(HeroTakedDamageEventArgs ev)
         {
-            Hud.Update();
+            Hud.Update(ev.Hero);
         }
 
         internal static void UpdateHudOnHealed(HeroHealedEventArgs ev)
         {
-            Hud.Update();
+            Hud.Update(ev.Hero);
         }
     }
 }

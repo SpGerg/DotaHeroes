@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 using UnityEngine;
 using static UnityEngine.UI.GridLayoutGroup;
 
-namespace DotaHeroes.Commands.Hero
+namespace DotaHeroes.Commands.User.Hero
 {
     public class Attack : HeroCommandBase
     {
@@ -28,7 +28,7 @@ namespace DotaHeroes.Commands.Hero
 
             var player = hero.Player;
 
-            if (!Physics.Raycast(hero.Player.Transform.position, hero.Player.Transform.forward, out hit, hero.HeroStatistics.Attack.AttackRange))
+            if (!Physics.Raycast(hero.Player.Transform.position, hero.Player.Transform.forward, out hit, (float)hero.HeroStatistics.Attack.AttackRange))
             {
                 response = string.Empty;
 

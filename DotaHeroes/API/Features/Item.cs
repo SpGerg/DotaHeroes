@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace DotaHeroes.API.Features
 {
-    public abstract class Item : IValues
+    public abstract class Item : ILevelValues
     {
         public string Name { get; }
 

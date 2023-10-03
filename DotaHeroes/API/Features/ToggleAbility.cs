@@ -28,7 +28,7 @@ namespace DotaHeroes.API.Features
         {
             if (string.IsNullOrEmpty(Command))
             {
-                Command = Name;
+                Command = Name.Replace(" ", "").ToLower();
             }
         }
 

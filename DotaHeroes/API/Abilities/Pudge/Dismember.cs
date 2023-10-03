@@ -18,11 +18,9 @@ namespace DotaHeroes.API.Abilities.Pudge
 {
     [CommandHandler(typeof(ClientCommandHandler))]
     [CommandHandler(typeof(RemoteAdminCommandHandler))]
-    public class Dismember : ActiveAbility, IValues
+    public class Dismember : ActiveAbility, ILevelValues
     {
         public override string Name => "Dismember";
-
-        public override string Command { get; set; } = "dismember";
 
         public override string Description => "Eating lol";
 
@@ -32,16 +30,19 @@ namespace DotaHeroes.API.Abilities.Pudge
 
         public override TargetType TargetType => TargetType.ToFriendAndEnemy;
 
-        public override int MaxLevel => 4;
-
         public const float Duration = 3.5f;
 
-        public int Range { get; set; } = 10;
+        public Dictionary<string, List<float>> Values => Plugin.Instance.Config.Abilites["dismember"].Values;
 
-        public IReadOnlyDictionary<string, List<float>> Values => new Dictionary<string, List<float>>()
+        public int MaxLevel { get; set; } = 3;
+
+        public int MinLevel { get; set; } = 0;
+
+        public IReadOnlyList<int> HeroLevelToLevelUp { get; set; } = new List<int>()
         {
-            { "damage", new List<float>() { 120, 150, 180, 210 } },
-            { "cooldown", new List<float>() { 30, 25, 20, 15 } },
+            6,
+            12,
+            18
         };
 
         public Dismember() : base() { }
@@ -52,7 +53,7 @@ namespace DotaHeroes.API.Abilities.Pudge
 
             RaycastHit hit;
 
-            if (!Physics.Raycast(player.Transform.position, player.CameraTransform.forward, out hit, Range))
+            if (!Physics.Raycast(player.Transform.position, player.CameraTransform.forward, out hit, Values["range"][Level]))
             {
                 response = "Target not found";
 

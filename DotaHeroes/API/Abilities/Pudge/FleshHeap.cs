@@ -14,11 +14,9 @@ namespace DotaHeroes.API.Abilities.Pudge
 {
     [CommandHandler(typeof(ClientCommandHandler))]
     [CommandHandler(typeof(RemoteAdminCommandHandler))]
-    public class FleshHeap : ActiveAbility, IValues
+    public class FleshHeap : ActiveAbility, ILevelValues
     {
         public override string Name => "Flesh heap";
-
-        public override string Command { get; set; } = "fleshheap";
 
         public override string Description => "Flesh heap";
 
@@ -28,14 +26,13 @@ namespace DotaHeroes.API.Abilities.Pudge
 
         public override TargetType TargetType => TargetType.None;
 
-        public override int MaxLevel => 4;
+        public Dictionary<string, List<float>> Values => Plugin.Instance.Config.Abilites["fleshheap"].Values;
 
-        public IReadOnlyDictionary<string, List<float>> Values => new Dictionary<string, List<float>>()
-        {
-            { "damage_block", new List<float> { 8, 14, 20, 26 } },
-            { "mana_cost", new List<float> { 120, 130, 140, 150 } },
-            { "cooldown", new List<float> { 12, 11, 9, 8 } },
-        };
+        public int MaxLevel { get; set; } = 4;
+
+        public int MinLevel { get; set; } = 0;
+
+        public IReadOnlyList<int> HeroLevelToLevelUp { get; set; } = new List<int>();
 
         public FleshHeap() : base() { }
 
@@ -46,7 +43,7 @@ namespace DotaHeroes.API.Abilities.Pudge
             if (effect != default)
             {
                 effect.IsVisible = true;
-                effect.Count++;
+                effect.Stack++;
             }
 
             base.LevelUp(hero);
