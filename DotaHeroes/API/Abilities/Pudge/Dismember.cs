@@ -30,13 +30,13 @@ namespace DotaHeroes.API.Abilities.Pudge
 
         public override TargetType TargetType => TargetType.ToFriendAndEnemy;
 
-        public const float Duration = 3.5f;
-
         public Dictionary<string, List<float>> Values => Plugin.Instance.Config.Abilites["dismember"].Values;
 
         public int MaxLevel { get; set; } = 3;
 
         public int MinLevel { get; set; } = 0;
+
+        public const float Duration = 3.5f;
 
         public IReadOnlyList<int> HeroLevelToLevelUp { get; set; } = new List<int>()
         {

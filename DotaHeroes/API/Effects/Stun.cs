@@ -20,7 +20,7 @@ namespace DotaHeroes.API.Effects
 
         public override DispelType DispelType { get; set; } = DispelType.Strong;
 
-        public float? Duration { get; set; } = 5;
+        public float Duration { get; set; } = 5;
 
         public override EffectClassType EffectClassType => EffectClassType.Negative;
 

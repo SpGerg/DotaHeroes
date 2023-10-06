@@ -22,7 +22,7 @@ namespace DotaHeroes.API.Abilities.Pudge
 {
     [CommandHandler(typeof(ClientCommandHandler))]
     [CommandHandler(typeof(RemoteAdminCommandHandler))]
-    public class Rot : ToggleAbility, ILevelValues
+    public class Rot : ToggleAbility, ILevelValues, IDamage
     {
         public override string Name => "Rot";
 
@@ -44,7 +44,9 @@ namespace DotaHeroes.API.Abilities.Pudge
 
         public IReadOnlyList<int> HeroLevelToLevelUp { get; set; } = new List<int>();
 
-        public float Damage { get; private set; }
+        public decimal Damage { get; set; }
+
+        public DamageType DamageType { get; set; }
 
         public Rot() : base()
         {

@@ -70,21 +70,35 @@ namespace DotaHeroes.API.Features
         public Ability() { }
 
         /// <summary>
-        /// Level up, if class is inheritance from IValues and contains cooldowns. Automatically set cooldown duration.
+        /// Level up.
         /// </summary>
         public virtual void LevelUp(Hero hero)
         {
             Level++;
-            if (this is ILevelValues && (this as ILevelValues).Values.ContainsKey("cooldowns"))
+            if (this is ILevelValues)
             {
-                var cooldown = Cooldowns.GetCooldown(hero.Player.Id, Name);
+                var levelValues = this as ILevelValues;
 
-                if (cooldown == default)
+                if (levelValues.Values.ContainsKey("cooldown"))
                 {
-                    cooldown = Cooldowns.AddCooldown(hero.Player.Id, new CooldownInfo(Name, 3));
+                    var cooldown = Cooldowns.GetCooldown(hero.Player.Id, Name);
+                    cooldown.Duration = (int)(this as ILevelValues).Values["cooldown"][Level];
                 }
 
-                cooldown.Duration = (int)(this as ILevelValues).Values["cooldown"][Level];
+                if (levelValues.Values.ContainsKey("damage") && this is IDamage)
+                {
+                    (this as IDamage).Damage = (decimal)levelValues.Values["damage"][Level];
+                }
+
+                if (levelValues.Values.ContainsKey("mana_cost") && this is ICost)
+                {
+                    (this as ICost).ManaCost = (int)(decimal)levelValues.Values["mana_cost"][Level];
+                }
+
+                if (levelValues.Values.ContainsKey("health_cost") && this is ICost)
+                {
+                    (this as ICost).HealthCost = (int)(decimal)levelValues.Values["health_cost"][Level];
+                } //thats sucks im know
             }
         }
 

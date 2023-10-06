@@ -21,7 +21,7 @@ using UnityStandardAssets.CrossPlatformInput;
 
 namespace DotaHeroes.API.Features
 {
-    public abstract class Hero : IHeroFactory
+    public abstract class Hero
     {
         public abstract string HeroName { get; }
 
@@ -98,6 +98,8 @@ namespace DotaHeroes.API.Features
             }
         }
 
+        public int PointsToLevelUp { get; private set; }
+
         public bool IsHeroDead
         {
             get
@@ -116,7 +118,11 @@ namespace DotaHeroes.API.Features
 
         public bool IsManaRegeneration { get; set; }
 
-        private List<Effect> Effects { get; }
+        protected List<Effect> Effects { get; }
+
+        protected static ArraySegment<string> emptyArraySegment { get; } = new ArraySegment<string>();
+
+        private Ability lastAbilityLevelUpped;
 
         private HeroStateType heroStateType;
 
@@ -286,6 +292,20 @@ namespace DotaHeroes.API.Features
         }
 
         /// <summary>
+        /// Level up.
+        /// </summary>
+        public void LevelUpAbilty<T>() where T : Ability, new()
+        {
+            if (Level >= 30 || PointsToLevelUp == 0) return;
+
+            Abilities.FirstOrDefault(ability => ability.Name == new T().Name).LevelUp(this);
+
+            HeroStatistics.LevelUp();
+
+            Log.Info($"Player {Player.Nickname} hero {HeroName} is level up from {Level} to {Level++}");
+        }
+
+        /// <summary>
         /// Execute ability by name.
         /// </summary>
         public bool ExecuteAbility(string name)
@@ -303,12 +323,12 @@ namespace DotaHeroes.API.Features
 
             if (ability is ActiveAbility)
             {
-                (ability as ActiveAbility).Execute(this, new ArraySegment<string>(), out string response);
+                (ability as ActiveAbility).Execute(this, emptyArraySegment, out string response);
             }
 
             if (ability is ToggleAbility)
             {
-                (ability as ToggleAbility).Execute(this, new ArraySegment<string>(), out string response);
+                (ability as ToggleAbility).Execute(this, emptyArraySegment, out string response);
             }
 
             return true;
@@ -325,19 +345,19 @@ namespace DotaHeroes.API.Features
 
             Hud.Update();
 
-            if (Abilities.FirstOrDefault(_ability => _ability == ability) == default)
+            if (Abilities.FirstOrDefault(_ability => _ability.Name == ability.Name) == default)
             {
                 return false;
             }
 
             if (ability is ActiveAbility)
             {
-                (ability as ActiveAbility).Execute(this, new ArraySegment<string>(), out string response);
+                (ability as ActiveAbility).Execute(this, emptyArraySegment, out string _);
             }
 
             if (ability is ToggleAbility)
             {
-                (ability as ToggleAbility).Execute(this, new ArraySegment<string>(), out string response);
+                (ability as ToggleAbility).Execute(this, emptyArraySegment, out string _);
             }
 
             return true;
