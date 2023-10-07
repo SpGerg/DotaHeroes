@@ -87,6 +87,7 @@ namespace DotaHeroes
                 {
                     { "damage", new List<float>() { 120, 150, 180, 210 } },
                     { "cooldown", new List<float>() { 30, 25, 20, 15 } },
+                    { "range", new List<float>() { 2, 2, 2, 2 } },
                 }
             )
             },

@@ -72,6 +72,14 @@ namespace DotaHeroes.API
         }
 
         /// <summary>
+        /// Get registered hero or default.
+        /// </summary>
+        public static Hero GetRegisteredHeroOrDefault(string name)
+        {
+            return RegisteredHeroes.FirstOrDefault(_player => _player.Key == name).Value;
+        }
+
+        /// <summary>
         /// Get ability or default.
         /// </summary>
         public static Ability GetAbilityOrDefault(string name)

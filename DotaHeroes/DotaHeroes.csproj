@@ -127,6 +127,7 @@
     <Compile Include="API\Effects\Pudge\FleshHeap.cs" />
     <Compile Include="API\Effects\Pudge\FleshHeapShield.cs" />
     <Compile Include="API\Enums\HeroStateType.cs" />
+    <Compile Include="API\Enums\StatisticsType.cs" />
     <Compile Include="API\Events\EventArgs\Hero\HeroDiedEventArgs.cs" />
     <Compile Include="API\Events\EventArgs\Hero\HeroDispelledEventArgs.cs" />
     <Compile Include="API\Events\EventArgs\Hero\HeroDispellingEventArgs.cs" />
@@ -140,6 +141,7 @@
     <Compile Include="API\Events\EventArgs\Hero\HeroTakingDamageEventArgs.cs" />
     <Compile Include="API\Events\EventArgs\Hero\HeroTakedDamageEventArgs.cs" />
     <Compile Include="API\Events\EventArgs\Interfaces\IHeroEvent.cs" />
+    <Compile Include="API\Extensions\PlayerExtension.cs" />
     <Compile Include="API\Features\Ability.cs" />
     <Compile Include="API\API.cs" />
     <Compile Include="API\Features\Constants.cs" />
@@ -163,6 +165,7 @@
     <Compile Include="API\Features\Objects\MeatHookObject.cs" />
     <Compile Include="API\Features\Objects\ProjectileObject.cs" />
     <Compile Include="API\Features\Hero.cs" />
+    <Compile Include="API\Features\Objects\RotDecorateObject.cs" />
     <Compile Include="API\Features\Serializables\AbilitySerializable.cs" />
     <Compile Include="API\Features\Serializables\HeroSerializable.cs" />
     <Compile Include="API\Heroes\Pudge.cs" />
@@ -182,6 +185,7 @@
     <Compile Include="API\Interfaces\IResistanceModifier.cs" />
     <Compile Include="API\Interfaces\ILevelValues.cs" />
     <Compile Include="API\Features\Item.cs" />
+    <Compile Include="API\Items\Bracer.cs" />
     <Compile Include="API\Statistics\ArmorStatistics.cs" />
     <Compile Include="API\Statistics\AttackStatistics.cs" />
     <Compile Include="API\Statistics\HealthAndManaStatistics.cs" />
@@ -189,6 +193,9 @@
     <Compile Include="API\Statistics\SpeedStatistics.cs" />
     <Compile Include="API\Features\Utils.cs" />
     <Compile Include="API\Statistics\HeroStatistics.cs" />
+    <Compile Include="Commands\AdminCommandBase.cs" />
+    <Compile Include="Commands\Admin\SetHero.cs" />
+    <Compile Include="Commands\Admin\Statistics.cs" />
     <Compile Include="Commands\HeroCommandBase.cs" />
     <Compile Include="Commands\User\Hero\Attack.cs" />
     <Compile Include="Config.cs" />
@@ -202,8 +209,6 @@
       <Version>13.4.0</Version>
     </PackageReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Commands\Admin\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

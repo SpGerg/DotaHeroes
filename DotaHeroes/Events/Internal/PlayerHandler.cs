@@ -1,5 +1,6 @@
 ﻿using DotaHeroes.API;
 using DotaHeroes.API.Enums;
+using DotaHeroes.API.Extensions;
 using DotaHeroes.API.Features;
 using DotaHeroes.API.Features.Components;
 using DotaHeroes.API.Heroes;
@@ -35,16 +36,11 @@ namespace DotaHeroes.Events.Internal
                 return;
             }
 
-            var createdHero = hero.Create(player, SideType.Dire);
-
-            ev.NewRole = createdHero.Model;
-            HeroController heroController = player.GameObject.AddComponent<HeroController>();
-            heroController.Hero = createdHero;
-            createdHero.Respawn();
+            var _hero = player.SetHero(hero);
 
             Log.Info($"Player {player.Nickname} hero is {hero.HeroName}");
 
-            Hud.Update(createdHero);
+            Hud.Update(_hero);
         }
     }
 }

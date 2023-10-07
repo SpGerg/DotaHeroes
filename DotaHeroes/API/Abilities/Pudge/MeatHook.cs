@@ -50,13 +50,13 @@ namespace DotaHeroes.API.Abilities.Pudge
         {
             var player = hero.Player;
 
-            Primitive primitive = Primitive.Create(player.Position, player.Rotation.eulerAngles, Vector3.one, false);
+            Primitive primitive = Primitive.Create(player.Position, player.Rotation.eulerAngles, -Vector3.one, false);
             primitive.Type = PrimitiveType.Cube;
             primitive.MovementSmoothing = 60;
             primitive.Collidable = false;
             var meatHookObject = primitive.AdminToyBase.gameObject.AddComponent<MeatHookObject>();
             meatHookObject.Initialization(
-                player.GameObject.GetComponent<HeroController>(),
+                hero,
                 Features.Utils.GetTargetPositionFromMouse(player.Transform.position, player.CameraTransform.forward, (int)Values["cast_range"][Level]),
                 (int)Values["cast_range"][Level],
                 25,

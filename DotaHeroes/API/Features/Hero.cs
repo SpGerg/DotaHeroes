@@ -35,7 +35,7 @@ namespace DotaHeroes.API.Features
 
         public Player Player { get; private set; }
 
-        public HeroStatistics HeroStatistics { get; protected set; }
+        public HeroStatistics HeroStatistics { get; protected set; } = new HeroStatistics();
 
         public HeroStateType HeroStateType {
             get
@@ -118,6 +118,8 @@ namespace DotaHeroes.API.Features
 
         public bool IsManaRegeneration { get; set; }
 
+        protected List<Item> Items { get; }
+
         protected List<Effect> Effects { get; }
 
         protected static ArraySegment<string> emptyArraySegment { get; } = new ArraySegment<string>();
@@ -141,6 +143,7 @@ namespace DotaHeroes.API.Features
         public Hero()
         {
             Player = null;
+            Items = new List<Item>();
             Effects = new List<Effect>();
             Values = new Dictionary<string, object>();
         }
@@ -151,8 +154,19 @@ namespace DotaHeroes.API.Features
         /// <param name="hero"><inheritdoc cref="Player" /></param>
         public Hero(Hero copy) : this(copy.Player, copy.SideType)
         {
+            Items = copy.Items;
             Effects = copy.Effects;
             Values = copy.Values;
+
+            if (Effects == null)
+            {
+                Effects = new List<Effect>();
+            }
+
+            if (Values == null)
+            {
+                Values = new Dictionary<string, object>();
+            }
         }
 
         /// <summary>
@@ -191,6 +205,34 @@ namespace DotaHeroes.API.Features
                     (ability as PassiveAbility).Register(this);
                 }
             }
+        }
+
+        /// <summary>
+        /// Add item.
+        /// </summary>
+        public void AddItem<T>() where T : Item, new()
+        {
+            var item = new T();
+
+            HeroStatistics.AddOrReduceStatistics(item.Statistics, false);
+
+            Items.Add(item);
+        }
+
+        /// <summary>
+        /// Remove item.
+        /// </summary>
+        public void RemoveItem<T>() where T : Item, new()
+        {
+            var copyItem = new T();
+
+            var item = Items.FirstOrDefault(_item => _item.Name == copyItem.Name);
+
+            if (item == default) return;
+
+            HeroStatistics.AddOrReduceStatistics(item.Statistics, true);
+
+            Items.Remove(item);
         }
 
         /// <summary>
@@ -287,8 +329,12 @@ namespace DotaHeroes.API.Features
             if (Level >= 30) return;
 
             HeroStatistics.LevelUp();
+            Level++;
 
-            Log.Info($"Player {Player.Nickname} hero {HeroName} is level up from {Level} to {Level++}");
+            if (Level > 1)
+            {
+                Log.Info($"Player {Player.Nickname} hero {HeroName} is level up from {Level - 1} to {Level}");
+            }
         }
 
         /// <summary>
@@ -298,11 +344,13 @@ namespace DotaHeroes.API.Features
         {
             if (Level >= 30 || PointsToLevelUp == 0) return;
 
-            Abilities.FirstOrDefault(ability => ability.Name == new T().Name).LevelUp(this);
+            var ability = Abilities.FirstOrDefault(ability => ability.Name == new T().Name);
+            ability.LevelUp(this);
 
-            HeroStatistics.LevelUp();
-
-            Log.Info($"Player {Player.Nickname} hero {HeroName} is level up from {Level} to {Level++}");
+            if (ability.Level > 1)
+            {
+                Log.Info($"Player {Player.Nickname} hero {HeroName} is level up ability {ability.Name} from {ability.Level - 1} to {ability.Level}");
+            }
         }
 
         /// <summary>
@@ -645,13 +693,13 @@ namespace DotaHeroes.API.Features
                 DisableEffect(effect);
             }
 
-            var died = new HeroDiedEventArgs(this);
-            Events.Handlers.Hero.OnHeroDied(died);
-
             IsHealthRegeneration = false;
             IsManaRegeneration = false;
 
             IsHeroDead = true;
+
+            var died = new HeroDiedEventArgs(this);
+            Events.Handlers.Hero.OnHeroDied(died);
         }
 
         /// <summary>
@@ -703,8 +751,6 @@ namespace DotaHeroes.API.Features
         }
 
         public abstract Hero Create();
-
-        public abstract Hero Create(Hero copy);
 
         public abstract Hero Create(Player player, SideType sideType);
 

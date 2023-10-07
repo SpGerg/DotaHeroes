@@ -24,6 +24,59 @@ namespace DotaHeroes.API.Features
         }
 
         /// <summary>
+        /// Get player from eye direction
+        /// </summary>
+        public static bool GetPlayerFromEyeDirection(Player player, int range, out string response, out Player target)
+        {
+            RaycastHit hit;
+
+            if (!Physics.Raycast(player.CameraTransform.position, player.CameraTransform.forward, out hit, range))
+            {
+                response = "Target not found";
+                target = null;
+                return false;
+            }
+
+            var _target = Player.Get(hit.collider);
+
+            if (_target == null)
+            {
+                response = "Target is not player";
+                target = null;
+                return false;
+            }
+
+            response = "Target is " + player.Nickname;
+            target = _target;
+            return true;
+        }
+
+        /// <summary>
+        /// Get hero from eye direction
+        /// </summary>
+        public static bool GetHeroFromPlayerEyeDirection(Player player, int range, out string response, out Hero hero)
+        {
+            if (!GetPlayerFromEyeDirection(player, range, out response, out Player target))
+            {
+                hero = null;
+                return false;
+            }
+
+            var _hero = API.GetHeroOrDefault(target.Id);
+
+            if (_hero == default)
+            {
+                response = "Target is not hero";
+                hero = null;
+                return false;
+            }
+
+            response = "Hero is " + player.Nickname;
+            hero = _hero;
+            return true;
+        }
+
+        /// <summary>
         /// Block damage
         /// </summary>
         public static decimal BlockDamage(decimal damage, DamageType damageType, IDamageBlock damageBlock)

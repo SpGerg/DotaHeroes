@@ -21,7 +21,7 @@ namespace DotaHeroes.API.Statistics
             {
                 speed = (sbyte)Mathf.Clamp(value, sbyte.MinValue, sbyte.MaxValue);
 
-                if (Hero.Player != null)
+                if (Hero != null && Hero.Player != null)
                 {
                     Hero.Player.DisableEffect<MovementBoost>();
 

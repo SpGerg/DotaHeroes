@@ -18,9 +18,9 @@ namespace DotaHeroes.API.Features.Objects
 {
     public class MeatHookObject : NetworkBehaviour, IDamage
     {
-        public HeroController Owner { get; private set; }
+        public Hero Owner { get; private set; }
 
-        public HeroController HeroTarget { get; private set; }
+        public Hero HeroTarget { get; private set; }
 
         public Vector3 Target { get; private set; }
 
@@ -44,7 +44,7 @@ namespace DotaHeroes.API.Features.Objects
 
         private bool isDestroying { get; set; }
 
-        public void Initialization(HeroController owner, Vector3 target, int range, float speed, int damage, DamageType damageType)
+        public void Initialization(Hero owner, Vector3 target, int range, float speed, int damage, DamageType damageType)
         {
             Owner = owner;
             Target = target;
@@ -62,6 +62,35 @@ namespace DotaHeroes.API.Features.Objects
             });
         }
 
+        public void Update()
+        {
+            if (!isMovingToTarget) return;
+
+            foreach (var hero in API.GetHeroes().Values)
+            {
+                if (Vector3.Distance(Owner.Player.Position, hero.Player.Position) < 1)
+                {
+                    if (hero.Player.UserId == Owner.Player.UserId)
+                    {
+                        return;
+                    }
+
+                    isMovingToTarget = false;
+
+                    HeroTarget = hero;
+                    HeroTarget.Player.IsGodModeEnabled = true;
+                    HeroTarget.EnableEffect<Stun>();
+
+                    if (hero.SideType == Owner.SideType)
+                    {
+                        return;
+                    }
+
+                    hero.TakeDamage(Damage, DamageType);
+                }
+            }
+        }
+
         public void FixedUpdate()
         {
             if (moveLength >= Range)
@@ -77,7 +106,7 @@ namespace DotaHeroes.API.Features.Objects
             else
             {
                 transform.position = Vector3.MoveTowards(transform.position, usePosition, Step);
-                HeroTarget?.Hero.Player.Teleport(transform.position);
+                HeroTarget?.Player.Teleport(transform.position);
             }
 
             if (Vector3.Distance(transform.position, Target) < 0.5f)
@@ -89,43 +118,13 @@ namespace DotaHeroes.API.Features.Objects
             {
                 IsEnded = true;
 
-                HeroTarget?.Hero.Player.DisableEffect<Ensnared>();
-                Owner.Hero.Player.DisableEffect<Ensnared>();
+                HeroTarget?.Player.DisableEffect<Ensnared>();
+                Owner.Player.DisableEffect<Ensnared>();
 
                 Timing.CallDelayed(0.2f, () =>
                 {
-                    HeroTarget.Hero.Player.IsGodModeEnabled = false;
+                    HeroTarget.Player.IsGodModeEnabled = false;
                 });
-            }
-        }
-
-        public void OnCollisionEnter(Collision collision)
-        {
-            var player = Player.Get(collision.collider);
-
-            if (player == null) return;
-            
-            if (!player.GameObject.TryGetComponent(out HeroController heroController)) return;
-
-            if (isMovingToTarget)
-            {
-                if (heroController.Hero.Player.UserId == Owner.Hero.Player.UserId)
-                {
-                    return;
-                }
-
-                isMovingToTarget = false;
-
-                HeroTarget = heroController;
-                HeroTarget.Hero.Player.IsGodModeEnabled = true;
-                HeroTarget.Hero.EnableEffect<Stun>();
-
-                if (heroController.Hero.SideType == Owner.Hero.SideType)
-                {
-                    return;
-                }
-
-                heroController.Hero.TakeDamage(Damage, DamageType);
             }
         }
     }

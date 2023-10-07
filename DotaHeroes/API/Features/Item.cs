@@ -1,4 +1,5 @@
-﻿using DotaHeroes.API.Interfaces;
+﻿using DotaHeroes.API.Enums;
+using DotaHeroes.API.Interfaces;
 using Exiled.API.Features;
 using System;
 using System.Collections.Generic;
@@ -18,7 +19,7 @@ namespace DotaHeroes.API.Features
 
         public virtual Ability Ability { get; }
 
-        public virtual IReadOnlyDictionary<string, List<float>> Values { get; }
+        public virtual IReadOnlyDictionary<StatisticsType, float> Statistics { get; }
 
         public Player Owner { get; }
 

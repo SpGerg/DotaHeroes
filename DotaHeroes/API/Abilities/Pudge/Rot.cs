@@ -64,25 +64,35 @@ namespace DotaHeroes.API.Abilities.Pudge
                 hero.Values["is_rot"] = true;
             }
 
+            var decorateRot = Primitive.Create(hero.Player.Position, Quaternion.identity.eulerAngles, -Vector3.one, true);
+            decorateRot.Type = PrimitiveType.Cube;
+            decorateRot.MovementSmoothing = 60;
+            decorateRot.Color = Color.yellow;
+            decorateRot.AdminToyBase.gameObject.AddComponent<RotDecorateObject>().Initialization(hero);
+
+            hero.Values["decorate_rot"] = decorateRot;
+
             Timing.RunCoroutine(RotCoroutine(hero));
 
             response = "Rot is enabled";
             return true;
         }
 
+        public override bool Deactivate(Hero hero, ArraySegment<string> arguments, out string response)
+        {
+            hero.Values["is_rot"] = false;
+            NetworkServer.Destroy((hero.Values["decorate_rot"] as Primitive).AdminToyBase.gameObject);
+
+            response = "Rot is disabled";
+            return true;
+        }
+
+
         public override void LevelUp(Hero hero)
         {
             Damage = (int)Values["damage"][Level];
 
             base.LevelUp(hero);
-        }
-
-        public override bool Deactivate(Hero hero, ArraySegment<string> arguments, out string response)
-        {
-            hero.Values["is_rot"] = false;
-
-            response = "Rot is disabled";
-            return true;
         }
 
         private IEnumerator<float> RotCoroutine(Hero owner)

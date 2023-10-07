@@ -17,7 +17,7 @@ namespace DotaHeroes.Commands
 
         public abstract string Description { get; }
 
-        public abstract string[] Aliases { get; }
+        public virtual string[] Aliases { get; } = new string[0];
 
         /// <summary>
         /// Execute

@@ -24,11 +24,6 @@ namespace DotaHeroes.API.Heroes
             HeroStatistics = new HeroStatistics(Plugin.Instance.Config.Heroes[HeroName].DefaultHeroStatistics, this);
         }
 
-        public Pudge(Hero hero) : base(hero)
-        {
-            HeroStatistics = new HeroStatistics(Plugin.Instance.Config.Heroes[HeroName].DefaultHeroStatistics, this);
-        }
-
         public Pudge(Player player, SideType sideType) : base(player, sideType)
         {
             HeroStatistics = new HeroStatistics(Plugin.Instance.Config.Heroes[HeroName].DefaultHeroStatistics, this);
@@ -37,11 +32,6 @@ namespace DotaHeroes.API.Heroes
         public override Hero Create()
         {
             return new Pudge();
-        }
-
-        public override Hero Create(Hero hero)
-        {
-            return new Pudge(hero);
         }
 
         public override Hero Create(Player player, SideType sideType)

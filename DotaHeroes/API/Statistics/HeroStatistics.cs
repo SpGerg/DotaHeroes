@@ -170,8 +170,52 @@ namespace DotaHeroes.API.Statistics
             Attack = heroStatistics.Attack;
             Armor = heroStatistics.Armor;
             Resistance = heroStatistics.Resistance;
-            Speed = heroStatistics.Speed;
+            Speed = new SpeedStatistics(hero);
             Hero = hero;
+        }
+
+        public virtual void AddOrReduceStatistics(IReadOnlyDictionary<StatisticsType, float> statistics, bool isReduce)
+        {
+            foreach (var value in statistics)
+            {
+                var total_value = value.Value;
+
+                if (isReduce)
+                {
+                    total_value = -total_value;
+                }
+
+                switch (value.Key)
+                {
+                    case StatisticsType.Strength:
+                        Strength += (decimal)total_value;
+                        break;
+                    case StatisticsType.Agility:
+                        Agility += (decimal)total_value;
+                        break;
+                    case StatisticsType.Intelligence:
+                        Intelligence += (decimal)total_value;
+                        break;
+                    case StatisticsType.Health:
+                        HealthAndMana.Health += (int)total_value;
+                        break;
+                    case StatisticsType.Mana:
+                        HealthAndMana.Mana += (int)total_value;
+                        break;
+                    case StatisticsType.HealthRegeneration:
+                        HealthAndMana.HealthRegeneration += (decimal)total_value;
+                        break;
+                    case StatisticsType.ManaRegeneration:
+                        HealthAndMana.ManaRegeneration += (decimal)total_value;
+                        break;
+                    case StatisticsType.ExtraAttackDamage:
+                        Attack.ExtraAttackDamage += (int)total_value;
+                        break;
+                    case StatisticsType.BaseAttackDamage:
+                        Attack.BaseAttackDamage += (int)total_value;
+                        break;
+                }
+            }
         }
 
         public void LevelUp()

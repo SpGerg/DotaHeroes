@@ -18,8 +18,6 @@ namespace DotaHeroes.Commands.User.Hero
     {
         public override string Command => "attack";
 
-        public override string[] Aliases => Array.Empty<string>();
-
         public override string Description => "Hero attack";
 
         protected override bool Execute(API.Features.Hero hero, ArraySegment<string> arguments, out string response)

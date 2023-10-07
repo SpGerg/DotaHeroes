@@ -53,7 +53,7 @@ namespace DotaHeroes.API.Abilities.Pudge
 
             RaycastHit hit;
 
-            if (!Physics.Raycast(player.Transform.position, player.CameraTransform.forward, out hit, Values["range"][Level]))
+            if (!Physics.Raycast(player.CameraTransform.position, player.CameraTransform.forward, out hit, Values["range"][Level]))
             {
                 response = "Target not found";
 
@@ -76,22 +76,24 @@ namespace DotaHeroes.API.Abilities.Pudge
                 return false;
             }
 
+            var targetHero = heroController.Hero;
+
             player.EnableEffect<Ensnared>();
-            heroController.Hero.EnableEffect(new Stun(heroController.Hero)
+            targetHero.EnableEffect(new Stun(targetHero)
             {
                 Duration = Duration
             });
 
-            response = "You eating " + heroController.Hero.Player.Nickname;
+            response = "You eating " + targetHero.Player.Nickname;
 
-            Timing.RunCoroutine(DamageCoroutine(hero, heroController.Hero, Values["damage"][Level], DamageType.Magical));
+            Timing.RunCoroutine(DamageCoroutine(hero, targetHero, Values["damage"][Level], DamageType.Magical));
 
             return true;
         }
 
         private IEnumerator<float> DamageCoroutine(Hero player, Hero target, float damage, DamageType damageType)
         {
-            for (int i = 0; i < (damage / 8); i += (int)damage / 8)
+            for (decimal i = 0; i < (decimal)(damage / 8); i += (decimal)damage / 8)
             {
                 if (IsStop)
                 {

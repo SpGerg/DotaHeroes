@@ -36,12 +36,16 @@ namespace DotaHeroes.API.Features
         /// </summary>
         public bool Execute(ArraySegment<string> arguments, ICommandSender sender, out string response)
         {
-            if (!base.Execute(sender, out response, out Hero hero, true))
+            if (!base.Execute(sender, out response, out Hero hero))
             {
                 return false;
             }
 
-            CheckAndRunCooldown(hero, out string _);
+            if (!CheckAndRunCooldown(hero, out string _response))
+            {
+                response = _response;
+                return false;
+            }
 
             return Execute(hero, arguments, out response);
         }
