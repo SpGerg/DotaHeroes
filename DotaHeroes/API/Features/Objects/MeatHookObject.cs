@@ -44,7 +44,7 @@ namespace DotaHeroes.API.Features.Objects
 
         private bool isDestroying { get; set; }
 
-        public void Initialization(Hero owner, Vector3 target, int range, float speed, int damage, DamageType damageType)
+        public void Initialize(Hero owner, Vector3 target, int range, float speed, int damage, DamageType damageType)
         {
             Owner = owner;
             Target = target;
@@ -68,7 +68,11 @@ namespace DotaHeroes.API.Features.Objects
 
             foreach (var hero in API.GetHeroes().Values)
             {
-                if (Vector3.Distance(Owner.Player.Position, hero.Player.Position) < 1)
+                if (hero == Owner) continue;
+
+                Log.Info(Vector3.Distance(Owner.Player.Position, hero.Player.Position));
+
+                if (Vector3.Distance(transform.position, hero.Player.Position) < 3)
                 {
                     if (hero.Player.UserId == Owner.Player.UserId)
                     {

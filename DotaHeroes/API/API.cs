@@ -1,4 +1,5 @@
 ﻿using DotaHeroes.API.Features;
+using Exiled.API.Features;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,6 +21,12 @@ namespace DotaHeroes.API
         /// </summary>
         public static void SetOrAddPlayer(int id, Hero hero)
         {
+            if (hero == default && Players.ContainsKey(id))
+            {
+                Players.Remove(id);
+                return;
+            }
+
             Players[id] = hero;
         }
 
@@ -29,6 +36,8 @@ namespace DotaHeroes.API
         public static void RegisterHero(Hero hero)
         {
             RegisteredHeroes[hero.HeroName] = hero;
+
+            Log.Info($"Hero with name {hero.HeroName} has been registered.");
         }
 
         /// <summary>
@@ -40,27 +49,27 @@ namespace DotaHeroes.API
         }
 
         /// <summary>
-        /// Return registered heroes (new copy)
+        /// Return registered heroes
         /// </summary>
         public static IReadOnlyDictionary<string, Hero> GetRegisteredHeroes()
         {
-            return new Dictionary<string, Hero>(RegisteredHeroes);
+            return RegisteredHeroes;
         }
 
         /// <summary>
-        /// Return of all players-heroes (new copy)
+        /// Return of all players-heroes
         /// </summary>
         public static IReadOnlyDictionary<int, Hero> GetHeroes()
         {
-            return new Dictionary<int, Hero>(Players);
+            return Players;
         }
 
         /// <summary>
-        /// Return registered abilties (new copy)
+        /// Return registered abilties
         /// </summary>
         public static IReadOnlyDictionary<string, Ability> GetRegisteredAbilties()
         {
-            return new Dictionary<string, Ability>(RegisteredAbilties);
+            return RegisteredAbilties;
         }
 
         /// <summary>

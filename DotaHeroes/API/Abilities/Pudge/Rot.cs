@@ -68,7 +68,7 @@ namespace DotaHeroes.API.Abilities.Pudge
             decorateRot.Type = PrimitiveType.Cube;
             decorateRot.MovementSmoothing = 60;
             decorateRot.Color = Color.yellow;
-            decorateRot.AdminToyBase.gameObject.AddComponent<RotDecorateObject>().Initialization(hero);
+            decorateRot.AdminToyBase.gameObject.AddComponent<RotDecorateObject>().Initialize(hero);
 
             hero.Values["decorate_rot"] = decorateRot;
 

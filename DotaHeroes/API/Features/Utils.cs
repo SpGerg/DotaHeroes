@@ -71,6 +71,13 @@ namespace DotaHeroes.API.Features
                 return false;
             }
 
+            if (_hero.Player == player)
+            {
+                response = "Target is owner";
+                hero = null;
+                return false;
+            }
+
             response = "Hero is " + player.Nickname;
             hero = _hero;
             return true;

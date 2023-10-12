@@ -39,7 +39,7 @@ namespace DotaHeroes.Commands.Admin
                 return false;
             }
 
-            if (!Enum.TryParse(arguments.Array[0], true, out StatisticsType statisticsType))
+            if (!Enum.TryParse(arguments.Array[2], true, out StatisticsType statisticsType))
             {
                 var stringBuilder = StringBuilderPool.Shared.Rent();
 
@@ -54,13 +54,13 @@ namespace DotaHeroes.Commands.Admin
                 return false;
             }
 
-            if (!float.TryParse(arguments.Array[0], out float _value))
+            if (!float.TryParse(arguments.Array[3], out float _value))
             {
                 response = "Second argument must be number";
                 return false;
             }
 
-            if (!bool.TryParse(arguments.Array[0], out bool isReduce))
+            if (!bool.TryParse(arguments.Array[4], out bool isReduce))
             {
                 response = "Third argument must be bool. True (yes) or false (no).";
                 return false;
@@ -72,7 +72,7 @@ namespace DotaHeroes.Commands.Admin
             }
 
             response = $"Have been added {_value} for {statisticsType}";
-            hero.HeroStatistics.AddOrReduceStatistics(new Dictionary<StatisticsType, float>() { { statisticsType, _value } }, isReduce);
+            hero.HeroStatistics.AddOrReduceStatistics(new Dictionary<StatisticsType, Value>() { { statisticsType, new Value((decimal)_value, false, isReduce) } }, false);
 
             Log.Info($"Have been added {_value} for {statisticsType} by {player.Nickname}");
             return true;

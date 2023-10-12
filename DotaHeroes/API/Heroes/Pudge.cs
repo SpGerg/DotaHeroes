@@ -15,18 +15,18 @@ namespace DotaHeroes.API.Heroes
 
         public override List<Ability> Abilities { get; } = Ability.ToAbilitiesFromStringList(Plugin.Instance.Config.Heroes["Pudge"].Abilties);
 
-        public override HeroClassType HeroClassType { get; set; } = HeroClassType.Melee;
+        public override HeroClassType HeroClassType { get; set; } = Plugin.Instance.Config.Heroes["Pudge"].HeroClassType;
 
         public Pudge() : base()
         {
             SideType = SideType.Dire;
 
-            HeroStatistics = new HeroStatistics(Plugin.Instance.Config.Heroes[HeroName].DefaultHeroStatistics, this);
+            HeroStatistics = new HeroStatistics(Plugin.Instance.Config.Heroes[HeroName].DefaultHeroStatistics.ToHeroStatistics(this), this);
         }
 
-        public Pudge(Player player, SideType sideType) : base(player, sideType)
+        public Pudge(Player player, SideType sideType) : base(player, sideType) 
         {
-            HeroStatistics = new HeroStatistics(Plugin.Instance.Config.Heroes[HeroName].DefaultHeroStatistics, this);
+            HeroStatistics = new HeroStatistics(Plugin.Instance.Config.Heroes[HeroName].DefaultHeroStatistics.ToHeroStatistics(this), this);
         }
 
         public override Hero Create()

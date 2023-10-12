@@ -51,64 +51,52 @@ namespace DotaHeroes.API.Abilities.Pudge
         {
             var player = hero.Player;
 
-            RaycastHit hit;
-
-            if (!Physics.Raycast(player.CameraTransform.position, player.CameraTransform.forward, out hit, Values["range"][Level]))
+            if (!Features.Utils.GetHeroFromPlayerEyeDirection(player, 5, out response, out Hero target))
             {
-                response = "Target not found";
-
                 return false;
             }
 
-            var target = Player.Get(hit.collider);
+            var duration = target.HeroStatistics.Resistance.GetEffectDuration(Duration);
 
-            if (target == null)
+            player.EnableEffect<Ensnared>(Duration);
+            target.EnableEffect(new Stun(target)
             {
-                response = "Target is not player";
-
-                return false;
-            }
-
-            if (!target.GameObject.TryGetComponent(out HeroController heroController))
-            {
-                response = "Target is not hero.";
-
-                return false;
-            }
-
-            var targetHero = heroController.Hero;
-
-            player.EnableEffect<Ensnared>();
-            targetHero.EnableEffect(new Stun(targetHero)
-            {
-                Duration = Duration
+                Duration = duration
             });
 
-            response = "You eating " + targetHero.Player.Nickname;
 
-            Timing.RunCoroutine(DamageCoroutine(hero, targetHero, Values["damage"][Level], DamageType.Magical));
+            response = "You eating " + target.Player.Nickname;
+
+            Timing.RunCoroutine(DamageCoroutine(hero, target, (decimal)Values["damage"][Level], DamageType.Magical, duration));
 
             return true;
         }
 
-        private IEnumerator<float> DamageCoroutine(Hero player, Hero target, float damage, DamageType damageType)
+        private IEnumerator<float> DamageCoroutine(Hero hero, Hero target, decimal damage, DamageType damageType, float duration)
         {
-            for (decimal i = 0; i < (decimal)(damage / 8); i += (decimal)damage / 8)
+            decimal times = (decimal)(duration / 0.1f);
+            var damageOverTime = new DamageOverTime(target, damage / times, damageType, (int)times, 0.1f, hero);
+            damageOverTime.Run();
+
+            for (int i = 0; i < times; i++)
             {
                 if (IsStop)
                 {
-                    player.Player.DisableEffect<Ensnared>();
+                    hero.Player.DisableEffect<Ensnared>();
                     target.DisableEffect<Stun>();
+
+                    damageOverTime.IsEnabled = false;
 
                     yield break;
                 }
 
-                target.Player.Position = Vector3.MoveTowards(target.Player.Position, player.Player.Position, 2 * Time.deltaTime);
-
-                target.TakeDamage(i, damageType);
+                target.Player.Position = Vector3.MoveTowards(target.Player.Position, hero.Player.Position, 2 * Time.deltaTime);
 
                 yield return Timing.WaitForSeconds(0.1f);
             }
+
+            hero.Player.DisableEffect<Ensnared>();
+            target.DisableEffect<Stun>();
         }
     }
 }

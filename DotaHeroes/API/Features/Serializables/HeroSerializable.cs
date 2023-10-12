@@ -23,7 +23,7 @@ namespace DotaHeroes.API.Features.Serializables
 
         public HeroClassType HeroClassType { get; set; }
 
-        public HeroStatistics DefaultHeroStatistics { get; set; }
+        public HeroStatisticsSerializable DefaultHeroStatistics { get; set; }
 
         [YamlIgnore]
         private Hero hero { get; set; }
@@ -35,10 +35,10 @@ namespace DotaHeroes.API.Features.Serializables
             ChangeRoles = new List<RoleTypeId>();
             Abilties = new List<string>();
             HeroClassType = HeroClassType.Ranged;
-            DefaultHeroStatistics = new HeroStatistics();
+            DefaultHeroStatistics = new HeroStatisticsSerializable();
         }
 
-        public HeroSerializable(string name, string description, List<string> abilties, List<RoleTypeId> changeRoles, HeroClassType heroClassType, HeroStatistics heroStatistics)
+        public HeroSerializable(string name, string description, List<string> abilties, List<RoleTypeId> changeRoles, HeroClassType heroClassType, HeroStatisticsSerializable heroStatistics)
         {
             Name = name;
             Description = description;

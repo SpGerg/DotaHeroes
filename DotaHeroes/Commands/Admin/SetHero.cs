@@ -1,4 +1,5 @@
-﻿using DotaHeroes.API.Extensions;
+﻿using CommandSystem;
+using DotaHeroes.API.Extensions;
 using Exiled.API.Features;
 using NorthwoodLib.Pools;
 using System;
@@ -34,11 +35,11 @@ namespace DotaHeroes.Commands.Admin
                 return false;
             }
 
-            var registeredHero = API.API.GetRegisteredHeroOrDefault(arguments.Array[1]);
+            var registeredHero = API.API.GetRegisteredHeroOrDefault(arguments.Array[2]);
 
             if (registeredHero == default)
             {
-                response = $"Hero with name {arguments.Array[1]} not found";
+                response = $"Hero with name {arguments.Array[2]} not found";
                 return false;
             }
 

@@ -1,5 +1,6 @@
 ﻿using DotaHeroes.API;
 using DotaHeroes.API.Enums;
+using DotaHeroes.API.Events.Handlers;
 using DotaHeroes.API.Extensions;
 using DotaHeroes.API.Features;
 using DotaHeroes.API.Features.Components;
@@ -30,17 +31,19 @@ namespace DotaHeroes.Events.Internal
                 GameObject.Destroy(hero.HeroController);
                 return;
             }
-
-            if (!hero.ChangeRoles.Contains(ev.NewRole))
+            
+            if (hero.ChangeRoles.Contains(ev.NewRole))
             {
-                return;
+                var _hero = player.SetHero(hero);
+
+                Log.Info($"Player {player.Nickname} hero is {hero.HeroName}");
+
+                Hud.Update(_hero);
             }
-
-            var _hero = player.SetHero(hero);
-
-            Log.Info($"Player {player.Nickname} hero is {hero.HeroName}");
-
-            Hud.Update(_hero);
+            else if (!hero.ChangeRoles.Contains(ev.NewRole) && hero != default)
+            {
+                player.RemoveHero();
+            }
         }
     }
 }

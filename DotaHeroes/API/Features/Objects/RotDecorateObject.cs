@@ -17,7 +17,7 @@ namespace DotaHeroes.API.Features.Objects
     {
         public Hero Owner { get; private set; }
 
-        public void Initialization(Hero owner)
+        public void Initialize(Hero owner)
         {
             Owner = owner;
         }

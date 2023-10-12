@@ -12,7 +12,9 @@ namespace DotaHeroes.API.Features
 {
     public class DamageOverTime : IDamage
     {
-        public Hero Hero { get; set; }
+        public Hero Hero { get; }
+
+        public Hero Attacker { get; }
 
         public decimal Damage { get; set; }
 
@@ -32,13 +34,14 @@ namespace DotaHeroes.API.Features
         /// <param name="damageType"><inheritdoc cref="DamageType" /></param>
         /// <param name="timesDamage"><inheritdoc cref="TimesDamage" /></param>
         /// <param name="interval"><inheritdoc cref="Interval" /></param>
-        public DamageOverTime(Hero hero, decimal damage, DamageType damageType, int timesDamage, float interval)
+        public DamageOverTime(Hero hero, decimal damage, DamageType damageType, int timesDamage, float interval, Hero attacker = null)
         {
             Hero = hero;
             Damage = damage;
             DamageType = damageType;
             TimesDamage = timesDamage;
             Interval = interval;
+            Attacker = attacker;
         }
 
         /// <summary>
@@ -54,24 +57,19 @@ namespace DotaHeroes.API.Features
 
         private IEnumerator<float> DamageCoroutine()
         {
-            if (TimesDamage <= -1)
-            {
-                while (true)
-                {
-                    if (!IsEnabled || Hero.IsHeroDead) yield break;
-
-                    Hero.TakeDamage(Hero, Damage, DamageType);
-
-                    yield return Timing.WaitForSeconds(Interval);
-                }
-            }
-
             for (int i = 0;i < TimesDamage;i++)
             {
                 if (!IsEnabled || Hero.IsHeroDead) yield break;
 
-                Hero.TakeDamage(Hero, Damage, DamageType);
-
+                if (Attacker == null)
+                {
+                    Hero.TakeDamage(Damage, DamageType);
+                }
+                else
+                {
+                    Hero.TakeDamage(Attacker, Damage, DamageType);
+                }
+                
                 yield return Timing.WaitForSeconds(Interval);
             }
         }

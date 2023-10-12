@@ -67,7 +67,7 @@ namespace DotaHeroes.API.Features
 
         public HeroController HeroController { get; private set; }
 
-        public int Level { get; set; }
+        public int Level { get; set; } = 1;
 
         public int Experience
         {
@@ -118,6 +118,8 @@ namespace DotaHeroes.API.Features
 
         public bool IsManaRegeneration { get; set; }
 
+        public float Money { get; set; }
+
         protected List<Item> Items { get; }
 
         protected List<Effect> Effects { get; }
@@ -152,7 +154,7 @@ namespace DotaHeroes.API.Features
         ///     Initializes a new instance of the <see cref="Hero" /> class.
         /// </summary>
         /// <param name="hero"><inheritdoc cref="Player" /></param>
-        public Hero(Hero copy) : this(copy.Player, copy.SideType)
+        protected Hero(Hero copy) : this(copy.Player, copy.SideType)
         {
             Items = copy.Items;
             Effects = copy.Effects;
@@ -174,7 +176,7 @@ namespace DotaHeroes.API.Features
         /// </summary>
         /// <param name="player"><inheritdoc cref="Player" /></param>
         /// <param name="sideType"><inheritdoc cref="SideType" /></param>
-        public Hero(Player player, SideType sideType)
+        protected Hero(Player player, SideType sideType)
         {
             Player = player;
             SideType = sideType;
@@ -191,7 +193,7 @@ namespace DotaHeroes.API.Features
 
             foreach (var ability in Abilities)
             {
-                if (ability is ILevelValues)
+                if (typeof(ILevelValues).IsAssignableFrom(ability.GetType()))
                 {
                     var values = (ability as ILevelValues).Values;
                     if (values.ContainsKey("cooldown"))
@@ -200,7 +202,7 @@ namespace DotaHeroes.API.Features
                     }
                 }
 
-                if (ability is PassiveAbility)
+                if (typeof(PassiveAbility).IsAssignableFrom(ability.GetType()))
                 {
                     (ability as PassiveAbility).Register(this);
                 }
@@ -213,8 +215,8 @@ namespace DotaHeroes.API.Features
         public void AddItem<T>() where T : Item, new()
         {
             var item = new T();
-
             HeroStatistics.AddOrReduceStatistics(item.Statistics, false);
+            item.Added();
 
             Items.Add(item);
         }
@@ -229,8 +231,9 @@ namespace DotaHeroes.API.Features
             var item = Items.FirstOrDefault(_item => _item.Name == copyItem.Name);
 
             if (item == default) return;
-
             HeroStatistics.AddOrReduceStatistics(item.Statistics, true);
+
+            item.Removed();
 
             Items.Remove(item);
         }
@@ -345,6 +348,9 @@ namespace DotaHeroes.API.Features
             if (Level >= 30 || PointsToLevelUp == 0) return;
 
             var ability = Abilities.FirstOrDefault(ability => ability.Name == new T().Name);
+
+            if (ability == default) return;
+
             ability.LevelUp(this);
 
             if (ability.Level > 1)
@@ -369,12 +375,12 @@ namespace DotaHeroes.API.Features
 
             Hud.Update();
 
-            if (ability is ActiveAbility)
+            if (typeof(ActiveAbility).IsAssignableFrom(ability.GetType()))
             {
                 (ability as ActiveAbility).Execute(this, emptyArraySegment, out string response);
             }
 
-            if (ability is ToggleAbility)
+            if (typeof(ToggleAbility).IsAssignableFrom(ability.GetType()))
             {
                 (ability as ToggleAbility).Execute(this, emptyArraySegment, out string response);
             }
@@ -387,26 +393,7 @@ namespace DotaHeroes.API.Features
         /// </summary>
         public bool ExecuteAbility<T>() where T : Ability, new()
         {
-            if (HeroStateType != HeroStateType.None) return false;
-
-            var ability = new T();
-
-            Hud.Update();
-
-            if (Abilities.FirstOrDefault(_ability => _ability.Name == ability.Name) == default)
-            {
-                return false;
-            }
-
-            if (ability is ActiveAbility)
-            {
-                (ability as ActiveAbility).Execute(this, emptyArraySegment, out string _);
-            }
-
-            if (ability is ToggleAbility)
-            {
-                (ability as ToggleAbility).Execute(this, emptyArraySegment, out string _);
-            }
+            ExecuteAbility(new T().Name);
 
             return true;
         }
@@ -573,26 +560,25 @@ namespace DotaHeroes.API.Features
         /// </summary>
         public virtual decimal TakeDamage(Hero attacker, decimal damage, DamageType damageType)
         {
+            if (Plugin.Instance.Config.Debug) Log.Info("First damage " + damage + " by " + attacker.Player.Nickname);
+
             var takingDamage = new HeroTakingDamageEventArgs(this, attacker, damage, damageType, true);
             Events.Handlers.Hero.OnHeroTakingDamage(takingDamage);
 
             if (!takingDamage.IsAllowed) return -1;
 
             decimal _damage = takingDamage.Damage;
+            if (Plugin.Instance.Config.Debug) Log.Info("Second Damage " + _damage + " by " + attacker.Player.Nickname);
             decimal total_damage = 0;
 
             switch (damageType)
             {
                 case DamageType.None: break;
                 case DamageType.Physical:
-                    decimal armor = (HeroStatistics.Armor.BaseArmor + HeroStatistics.Armor.ExtraArmor);
-                    decimal armor_percent = (0.052m * armor) / (0.9m + 0.048m * armor);
-                    total_damage = (int)(_damage - ((_damage / 100) * armor_percent));
-
+                    total_damage = HeroStatistics.Armor.GetPhysicalDamage(damage, HeroStatistics.Agility);
                     break;
                 case DamageType.Magical:
-                    decimal percent = (_damage / 100m);
-                    total_damage = _damage - percent * HeroStatistics.Resistance.GetMagicResistance(HeroStatistics.Intelligence);
+                    total_damage = HeroStatistics.Resistance.GetMagicalDamage(damage, HeroStatistics.Intelligence);
 
                     break;
                 case DamageType.Pure:
@@ -602,6 +588,8 @@ namespace DotaHeroes.API.Features
                     total_damage = _damage;
                     break;
             }
+
+            if (Plugin.Instance.Config.Debug) Log.Info("Third Damage " + total_damage + " by " + attacker.Player.Nickname);
 
             ReduceHealthAndCheckForDead(total_damage);
 
@@ -630,6 +618,8 @@ namespace DotaHeroes.API.Features
             Events.Handlers.Hero.OnHeroHealing(healing);
 
             if (!healing.IsAllowed) return;
+
+            if (Plugin.Instance.Config.Debug) Log.Info("Healed " + heal);
 
             HeroStatistics.HealthAndMana.Health += healing.Heal;
 
@@ -677,9 +667,9 @@ namespace DotaHeroes.API.Features
 
             Player.Role.Set(RoleTypeId.Spectator);
 
-            foreach (var ability in Abilities)
+            foreach (var ability in Abilities)  
             {
-                if (ability is ToggleAbility)
+                if (typeof(ToggleAbility).IsAssignableFrom(ability.GetType()))
                 {
                     var toggle = ability as ToggleAbility;
 
@@ -772,15 +762,8 @@ namespace DotaHeroes.API.Features
                         healthAndMana.Mana += healthAndMana.ManaRegeneration;
                     }
 
-                    if (healthAndMana.Health >= healthAndMana.MaximumHealth)
-                    {
-                        healthAndMana.Health = healthAndMana.MaximumHealth;
-                    }
-
-                    if (healthAndMana.Mana >= healthAndMana.MaximumMana)
-                    {
-                        healthAndMana.Mana = healthAndMana.MaximumMana;
-                    }
+                    healthAndMana.Health = (decimal)Mathf.Clamp((float)healthAndMana.Health, 0, (float)healthAndMana.MaximumHealth);
+                    healthAndMana.Mana = (decimal)Mathf.Clamp((float)healthAndMana.Mana, 0, (float)healthAndMana.MaximumMana);
 
                     Hud.Update(hero);
                 }

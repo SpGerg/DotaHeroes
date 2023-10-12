@@ -30,7 +30,7 @@ namespace DotaHeroes.API.Features.Objects
             Step = Speed * Time.deltaTime;
         }
 
-        public void Initialization(HeroController heroController, int damage, DamageType damageType, float speed)
+        public void Initialize(HeroController heroController, int damage, DamageType damageType, float speed)
         {
             Target = heroController;
             Damage = damage;

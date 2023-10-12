@@ -2,11 +2,13 @@
 using DotaHeroes.API.Features;
 using DotaHeroes.API.Features.Components;
 using Exiled.API.Features;
+using Mirror;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UnityEngine;
 
 namespace DotaHeroes.API.Extensions
 {
@@ -30,8 +32,25 @@ namespace DotaHeroes.API.Extensions
             HeroController heroController = player.GameObject.AddComponent<HeroController>();
             heroController.Hero = createdHero;
             createdHero.Respawn();
+            player.IsGodModeEnabled = true;
 
             return createdHero;
+        }
+
+        public static bool RemoveHero(this Player player)
+        {
+            HeroController heroController = player.GameObject.GetComponent<HeroController>();
+            
+            if (heroController == null)
+            {
+                return false;
+            }
+
+            GameObject.Destroy(heroController);
+
+            API.SetOrAddPlayer(player.Id, default);
+
+            return true;
         }
     }
 }

@@ -41,14 +41,8 @@
     <Reference Include="Assembly-CSharp-firstpass">
       <HintPath>..\Imports\Assembly-CSharp-firstpass.dll</HintPath>
     </Reference>
-    <Reference Include="ChatAPI">
-      <HintPath>..\Imports\ChatAPI.dll</HintPath>
-    </Reference>
     <Reference Include="CommandSystem.Core">
       <HintPath>..\Imports\CommandSystem.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="CustomHudAPI">
-      <HintPath>..\Imports\CustomHudAPI.dll</HintPath>
     </Reference>
     <Reference Include="Exiled.API">
       <HintPath>..\Imports\Exiled.API.dll</HintPath>
@@ -168,10 +162,16 @@
     <Compile Include="API\Features\Objects\RotDecorateObject.cs" />
     <Compile Include="API\Features\Serializables\AbilitySerializable.cs" />
     <Compile Include="API\Features\Serializables\HeroSerializable.cs" />
+    <Compile Include="API\Features\Serializables\HeroStatisticsSerializable.cs" />
+    <Compile Include="API\Features\Serializables\ItemSerializable.cs" />
     <Compile Include="API\Heroes\Pudge.cs" />
     <Compile Include="API\Enums\DispelType.cs" />
     <Compile Include="API\Features\Hud.cs" />
     <Compile Include="API\Features\ActiveAbility.cs" />
+    <Compile Include="API\Heroes\SpiritBreaker.cs" />
+    <Compile Include="API\Interfaces\IAccuracyModifier.cs" />
+    <Compile Include="API\Interfaces\IArmorModifier.cs" />
+    <Compile Include="API\Interfaces\IBlindModifier.cs" />
     <Compile Include="API\Interfaces\IDamageBlock.cs" />
     <Compile Include="API\Interfaces\IDamage.cs" />
     <Compile Include="API\Interfaces\IEffectDuration.cs" />
@@ -180,24 +180,32 @@
     <Compile Include="API\Enums\SideType.cs" />
     <Compile Include="API\Features\ToggleAbility.cs" />
     <Compile Include="API\Features\PassiveAbility.cs" />
+    <Compile Include="API\Interfaces\IEvasionModifier.cs" />
     <Compile Include="API\Interfaces\ILevelUp.cs" />
+    <Compile Include="API\Interfaces\INegativeArmorModifier.cs" />
     <Compile Include="API\Interfaces\IPierceDebuffImmunity.cs" />
     <Compile Include="API\Interfaces\IResistanceModifier.cs" />
     <Compile Include="API\Interfaces\ILevelValues.cs" />
     <Compile Include="API\Features\Item.cs" />
     <Compile Include="API\Items\Bracer.cs" />
+    <Compile Include="API\Features\Value.cs" />
     <Compile Include="API\Statistics\ArmorStatistics.cs" />
     <Compile Include="API\Statistics\AttackStatistics.cs" />
+    <Compile Include="API\Statistics\EvasionStatistics.cs" />
     <Compile Include="API\Statistics\HealthAndManaStatistics.cs" />
     <Compile Include="API\Statistics\ResistanceStatistics.cs" />
     <Compile Include="API\Statistics\SpeedStatistics.cs" />
     <Compile Include="API\Features\Utils.cs" />
     <Compile Include="API\Statistics\HeroStatistics.cs" />
     <Compile Include="Commands\AdminCommandBase.cs" />
+    <Compile Include="Commands\Admin\HeroDummy.cs" />
+    <Compile Include="Commands\Admin\Info.cs" />
+    <Compile Include="Commands\Admin\Parent.cs" />
     <Compile Include="Commands\Admin\SetHero.cs" />
     <Compile Include="Commands\Admin\Statistics.cs" />
     <Compile Include="Commands\HeroCommandBase.cs" />
     <Compile Include="Commands\User\Hero\Attack.cs" />
+    <Compile Include="Commands\User\Hero\Parent.cs" />
     <Compile Include="Config.cs" />
     <Compile Include="Events\Internal\HeroHandler.cs" />
     <Compile Include="Events\Internal\PlayerHandler.cs" />
@@ -209,6 +217,8 @@
       <Version>13.4.0</Version>
     </PackageReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="API\Abilities\Spirit Breaker\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

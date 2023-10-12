@@ -9,15 +9,17 @@ namespace DotaHeroes.API.Statistics
 {
     public class AttackStatistics
     {
-        public int BaseAttackDamage { get; set; }
+        public int BaseAttackDamage { get; }
 
-        public int ExtraAttackDamage { get; set; }
+        public int AttackDamage { get; set; }
+
+        public int ExtraAttackDamage { get; set; } 
 
         [YamlIgnore]
         public int FullDamage {
             get
             {
-                return BaseAttackDamage + ExtraAttackDamage;
+                return BaseAttackDamage + AttackDamage + ExtraAttackDamage;
             }
         }
 
@@ -25,24 +27,27 @@ namespace DotaHeroes.API.Statistics
 
         public decimal AttackRange { get; set; }
 
+        public decimal ProjectileSpeed { get; set; }
+
         public AttackStatistics() { }
 
-        public AttackStatistics(int baseAttackDamage, int extraAttackDamage, int attackSpeed, decimal attackRange)
+        public AttackStatistics(int baseAttackDamage, int extraAttackDamage, int attackSpeed, decimal attackRange, decimal projectileSpeed = 0)
         {
             BaseAttackDamage = baseAttackDamage;
             ExtraAttackDamage = extraAttackDamage;
             AttackSpeed = attackSpeed;
             AttackRange = attackRange;
+            ProjectileSpeed = projectileSpeed;
         }
 
         public override string ToString()
         {
             if (ExtraAttackDamage > 0)
             {
-                return $"Attack damage: {BaseAttackDamage} + <color=Green>{ExtraAttackDamage}</color>";
+                return $"Attack damage: {AttackDamage} + <color=Green>{ExtraAttackDamage}</color>";
             }
 
-            return $"Attack damage: {BaseAttackDamage}";
+            return $"Attack damage: {AttackDamage}";
         }
     }
 }

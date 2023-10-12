@@ -35,7 +35,7 @@ namespace DotaHeroes.API.Features
         public bool IsStop { 
             get
             {
-                return IsStop;
+                return isStop;
             }
             set
             {

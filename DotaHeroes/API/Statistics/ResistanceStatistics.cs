@@ -33,6 +33,12 @@ namespace DotaHeroes.API.Statistics
             ResistanceModifiers = new List<IResistanceModifier>();
         }
 
+        public decimal GetMagicalDamage(decimal damage, decimal intelligence)
+        {
+            decimal percent = (damage / 100m);
+            return damage - percent * GetMagicResistance(intelligence);
+        }
+
         public float GetEffectResistance()
         {
             return Mathf.Clamp(1 - (1 - (float)EffectResistance / 10) * GetEffectResistanceFromModifiers(), 0, 99) * 10;
@@ -40,7 +46,7 @@ namespace DotaHeroes.API.Statistics
 
         public float GetEffectDuration(float originalDuration)
         {
-            return originalDuration * (100 - GetEffectResistance());
+            return originalDuration * ((100 - GetEffectResistance()) / 100);
         }
 
         public decimal GetMagicResistance(decimal intelligence)

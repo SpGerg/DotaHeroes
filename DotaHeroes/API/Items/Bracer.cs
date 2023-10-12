@@ -11,14 +11,13 @@ namespace DotaHeroes.API.Items
 {
     public class Bracer : Item
     {
-        public override IReadOnlyDictionary<StatisticsType, float> Statistics => new Dictionary<StatisticsType, float>()
-        {
-            { StatisticsType.Strength, 5 },
-            { StatisticsType.Agility, 2 },
-            { StatisticsType.Intelligence, 2 },
-            { StatisticsType.HealthRegeneration, 0.75f },
-            { StatisticsType.ExtraAttackDamage, 3 },
-        };
+        public override string Name => "Bracer";
+
+        public override string Description => "Bracer";
+
+        public override string Lore => "Bracer";
+
+        public override IReadOnlyDictionary<StatisticsType, Value> Statistics => Plugin.Instance.Config.Items["bracer"].Statistics;
 
         public Bracer(Player owner) : base(owner)
         {

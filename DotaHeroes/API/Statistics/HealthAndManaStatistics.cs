@@ -43,32 +43,48 @@ namespace DotaHeroes.API.Statistics
 
         public decimal ManaRegeneration { get; set; }
 
+        public decimal BaseHealth { get; }
+
+        public decimal BaseHealthRegeneration { get; }
+
+        public decimal BaseMana { get; }
+
+        public decimal BaseManaRegeneration { get; }
+
         private decimal maximumMana;
 
         private decimal maximumHealth;
 
         public HealthAndManaStatistics() { }
 
-        public HealthAndManaStatistics(int maximumHealth, int maximumMana)
+        public HealthAndManaStatistics(decimal maximumHealth, decimal maximumMana)
         {
             MaximumMana = maximumMana;
             MaximumHealth = maximumHealth;
+            BaseHealth = maximumHealth;
+            BaseMana = maximumMana;
             Health = maximumHealth;
             Mana = maximumMana;
         }
 
-        public HealthAndManaStatistics(int maximumHealth, int maximumMana, int health, int mana)
+        public HealthAndManaStatistics(decimal maximumHealth, decimal maximumMana, decimal health, decimal mana)
         {
             MaximumMana = maximumMana;
             MaximumHealth = maximumHealth;
+            BaseHealth = maximumHealth;
+            BaseMana = maximumMana;
             Health = health;
             Mana = mana;
         }
 
-        public HealthAndManaStatistics(int maximumHealth, int maximumMana, int health, int mana, int healthReg, int manaReg)
+        public HealthAndManaStatistics(decimal maximumHealth, decimal maximumMana, decimal health, decimal mana, decimal healthReg, decimal manaReg)
         {
             MaximumMana = maximumMana;
             MaximumHealth = maximumHealth;
+            BaseHealth = maximumHealth;
+            BaseHealthRegeneration = healthReg;
+            BaseMana = maximumMana;
+            BaseManaRegeneration = manaReg;
             Health = health;
             Mana = mana;
             HealthRegeneration = healthReg;

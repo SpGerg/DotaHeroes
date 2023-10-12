@@ -36,6 +36,6 @@ namespace DotaHeroes.Commands
             return Execute(player, arguments, out response);
         }
 
-        public abstract bool Execute(Player player, ArraySegment<string> arguments, out string response);;
+        public abstract bool Execute(Player player, ArraySegment<string> arguments, out string response);
     }
 }

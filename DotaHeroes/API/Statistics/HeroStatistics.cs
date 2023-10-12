@@ -1,6 +1,5 @@
 ﻿using DotaHeroes.API;
 using DotaHeroes.API.Enums;
-using DotaHeroes.API.Events.Handlers;
 using DotaHeroes.API.Features;
 using DotaHeroes.API.Interfaces;
 using DotaHeroes.API.Statistics;
@@ -9,8 +8,10 @@ using NorthwoodLib.Pools;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
+using UnityEngine;
 
 namespace DotaHeroes.API.Statistics
 {
@@ -26,16 +27,13 @@ namespace DotaHeroes.API.Statistics
             {
                 strength = value;
 
-                var maximumHealth = HealthAndMana.MaximumHealth;
-                var healthReg = HealthAndMana.HealthRegeneration;
-
                 var healthFromStrength = Constants.MaximumHealthFromStrength * value;
                 var healthRegFromStrength = Constants.HealthRegenerationFromStrength * value;
 
-                HealthAndMana.MaximumHealth = maximumHealth + healthFromStrength;
-                HealthAndMana.HealthRegeneration = healthReg + healthRegFromStrength;
+                HealthAndMana.MaximumHealth = healthFromStrength + HealthAndMana.BaseHealth;
+                HealthAndMana.HealthRegeneration = healthRegFromStrength + HealthAndMana.BaseHealthRegeneration;
 
-                UpdateAttackDamage(value);
+                UpdateAttackDamage(value, AttributeType.Strength);
             }
         }
 
@@ -49,16 +47,11 @@ namespace DotaHeroes.API.Statistics
             {
                 agility = value;
 
-                var armor = Armor.BaseArmor;
-                var attackSpeed = Attack.AttackSpeed;
-
-                var armorFromAgility = Constants.ArmorFromAgility * value;
                 var attackSpeedFromAgility = (int)(Constants.AttackSpeedFromAgility * value);
 
-                Armor.BaseArmor = armor + armorFromAgility;
-                Attack.AttackSpeed = attackSpeed + attackSpeedFromAgility;
+                Attack.AttackSpeed = attackSpeedFromAgility;
 
-                UpdateAttackDamage(value);
+                UpdateAttackDamage(value, AttributeType.Agility);
             }
         }
 
@@ -72,16 +65,13 @@ namespace DotaHeroes.API.Statistics
             {
                 intelligence = value;
 
-                var maximumMana = HealthAndMana.MaximumMana;
-                var manaReg = HealthAndMana.ManaRegeneration;
+                var maximumManaFromIntelligence = Constants.MaximumManaFromIntelligence * intelligence;
+                var manaRegFromIntelligence = Constants.ManaRegenerationFromIntelligence * intelligence;
 
-                var maximumManaFromIntelligence = Constants.MaximumManaFromIntelligence * value;
-                var manaRegFromIntelligence = Constants.ManaRegenerationFromIntelligence * value;
+                HealthAndMana.MaximumMana = maximumManaFromIntelligence + HealthAndMana.BaseMana;
+                HealthAndMana.ManaRegeneration = manaRegFromIntelligence + HealthAndMana.BaseManaRegeneration;
 
-                HealthAndMana.MaximumMana = (int)(maximumMana + maximumManaFromIntelligence);
-                HealthAndMana.ManaRegeneration = (int)(manaReg + manaRegFromIntelligence);
-
-                UpdateAttackDamage(value);
+                UpdateAttackDamage(value, AttributeType.Intelligence);
             }
         }
 
@@ -100,6 +90,9 @@ namespace DotaHeroes.API.Statistics
         public ArmorStatistics Armor { get; }
 
         public SpeedStatistics Speed { get; }
+
+        // Im init cuz all heroes by default have 0% evasion. wepith eawskughifwean, fmcvzkloppjito 0pwea
+        public EvasionStatistics Evasion { get; } = new EvasionStatistics();
 
         public AttributeType AttributeType { get; set; }
 
@@ -131,19 +124,6 @@ namespace DotaHeroes.API.Statistics
             Speed = new SpeedStatistics(hero);
         }
 
-        public HeroStatistics(AttributeType attribute, decimal strengthFromLevel, decimal agilityFromLevel, decimal intelligenceFromLevel, HealthAndManaStatistics healthAndManaStatistics, AttackStatistics attackStatistics, ArmorStatistics armorStatistics, ResistanceStatistics resistanceStatistics, SpeedStatistics speedStatistics)
-        {
-            AttributeType = attribute;
-            HealthAndMana = healthAndManaStatistics;
-            Attack = attackStatistics;
-            Armor = armorStatistics;
-            Resistance = resistanceStatistics;
-            Speed = speedStatistics;
-            StrengthFromLevel = strengthFromLevel;
-            AgilityFromLevel = agilityFromLevel;
-            IntelligenceFromLevel = intelligenceFromLevel;
-        }
-
         public HeroStatistics(AttributeType attribute, decimal strength, decimal strengthFromLevel, decimal agility, decimal agilityFromLevel, decimal intelligence, decimal intelligenceFromLevel, HealthAndManaStatistics healthAndManaStatistics, AttackStatistics attackStatistics, ArmorStatistics armorStatistics, ResistanceStatistics resistanceStatistics, SpeedStatistics speedStatistics)
         {
             AttributeType = attribute;
@@ -152,19 +132,16 @@ namespace DotaHeroes.API.Statistics
             Armor = armorStatistics;
             Resistance = resistanceStatistics;
             Speed = speedStatistics;
-            Strength = strength;
-            Agility = agility;
-            Intelligence = intelligence;
             StrengthFromLevel = strengthFromLevel;
             AgilityFromLevel = agilityFromLevel;
             IntelligenceFromLevel = intelligenceFromLevel;
+            Strength = strength;
+            Agility = agility;
+            Intelligence = intelligence;
         }
 
-        public HeroStatistics(HeroStatistics heroStatistics, Features.Hero hero)
+        public HeroStatistics(HeroStatistics heroStatistics, Hero hero)
         {
-            StrengthFromLevel = heroStatistics.StrengthFromLevel;
-            AgilityFromLevel = heroStatistics.AgilityFromLevel;
-            IntelligenceFromLevel = heroStatistics.IntelligenceFromLevel;
             AttributeType = heroStatistics.AttributeType;
             HealthAndMana = heroStatistics.HealthAndMana;
             Attack = heroStatistics.Attack;
@@ -172,47 +149,47 @@ namespace DotaHeroes.API.Statistics
             Resistance = heroStatistics.Resistance;
             Speed = new SpeedStatistics(hero);
             Hero = hero;
+            StrengthFromLevel = heroStatistics.StrengthFromLevel;
+            AgilityFromLevel = heroStatistics.AgilityFromLevel;
+            IntelligenceFromLevel = heroStatistics.IntelligenceFromLevel;
+            Strength = heroStatistics.Strength;
+            Agility = heroStatistics.Agility;
+            Intelligence = heroStatistics.Intelligence;
         }
 
-        public virtual void AddOrReduceStatistics(IReadOnlyDictionary<StatisticsType, float> statistics, bool isReduce)
+        public virtual void AddOrReduceStatistics(IReadOnlyDictionary<StatisticsType, Value> statistics, bool isReduce)
         {
             foreach (var value in statistics)
             {
-                var total_value = value.Value;
-
-                if (isReduce)
-                {
-                    total_value = -total_value;
-                }
-
+                //im dont know how im can make it better
                 switch (value.Key)
                 {
                     case StatisticsType.Strength:
-                        Strength += (decimal)total_value;
+                        Strength += GetValue(value.Value.CoolValue, Strength, value.Value.IsPercent, isReduce);
                         break;
                     case StatisticsType.Agility:
-                        Agility += (decimal)total_value;
+                        Agility += GetValue(value.Value.CoolValue, Agility, value.Value.IsPercent, isReduce);
                         break;
                     case StatisticsType.Intelligence:
-                        Intelligence += (decimal)total_value;
+                        Intelligence += GetValue(value.Value.CoolValue, Intelligence, value.Value.IsPercent, isReduce);
                         break;
                     case StatisticsType.Health:
-                        HealthAndMana.Health += (int)total_value;
+                        HealthAndMana.Health += GetValue(value.Value.CoolValue, HealthAndMana.Health, value.Value.IsPercent, isReduce);
                         break;
                     case StatisticsType.Mana:
-                        HealthAndMana.Mana += (int)total_value;
+                        HealthAndMana.Mana += GetValue(value.Value.CoolValue, HealthAndMana.Mana, value.Value.IsPercent, isReduce);
                         break;
                     case StatisticsType.HealthRegeneration:
-                        HealthAndMana.HealthRegeneration += (decimal)total_value;
+                        HealthAndMana.HealthRegeneration += GetValue(value.Value.CoolValue, HealthAndMana.Health, value.Value.IsPercent, isReduce);
                         break;
                     case StatisticsType.ManaRegeneration:
-                        HealthAndMana.ManaRegeneration += (decimal)total_value;
+                        HealthAndMana.ManaRegeneration += GetValue(value.Value.CoolValue, HealthAndMana.Mana, value.Value.IsPercent, isReduce);
                         break;
                     case StatisticsType.ExtraAttackDamage:
-                        Attack.ExtraAttackDamage += (int)total_value;
+                        Attack.ExtraAttackDamage += (int)GetValue(value.Value.CoolValue, Attack.ExtraAttackDamage, value.Value.IsPercent, isReduce);
                         break;
                     case StatisticsType.BaseAttackDamage:
-                        Attack.BaseAttackDamage += (int)total_value;
+                        Attack.AttackDamage += (int)GetValue(value.Value.CoolValue, Attack.AttackDamage, value.Value.IsPercent, isReduce);
                         break;
                 }
             }
@@ -225,30 +202,48 @@ namespace DotaHeroes.API.Statistics
             Intelligence += IntelligenceFromLevel;
         }
 
-        private void UpdateAttackDamage(decimal value)
-        {
-            if (AttributeType == AttributeType.Intelligence)
-            {
-                Attack.BaseAttackDamage = (int)value;
-            }
-
-            if (AttributeType == AttributeType.Universal)
-            {
-                Attack.BaseAttackDamage = (int)((Strength + Agility + Intelligence) / Constants.UniversalDamage);
-            }
-        }
-
         public override string ToString()
         {
             var stringBuilder = StringBuilderPool.Shared.Rent();
             stringBuilder.AppendLine(HealthAndMana.ToString());
             stringBuilder.AppendLine(Attack.ToString());
-            stringBuilder.AppendLine(Armor.ToString());
+            stringBuilder.AppendLine(Armor.ToString(Agility));
             stringBuilder.AppendLine(Resistance.ToString(Intelligence));
+            stringBuilder.AppendLine(Evasion.ToString());
             stringBuilder.AppendLine(Speed.ToString());
             stringBuilder.AppendLine(AttributeType.ToString());
 
             return StringBuilderPool.Shared.ToStringReturn(stringBuilder);
+        }
+
+        private void UpdateAttackDamage(decimal value, AttributeType attributeType)
+        {
+            if (AttributeType == attributeType)
+            {
+                Attack.AttackDamage = (int)value + Attack.BaseAttackDamage;
+            }
+
+            if (AttributeType == AttributeType.Universal)
+            {
+                Attack.AttackDamage = (int)((Strength + Agility + Intelligence) / Constants.UniversalDamage) + Attack.BaseAttackDamage;
+            }
+        }
+
+        private decimal GetValue(decimal value, decimal fullValue, bool isPercent, bool isReduce)
+        {
+            var total_value = value;
+
+            if (isPercent)
+            {
+                total_value = (fullValue / 100) * value;
+            }
+
+            if (value < 0 && isReduce)
+            {
+                total_value = -total_value;
+            }
+
+            return total_value;
         }
     }
 }
