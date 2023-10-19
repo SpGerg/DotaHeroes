@@ -68,6 +68,7 @@ namespace DotaHeroes
 
             Player.ChangingRole += PlayerHandler.SetHero;
             Player.Left += PlayerHandler.RemoveHero;
+            Hero.Died += HeroHandler.GiveExperienceAndMoneyFromKill;
             Hero.TakingDamage += HeroHandler.BlockingDamage;
             Hero.TakedDamage += HeroHandler.UpdateHudOnTakedDamage;
             Hero.ExecutingAbility += HeroHandler.Silence;
@@ -81,6 +82,7 @@ namespace DotaHeroes
         {
             Player.ChangingRole -= PlayerHandler.SetHero;
             Player.Left -= PlayerHandler.RemoveHero;
+            Hero.Died -= HeroHandler.GiveExperienceAndMoneyFromKill;
             Hero.TakingDamage -= HeroHandler.BlockingDamage;
             Hero.TakedDamage -= HeroHandler.UpdateHudOnTakedDamage;
             Hero.ExecutingAbility -= HeroHandler.Silence;

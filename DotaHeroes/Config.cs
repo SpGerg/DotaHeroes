@@ -25,10 +25,10 @@ namespace DotaHeroes
         public bool IsUsingSounds { get; set; }
 
         [Description("Giving money from kill")]
-        public int KillFromMoney { get; set; }
+        public int MoneyFromKill { get; set; } = 100;
 
         [Description("Giving exp from kill")]
-        public int ExpFromMoney { get; set; }
+        public int ExpFromKill { get; set; } = 100;
 
         [Description("Heroes abilities, default hero statistics")]
         public Dictionary<string, HeroSerializable> Heroes { get; set; } = new()

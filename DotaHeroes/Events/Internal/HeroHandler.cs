@@ -31,6 +31,14 @@ namespace DotaHeroes.Events.Internal
             ev.Damage = total_damage;
         }
 
+        internal static void GiveExperienceAndMoneyFromKill(HeroDiedEventArgs ev)
+        {
+            if (ev.Killer == null) return;
+
+            ev.Killer.Experience += Plugin.Instance.Config.ExpFromKill;
+            ev.Killer.Money += Plugin.Instance.Config.MoneyFromKill;
+        }
+
         internal static void AddFleshHeapStackOnDied(HeroDiedEventArgs ev)
         {
             foreach (var hero in API.API.GetHeroes().Values)

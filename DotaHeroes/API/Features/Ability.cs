@@ -59,7 +59,7 @@ namespace DotaHeroes.API.Features
             }
         }
 
-        private int level;
+        private int level = -1;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Ability" /> class.
@@ -84,6 +84,8 @@ namespace DotaHeroes.API.Features
                     {
                         cooldown.Duration = (float)levelValues.Values["cooldown"][Level];
                     }
+
+                    Cooldowns.AddCooldown(hero.Player.Id, new CooldownInfo(Slug, (float)levelValues.Values["cooldown"][Level]));
                 }
 
                 if (levelValues.Values.ContainsKey("damage") && this is IDamage)
@@ -111,6 +113,13 @@ namespace DotaHeroes.API.Features
             if (!IsEnabled)
             {
                 response = "Ability is disabled";
+
+                return false;
+            }
+
+            if (Level < 0)
+            {
+                response = "This is ability is not upgraded";
 
                 return false;
             }

@@ -1,4 +1,5 @@
 ﻿using CommandSystem;
+using DotaHeroes.API.Effects;
 using DotaHeroes.API.Enums;
 using DotaHeroes.API.Events.EventArgs.Hero;
 using DotaHeroes.API.Events.Handlers;
@@ -31,6 +32,12 @@ namespace DotaHeroes.Commands.User.Hero
             if (!API.Features.Utils.GetHeroFromPlayerEyeDirection(hero, (float)hero.HeroStatistics.Attack.AttackRange, out response, out API.Features.Hero target))
             {
                 return false;
+            }
+
+            if (hero.TryGetEffect(out Disarm result))
+            {
+                response = "You are disarmed";
+                return true;
             }
 
             var heroAttacking = new HeroAttackingEventArgs(hero, target, hero.HeroStatistics.Attack.FullDamage, DamageType.Physical, true);

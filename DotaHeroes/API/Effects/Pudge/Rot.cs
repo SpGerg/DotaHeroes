@@ -22,6 +22,8 @@ namespace DotaHeroes.API.Effects.Pudge
 
         public override DispelType DispelType { get; set; } = DispelType.NotDispelling;
 
+        public Hero Attacker { get; set; }
+
         public decimal Damage { get; set; }
 
         public DamageType DamageType { get; set; }
@@ -32,13 +34,14 @@ namespace DotaHeroes.API.Effects.Pudge
 
         public Rot(Hero owner) : base(owner)
         {
-            DamageOverTime = new DamageOverTime(owner, 30, DamageType.Magical, -1, 1f, owner);
+            DamageOverTime = new DamageOverTime(owner, 30, DamageType.Magical, -1, 1f, Attacker);
         }
 
         public override void Enable()
         {
             Hero.HeroStatistics.Speed.Speed -= 10;
             DamageOverTime.Damage = Damage;
+            Log.Info("п");
             DamageOverTime.DamageType = DamageType;
             DamageOverTime.Run();
              

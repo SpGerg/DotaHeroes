@@ -55,7 +55,7 @@ namespace DotaHeroes.API.Abilities.SpiritBreaker
 
             var chance = UnityEngine.Random.Range(0, 100);
 
-            if (Values["chance"][Level] < chance || !Cooldowns.GetCooldown(ev.Hero.Player.Id, Slug).IsReady) return;
+            if (Values["chance"][Level] < chance || !Cooldowns.GetCooldown(ev.Hero.Player.Id, Slug).IsReady || ev.Hero.TryGetEffect(out Break _)) return;
 
             if (Plugin.Instance.Config.Debug) Log.Info("BSAYUHIBFUI 7QAWEYER");
 

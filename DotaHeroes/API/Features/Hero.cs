@@ -85,24 +85,16 @@ namespace DotaHeroes.API.Features
 
                 if (experience >= Constants.ExperienceToLevelUp[Level])
                 {
-                    for (int i = Level;i < i++;i++)
-                    {
-                        experience -= Constants.ExperienceToLevelUp[Level];
+                    var left = experience - Constants.ExperienceToLevelUp[Level];
 
-                        if (experience <= 0)
-                        {
-                            break;
-                        }
+                    LevelUp();
 
-                        LevelUp();
-                    }
-
-                    experience = 0;
+                    experience = Constants.ExperienceToLevelUp[Level] + left;
                 }
             }
         }
 
-        public int PointsToLevelUp { get; private set; }
+        public int PointsToLevelUp { get; private set; } = 1;
 
         public bool IsHeroDead
         {
@@ -170,24 +162,6 @@ namespace DotaHeroes.API.Features
             }
 
             HeroController = Player.GameObject.GetComponent<HeroController>();
-
-            Log.Info("п");
-
-            foreach (var ability in Abilities)
-            {
-                if (ability is ILevelValues levelValues)
-                {
-                    if (levelValues.Values.ContainsKey("cooldown"))
-                    {
-                        Cooldowns.AddCooldown(player.Id, new CooldownInfo(ability.Slug, (int)levelValues.Values["cooldown"][0]));
-                    }
-                }
-
-                if (ability is PassiveAbility passiveAbility)
-                {
-                    passiveAbility.Register(this);
-                }
-            }
         }
 
         /// <summary>
@@ -209,22 +183,22 @@ namespace DotaHeroes.API.Features
         /// <summary>
         /// Level up.
         /// </summary>
-        public void LevelUpAbilty(string name)
+        public bool LevelUpAbilty(string slug)
         {
-            if (Level >= 30 || PointsToLevelUp == 0 || lastAbilityLevelUpped.Name == name) return;
+            if (Level >= 30 || PointsToLevelUp == 0 || (lastAbilityLevelUpped != null && lastAbilityLevelUpped.Slug == Slug)) return false;
 
-            var ability = Abilities.FirstOrDefault(ability => ability.Name == name);
+            var ability = Abilities.FirstOrDefault(ability => ability.Slug == slug);
 
-            if (ability == default) return;
+            if (ability == default) return false;
 
             ability.LevelUp(this);
 
             lastAbilityLevelUpped = ability;
+            PointsToLevelUp--;
 
-            if (ability.Level > 1)
-            {
-                Log.Info($"Player {Player.Nickname} hero {HeroName} is level up ability {ability.Name} from {ability.Level - 1} to {ability.Level}");
-            }
+            Log.Info($"Player {Player.Nickname} hero {HeroName} is level up ability {ability.Name} from {ability.Level - 1} to {ability.Level}");
+
+            return true;
         }
 
         /// <summary>
@@ -259,8 +233,6 @@ namespace DotaHeroes.API.Features
             }
 
             Hud.Update();
-
-            Log.Info(slug);
 
             if (ability is not PassiveAbility)
             {
@@ -344,7 +316,7 @@ namespace DotaHeroes.API.Features
 
             if (Plugin.Instance.Config.Debug) Log.Info("Third Damage " + total_damage + " by " + (attacker == null ? "attacker is null lol" : attacker.Player.Nickname));
 
-            ReduceHealthAndCheckForDead(total_damage, isCheckDead);
+            ReduceHealthAndCheckForDead(attacker, total_damage, isCheckDead);
 
             var takedDamage = new HeroTakedDamageEventArgs(this, attacker, total_damage, damageType);
             Events.Handlers.Hero.OnHeroTakedDamage(takedDamage);
@@ -400,7 +372,7 @@ namespace DotaHeroes.API.Features
 
             if (!attacking.IsAllowed) return;
 
-            target.TakeDamage(attacking.Damage, attacking.DamageType);
+            target.TakeDamage(this, attacking.Damage, attacking.DamageType);
 
             var attacked = new HeroAttackedEventArgs(this, target, HeroStatistics.Attack.FullDamage, DamageType.Physical);
             Events.Handlers.Hero.OnHeroAttacked(attacked);
@@ -409,14 +381,14 @@ namespace DotaHeroes.API.Features
         /// <summary>
         /// Dead
         /// </summary>
-        public virtual void Dead()
+        public virtual void Dead(Hero killer = null)
         {
-            var dying = new HeroDyingEventArgs(this, true);
+            var dying = new HeroDyingEventArgs(this, killer, true);
             Events.Handlers.Hero.OnHeroDying(dying);
 
             if (!dying.IsAllowed) return;
 
-            Hud.Clear(this);
+            Hud.Clear(Player);
 
             ApplyDispel(DispelType.Dead);
 
@@ -441,7 +413,7 @@ namespace DotaHeroes.API.Features
 
             IsHeroDead = true;
 
-            var died = new HeroDiedEventArgs(this);
+            var died = new HeroDiedEventArgs(this, killer);
             Events.Handlers.Hero.OnHeroDied(died);
         }
 
@@ -774,7 +746,7 @@ namespace DotaHeroes.API.Features
             }
         }
 
-        private void ReduceHealthAndCheckForDead(decimal damage, bool isCheck = true)
+        private void ReduceHealthAndCheckForDead(Hero killer, decimal damage, bool isCheck = true)
         {
             HeroStatistics.HealthAndMana.Health -= damage;
 
@@ -782,7 +754,7 @@ namespace DotaHeroes.API.Features
             {
                 if (isCheck)
                 {
-                    Dead();
+                    Dead(killer);
                 }
                 else
                 {

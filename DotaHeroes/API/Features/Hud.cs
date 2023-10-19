@@ -2,7 +2,6 @@
 using Exiled.API.Features;
 using MEC;
 using NorthwoodLib.Pools;
-using PluginAPI.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -74,9 +73,9 @@ namespace DotaHeroes.API.Features
         /// <summary>
         /// Clear hud to hero.
         /// </summary>
-        public static void Clear(Hero hero)
+        public static void Clear(Player player)
         {
-            hero.Player.ShowHint(string.Empty, 0);
+            player.ShowHint(string.Empty, 0);
         }
     }
 }

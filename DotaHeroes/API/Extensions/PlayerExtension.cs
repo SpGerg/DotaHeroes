@@ -66,6 +66,8 @@ namespace DotaHeroes.API.Extensions
 
             API.SetOrAddPlayer(player.Id, default);
 
+            Hud.Clear(player);
+
             return true;
         }
 

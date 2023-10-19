@@ -20,7 +20,7 @@ using Hero = DotaHeroes.API.Features.Hero;
 
 namespace DotaHeroes.API.Abilities.Pudge
 {
-    public class Rot : ToggleAbility, ILevelValues, IDamage
+    public class Rot : ToggleAbility, ILevelValues
     {
         public override string Name => "Rot";
 
@@ -42,16 +42,7 @@ namespace DotaHeroes.API.Abilities.Pudge
 
         public IReadOnlyList<int> HeroLevelToLevelUp { get; set; } = Features.Utils.EmptyLevelsList;
 
-        public decimal Damage { get; set; }
-
-        public DamageType DamageType { get; set; }
-
         public static string SoundsPath = Plugin.Instance.SoundsPath + "\\pudge\\rot";
-
-        public Rot() : base()
-        {
-            Damage = (int)Values["damage"][Level];
-        }
 
         public override bool Activate(Hero hero, ArraySegment<string> arguments, out string response)
         {
@@ -82,18 +73,20 @@ namespace DotaHeroes.API.Abilities.Pudge
         public override bool Deactivate(Hero hero, ArraySegment<string> arguments, out string response)
         {
             hero.Values["is_rot"] = false;
-            NetworkServer.Destroy((hero.Values["decorate_rot"] as Primitive).AdminToyBase.gameObject);
-            Audio.StopLoop(hero.Values["audio_rot"] as Player);
+            try
+            {
+                NetworkServer.Destroy((hero.Values["decorate_rot"] as Primitive).AdminToyBase.gameObject);
+            }
+            catch { }
+
+            try
+            {
+                Audio.StopLoop(hero.Values["audio_rot"] as Player);
+            }
+            catch { }
 
             response = "Rot is disabled";
             return true;
-        }
-
-        public override void LevelUp(Hero hero)
-        {
-            Damage = (int)Values["damage"][Level];
-
-            base.LevelUp(hero);
         }
 
         private IEnumerator<float> RotCoroutine(Hero owner)
@@ -105,8 +98,9 @@ namespace DotaHeroes.API.Abilities.Pudge
                     if (Vector3.Distance(hero.Player.Position, owner.Player.Position) < 2)
                     {
                         var rot = new Effects.Pudge.Rot(hero);
-                        rot.Damage = (int)Damage;
+                        rot.Damage = (int)Values["damage"][Level];
                         rot.DamageType = DamageType.Magical;
+                        rot.Attacker = owner;
                         hero.EnableEffect(rot);
                     }
                     else

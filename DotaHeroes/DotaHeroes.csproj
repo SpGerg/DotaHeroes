@@ -41,6 +41,8 @@
     <Compile Include="API\Abilities\SpiritBreaker\ChargeOfDarkness.cs" />
     <Compile Include="API\Abilities\SpiritBreaker\GreaterBash.cs" />
     <Compile Include="API\Abilities\SpiritBreaker\NetherStrike.cs" />
+    <Compile Include="API\Effects\Break.cs" />
+    <Compile Include="API\Effects\Disarm.cs" />
     <Compile Include="API\Effects\Pudge\FleshHeap.cs" />
     <Compile Include="API\Effects\Pudge\FleshHeapShield.cs" />
     <Compile Include="API\Effects\Silence.cs" />
@@ -161,6 +163,7 @@
     <Compile Include="Commands\HeroCommandBase.cs" />
     <Compile Include="Commands\User\Hero\BuyItem.cs" />
     <Compile Include="Commands\User\Hero\Inventory.cs" />
+    <Compile Include="Commands\User\Hero\LevelUp.cs" />
     <Compile Include="Commands\User\Hero\SellItem.cs" />
     <Compile Include="Commands\User\Hero\UseAbility.cs" />
     <Compile Include="Commands\User\Hero\Attack.cs" />

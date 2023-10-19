@@ -15,6 +15,8 @@ namespace DotaHeroes.API.Events.EventArgs.Hero
     {
         public Features.Hero Hero { get; }
 
+        public Features.Hero Killer { get; }
+
         public bool IsAllowed { get; set; }
 
         /// <summary>
@@ -22,9 +24,10 @@ namespace DotaHeroes.API.Events.EventArgs.Hero
         /// </summary>
         /// <param name="hero"><inheritdoc cref="Hero" /></param>
         /// <param name="isAllowed"><inheritdoc cref="IsAllowed" /></param>
-        public HeroDyingEventArgs(Features.Hero hero, bool isAllowed)
+        public HeroDyingEventArgs(Features.Hero hero, Features.Hero killer, bool isAllowed)
         {
             Hero = hero;
+            Killer = killer;
             IsAllowed = isAllowed;
         }
     }

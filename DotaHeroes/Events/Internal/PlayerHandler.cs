@@ -47,6 +47,10 @@ namespace DotaHeroes.Events.Internal
 
                 Hud.Update(_hero);
             }
+            else
+            {
+                player.RemoveHero();
+            }
         }
 
         internal static void RemoveHero(LeftEventArgs ev)

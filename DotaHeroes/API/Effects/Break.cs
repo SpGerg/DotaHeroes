@@ -9,20 +9,18 @@ using System.Threading.Tasks;
 
 namespace DotaHeroes.API.Effects
 {
-    public class Silence : Effect, IEffectDuration
+    public class Break : Effect, IEffectDuration
     {
-        public override string Name => "Silence";
+        public override string Name => "Break";
 
-        public override string Description { get; protected set; } = "Silence";
+        public override string Description { get; protected set; } = "Disable passives abilties";
 
         public override EffectClassType EffectClassType => EffectClassType.Negative;
 
-        public override DispelType DispelType { get; set; } = DispelType.Basic;
-
         public float Duration { get; set; }
 
-        public Silence() : base() { }
+        public Break() : base() { }
 
-        public Silence(Hero owner) : base(owner) { }
+        public Break(Hero owner) : base(owner) { }
     }
 }

@@ -14,13 +14,16 @@ namespace DotaHeroes.API.Events.EventArgs.Hero
     {
         public Features.Hero Hero { get; }
 
+        public Features.Hero Killer { get; }
+
         /// <summary>
         ///     Initializes a new instance of the <see cref="HeroDiedEventArgs" /> class.
         /// </summary>
         /// <param name="hero"><inheritdoc cref="Hero" /></param>
-        public HeroDiedEventArgs(Features.Hero hero)
+        public HeroDiedEventArgs(Features.Hero hero, Features.Hero killer)
         {
             Hero = hero;
+            Killer = killer;
         }
     }
 }

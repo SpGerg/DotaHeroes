@@ -24,7 +24,8 @@ namespace DotaHeroes.Commands.User.Hero
             new UseAbility(),
             new BuyItem(),
             new SellItem(),
-            new Inventory()
+            new Inventory(),
+            new LevelUp()
         };
 
         private string message = string.Empty;
