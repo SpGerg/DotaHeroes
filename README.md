@@ -1,4 +1,4 @@
 # DotaHeroes
- Transferring characters from Dota to SCP SL. [Fun plugin]
+Transferring characters from Dota to SCP SL. [Fun plugin]
 
- In development!
+All info in wiki.
