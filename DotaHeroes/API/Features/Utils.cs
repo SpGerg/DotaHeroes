@@ -1,5 +1,6 @@
 ﻿using DotaHeroes.API.Enums;
 using DotaHeroes.API.Interfaces;
+using DotaHeroes.API.Statistics;
 using Exiled.API.Features;
 using NorthwoodLib.Pools;
 using System;
@@ -8,11 +9,25 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
+using static UnityEngine.UI.GridLayoutGroup;
 
 namespace DotaHeroes.API.Features
 {
     public static class Utils
     {
+        public static ArraySegment<string> EmptyArraySegment { get; } = new ArraySegment<string>();
+
+        public static List<int> EmptyLevelsList { get; } = new List<int>();
+
+        public static List<int> DefaultLevelsUltimateList { get; } = new List<int>()
+        {
+            6,
+            12,
+            18
+        };
+
+        private static SideType[] sides = new SideType[] { SideType.Dire, SideType.Radiant };
+
         /// <summary>
         /// Get position from player eye direction with range
         /// </summary>
@@ -24,9 +39,17 @@ namespace DotaHeroes.API.Features
         }
 
         /// <summary>
+        /// Get position from player eye direction with range
+        /// </summary>
+        public static decimal GetPercentOfValue(decimal value, decimal percent)
+        {
+            return (value / 100) * percent;
+        }
+
+        /// <summary>
         /// Get player from eye direction
         /// </summary>
-        public static bool GetPlayerFromEyeDirection(Player player, int range, out string response, out Player target)
+        public static bool GetPlayerFromEyeDirection(Player player, float range, out string response, out Player target)
         {
             RaycastHit hit;
 
@@ -52,9 +75,9 @@ namespace DotaHeroes.API.Features
         }
 
         /// <summary>
-        /// Get hero from eye direction
+        /// Get hero from eye direction with player
         /// </summary>
-        public static bool GetHeroFromPlayerEyeDirection(Player player, int range, out string response, out Hero hero)
+        public static bool GetHeroFromPlayerEyeDirection(Player player, float range, out string response, out Hero hero)
         {
             if (!GetPlayerFromEyeDirection(player, range, out response, out Player target))
             {
@@ -66,7 +89,7 @@ namespace DotaHeroes.API.Features
 
             if (_hero == default)
             {
-                response = "Target is not hero";
+                response = "Target is not hero2";
                 hero = null;
                 return false;
             }
@@ -74,12 +97,35 @@ namespace DotaHeroes.API.Features
             if (_hero.Player == player)
             {
                 response = "Target is owner";
-                hero = null;
+                hero = _hero;
                 return false;
             }
 
             response = "Hero is " + player.Nickname;
             hero = _hero;
+            return true;
+        }
+
+        /// <summary>
+        /// Get hero from eye direction with hero
+        /// </summary>
+        public static bool GetHeroFromPlayerEyeDirection(Hero hero, float range, out string response, out Hero target, bool isIgnoreSide = false)
+        {
+            if (!GetHeroFromPlayerEyeDirection(hero.Player, range, out response, out Hero _target))
+            {
+                target = _target;
+                return false;
+            }
+
+            if (_target.SideType == hero.SideType && !isIgnoreSide)
+            {
+                response = "Target is your teammate";
+                target = _target;
+                return false;
+            }
+
+            response = "Hero is " + hero.Player.Nickname;
+            target = _target;
             return true;
         }
 
@@ -99,6 +145,91 @@ namespace DotaHeroes.API.Features
             }
 
             return damage;
+        }
+
+
+        public static void AddModifier(Hero hero, IModifier modifier)
+        {
+            if (modifier is IAccuracyModifier accuracyModifier)
+            {
+                if (hero.HeroStatistics.Evasion.AccuracyModifier == null || hero.HeroStatistics.Evasion.AccuracyModifier.Accuracy < accuracyModifier.Accuracy)
+                {
+                    hero.HeroStatistics.Evasion.AccuracyModifier = accuracyModifier;
+                }
+            }
+
+            if (modifier is IEvasionModifier evasionModifier)
+            {
+                hero.HeroStatistics.Evasion.EvasionModifiers.Add(evasionModifier);
+            }
+
+            if (modifier is IBlindModifier blindModifier)
+            {
+                hero.HeroStatistics.Evasion.BlindModifiers.Add(blindModifier);
+            }
+
+            if (modifier is IResistanceModifier resistanceModifier)
+            {   
+                hero.HeroStatistics.Resistance.ResistanceModifiers.Add(resistanceModifier);
+            }
+
+            if (modifier is ISpeedModifier speedModifier)
+            {
+                hero.HeroStatistics.Speed.Speed += speedModifier.Speed;
+            }
+
+            if (modifier is IArmorModifier armorModifier)
+            {
+                hero.HeroStatistics.Armor.ArmorModifiers.Add(armorModifier);
+            }
+
+            if (modifier is INegativeArmorModifier negativeArmorModifier)
+            {
+                hero.HeroStatistics.Armor.NegativeArmorModifiers.Add(negativeArmorModifier);
+            }
+        }
+
+        public static void RemoveModifier(Hero hero, IModifier modifier)
+        {
+            if (modifier is IAccuracyModifier accuracyModifier)
+            {
+                hero.HeroStatistics.Evasion.AccuracyModifier = null;
+            }
+
+            if (modifier is IEvasionModifier evasionModifier)
+            {
+                hero.HeroStatistics.Evasion.EvasionModifiers.Remove(evasionModifier);
+            }
+
+            if (modifier is IBlindModifier blindModifier)
+            {
+                hero.HeroStatistics.Evasion.BlindModifiers.Remove(blindModifier);
+            }
+
+            if (modifier is IResistanceModifier resistanceModifier)
+            {
+                hero.HeroStatistics.Resistance.ResistanceModifiers.Remove(resistanceModifier);
+            }
+
+            if (modifier is ISpeedModifier speedModifier)
+            {
+                hero.HeroStatistics.Speed.Speed -= speedModifier.Speed;
+            }
+
+            if (modifier is IArmorModifier armorModifier)
+            {
+                hero.HeroStatistics.Armor.ArmorModifiers.Remove(armorModifier);
+            }
+
+            if (modifier is INegativeArmorModifier negativeArmorModifier)
+            {
+                hero.HeroStatistics.Armor.NegativeArmorModifiers.Remove(negativeArmorModifier);
+            }
+        }
+
+        public static SideType GetRandomSide()
+        {
+            return sides[UnityEngine.Random.Range(0, 2)]; //interesting fact. Range(0, 1) is always 0. Lol
         }
     }
 }

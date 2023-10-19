@@ -16,6 +16,8 @@ namespace DotaHeroes.API
 
         private static Dictionary<string, Ability> RegisteredAbilties = new Dictionary<string, Ability>();
 
+        private static Dictionary<string, Item> RegisteredItems = new Dictionary<string, Item>();
+
         /// <summary>
         /// Set or add player from id.
         /// </summary>
@@ -46,6 +48,18 @@ namespace DotaHeroes.API
         public static void RegisterAbility(Ability ability)
         {
             RegisteredAbilties[ability.Name] = ability;
+
+            Log.Info($"Ability with name {ability.Name} has been registered.");
+        }
+
+        /// <summary>
+        /// Register item
+        /// </summary>
+        public static void RegisterItem(Item item)
+        {
+            RegisteredItems[item.Name] = item;
+
+            Log.Info($"Item with name {item.Name} has been registered.");
         }
 
         /// <summary>
@@ -73,6 +87,14 @@ namespace DotaHeroes.API
         }
 
         /// <summary>
+        /// Return registered items
+        /// </summary>
+        public static IReadOnlyDictionary<string, Item> GetRegisteredItems()
+        {
+            return RegisteredItems;
+        }
+
+        /// <summary>
         /// Get hero or default.
         /// </summary>
         public static Hero GetHeroOrDefault(int id)
@@ -97,11 +119,35 @@ namespace DotaHeroes.API
         }
 
         /// <summary>
+        /// Get item or default.
+        /// </summary>
+        public static Item GetItemOrDefault(string name)
+        {
+            return RegisteredItems.FirstOrDefault(item => item.Key == name).Value;
+        }
+
+        /// <summary>
+        /// Get registered hero or default by slug.
+        /// </summary>
+        public static Hero GetRegisteredHeroOrDefaultBySlug(string slug)
+        {
+            return RegisteredHeroes.FirstOrDefault(player => player.Value.Slug == slug).Value;
+        }
+
+        /// <summary>
         /// Get ability or default.
         /// </summary>
-        public static Ability GetAbilityOrDefaultWithIgnoreCaseAndSpaces(string name)
+        public static Ability GetAbilityOrDefaultBySlug(string slug)
         {
-            return RegisteredAbilties.FirstOrDefault(ability => string.Equals(ability.Key.Replace(" ", ""), name.Replace(" ", ""), StringComparison.OrdinalIgnoreCase)).Value;
+            return RegisteredAbilties.FirstOrDefault(ability => ability.Value.Slug == slug).Value;
+        }
+
+        /// <summary>
+        /// Get item or default by slug.
+        /// </summary>
+        public static Item GetItemOrDefaultBySlug(string slug)
+        {
+            return RegisteredItems.FirstOrDefault(item => item.Value.Slug == slug).Value;
         }
     }
 }

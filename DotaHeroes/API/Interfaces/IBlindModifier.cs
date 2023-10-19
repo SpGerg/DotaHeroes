@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace DotaHeroes.API.Interfaces
 {
-    public interface IBlindModifier
+    public interface IBlindModifier : IModifier
     {
-        decimal Blind { get; }
+        decimal Blind { get; set; }
     }
 }

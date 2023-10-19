@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace DotaHeroes.API.Interfaces
 {
-    public interface INegativeArmorModifier
+    public interface INegativeArmorModifier : IModifier
     {
-        float NegativeArmor { get; set; }
+        decimal NegativeArmor { get; set; }
     }
 }

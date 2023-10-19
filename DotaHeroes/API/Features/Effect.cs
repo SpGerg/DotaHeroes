@@ -28,6 +28,8 @@ namespace DotaHeroes.API.Features
 
         public bool IsVisible { get; set; } = true;
 
+        public bool IsActive { get; set; }
+
         public Effect() { }
 
         /// <summary>
@@ -43,41 +45,38 @@ namespace DotaHeroes.API.Features
         /// <summary>
         /// Enable effect.
         /// </summary>
-        public virtual bool Enable()
+        public virtual void Enable()
         {
-            if (this is IEffectDuration)
+            if (this is IEffectDuration effectDuration)
             {
-                Timing.CallDelayed((float)(this as IEffectDuration).Duration, () =>
+                if (effectDuration.Duration > 0)
                 {
-                    Hero.DisableEffect(this);
-                });
+                    Timing.CallDelayed(effectDuration.Duration, () =>
+                    {
+                        Hero.DisableEffect(this);
+                    });
+                }
             }
 
-            return true;
+            IsActive = true;
         }
 
         /// <summary>
         /// Execute effect.
         /// </summary>
-        public virtual bool Execute()
-        {
-            return true;
-        }
+        public virtual void Execute() { }
 
         /// <summary>
         /// Dispel effect.
         /// </summary>
-        public virtual bool Dispel()
-        {
-            return false;
-        }
+        public virtual void Dispel() { }
 
         /// <summary>
         /// Disable effect.
         /// </summary>
-        public virtual bool Disable()
+        public virtual void Disable()
         {
-            return true;
+            IsActive = false;
         }
 
         /// <summary>

@@ -2,7 +2,6 @@
 using DotaHeroes.API.Enums;
 using DotaHeroes.API.Features;
 using DotaHeroes.API.Interfaces;
-using Exiled.API.Features;
 using MEC;
 using System;
 using System.Collections.Generic;
@@ -12,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace DotaHeroes.API.Effects
 {
-    public class Stun : Features.Effect, IEffectDuration
+    public class Stun : Effect, IEffectDuration
     {
         public override string Name => "Stun";
 
@@ -24,27 +23,42 @@ namespace DotaHeroes.API.Effects
 
         public override EffectClassType EffectClassType => EffectClassType.Negative;
 
+        public bool IsIgnoreSpellImmunity { get; set; }
+
         public Stun() : base() { }   
 
         public Stun(Hero owner) : base(owner)
         {
         }
 
-        public override bool Enable()
+        public override void Enable()
         {
+            if (Owner.TryGetEffect(out SpellImmunity result) && !IsIgnoreSpellImmunity)
+            {
+                Owner.DisableEffect(this);
+                return;
+            }
+
+            foreach (var ability in Owner.Abilities)
+            {
+                ability.Stop(Owner);
+            }
+
             Owner.Player.EnableEffect<Ensnared>();
 
-            Timing.CallDelayed((float)Duration, () =>
-            {
-                Owner.Player.DisableEffect<Ensnared>();
-            });
-
-            return true;
+            base.Enable();
         }
 
-        public override bool Execute()
+        public override void Execute()
         {
-            return Enable();
+            Enable();
+        }
+
+        public override void Disable()
+        {
+            Owner.Player.DisableEffect<Ensnared>();
+
+            base.Disable();
         }
     }
 }

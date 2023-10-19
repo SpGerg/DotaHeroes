@@ -13,6 +13,6 @@ namespace DotaHeroes.API.Interfaces
     /// </summary>
     public interface ILevelValues : ILevelUp
     {
-        Dictionary<string, List<float>> Values { get; }
+        Dictionary<string, List<decimal>> Values { get; }
     }
 }

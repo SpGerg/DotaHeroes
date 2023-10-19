@@ -12,15 +12,19 @@ namespace DotaHeroes.Commands.User.Hero
     [CommandHandler(typeof(ClientCommandHandler))]
     public class Parent : ParentCommand
     {
-        public override string Command => "hero_admin";
+        public override string Command => "hero";
 
         public override string[] Aliases => new string[0];
 
-        public override string Description => "Admin commands";
+        public override string Description => "Hero commands";
 
         public override IEnumerable<ICommand> AllCommands => new Collection<ICommand>()
         {
             new Attack(),
+            new UseAbility(),
+            new BuyItem(),
+            new SellItem(),
+            new Inventory()
         };
 
         private string message = string.Empty;

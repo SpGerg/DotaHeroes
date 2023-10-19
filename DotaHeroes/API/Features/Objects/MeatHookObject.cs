@@ -1,4 +1,5 @@
 ﻿using CustomPlayerEffects;
+using DotaHeroes.API.Abilities.Pudge;
 using DotaHeroes.API.Effects;
 using DotaHeroes.API.Enums;
 using DotaHeroes.API.Features.Components;
@@ -34,6 +35,8 @@ namespace DotaHeroes.API.Features.Objects
 
         public DamageType DamageType { get; set; }
 
+        public Player MovingSound { get; set; }
+
         private bool isMovingToTarget { get; set; } = true;
 
         private Vector3 usePosition { get; set; }
@@ -44,7 +47,7 @@ namespace DotaHeroes.API.Features.Objects
 
         private bool isDestroying { get; set; }
 
-        public void Initialize(Hero owner, Vector3 target, int range, float speed, int damage, DamageType damageType)
+        public void Initialize(Hero owner, Vector3 target, int range, float speed, int damage, DamageType damageType, Player movingSound)
         {
             Owner = owner;
             Target = target;
@@ -52,6 +55,7 @@ namespace DotaHeroes.API.Features.Objects
             Speed = speed;
             Damage = damage;
             DamageType = damageType;
+            MovingSound = movingSound;
 
             usePosition = transform.position;
             Step = Speed * Time.deltaTime;
@@ -70,9 +74,7 @@ namespace DotaHeroes.API.Features.Objects
             {
                 if (hero == Owner) continue;
 
-                Log.Info(Vector3.Distance(Owner.Player.Position, hero.Player.Position));
-
-                if (Vector3.Distance(transform.position, hero.Player.Position) < 3)
+                if (Vector3.Distance(transform.position, hero.Player.Position) < 1)
                 {
                     if (hero.Player.UserId == Owner.Player.UserId)
                     {
@@ -82,15 +84,20 @@ namespace DotaHeroes.API.Features.Objects
                     isMovingToTarget = false;
 
                     HeroTarget = hero;
-                    HeroTarget.Player.IsGodModeEnabled = true;
-                    HeroTarget.EnableEffect<Stun>();
+                    HeroTarget.EnableEffect(new Stun(HeroTarget), 0);
+
+                    Audio.Stop(MovingSound);
+                    Audio.Play(HeroTarget.Player.Position, MeatHook.SoundsPath + "\\hooked.ogg");
+                    Audio.Play(Owner.Player.Position, MeatHook.SoundsPath + "\\hooked.ogg");
+                    Audio.Play(HeroTarget.Player.Position, MeatHook.SoundsPath + "\\moving_to_target.ogg", 50f);
+                    Audio.Play(Owner.Player.Position, MeatHook.SoundsPath + "\\moving_to_target.ogg", 50f);
 
                     if (hero.SideType == Owner.SideType)
                     {
                         return;
                     }
 
-                    hero.TakeDamage(Damage, DamageType);
+                    hero.TakeDamage(Owner, Damage, DamageType);
                 }
             }
         }
@@ -100,6 +107,8 @@ namespace DotaHeroes.API.Features.Objects
             if (moveLength >= Range)
             {
                 isMovingToTarget = false;
+                Audio.Stop(MovingSound);
+                Audio.Play(Owner.Player.Position, MeatHook.SoundsPath + "\\moving_to_target.ogg");
             }
 
             if (isMovingToTarget)
@@ -122,13 +131,8 @@ namespace DotaHeroes.API.Features.Objects
             {
                 IsEnded = true;
 
-                HeroTarget?.Player.DisableEffect<Ensnared>();
+                HeroTarget?.DisableEffect<Stun>();
                 Owner.Player.DisableEffect<Ensnared>();
-
-                Timing.CallDelayed(0.2f, () =>
-                {
-                    HeroTarget.Player.IsGodModeEnabled = false;
-                });
             }
         }
     }

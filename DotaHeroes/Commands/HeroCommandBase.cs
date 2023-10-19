@@ -32,7 +32,7 @@ namespace DotaHeroes.Commands
             }
 
             var player = Player.Get(sender);
-            API.Features.Hero hero = API.API.GetHeroOrDefault(player.Id);
+            Hero hero = API.API.GetHeroOrDefault(player.Id);
 
             if (hero == default)
             {
@@ -47,6 +47,6 @@ namespace DotaHeroes.Commands
         /// <summary>
         /// Abstract execute. ICommandSender to Hero.
         /// </summary>
-        protected abstract bool Execute(API.Features.Hero hero, ArraySegment<string> arguments, out string response);
+        protected abstract bool Execute(Hero hero, ArraySegment<string> arguments, out string response);
     }
 }

@@ -17,13 +17,15 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityStandardAssets.CrossPlatformInput;
+using static UnityEngine.UI.GridLayoutGroup;
 
 namespace DotaHeroes.API.Features
 {
     public abstract class Hero
     {
         public abstract string HeroName { get; }
+
+        public abstract string Slug { get; }
 
         public abstract HeroClassType HeroClassType { get; set; }
 
@@ -36,6 +38,8 @@ namespace DotaHeroes.API.Features
         public Player Player { get; private set; }
 
         public HeroStatistics HeroStatistics { get; protected set; } = new HeroStatistics();
+
+        public Inventory Inventory { get; protected set; }
 
         public HeroStateType HeroStateType {
             get
@@ -120,11 +124,7 @@ namespace DotaHeroes.API.Features
 
         public float Money { get; set; }
 
-        protected List<Item> Items { get; }
-
-        protected List<Effect> Effects { get; }
-
-        protected static ArraySegment<string> emptyArraySegment { get; } = new ArraySegment<string>();
+        protected List<Effect> Effects { get; set; }
 
         private Ability lastAbilityLevelUpped;
 
@@ -145,30 +145,8 @@ namespace DotaHeroes.API.Features
         public Hero()
         {
             Player = null;
-            Items = new List<Item>();
             Effects = new List<Effect>();
             Values = new Dictionary<string, object>();
-        }
-
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="Hero" /> class.
-        /// </summary>
-        /// <param name="hero"><inheritdoc cref="Player" /></param>
-        protected Hero(Hero copy) : this(copy.Player, copy.SideType)
-        {
-            Items = copy.Items;
-            Effects = copy.Effects;
-            Values = copy.Values;
-
-            if (Effects == null)
-            {
-                Effects = new List<Effect>();
-            }
-
-            if (Values == null)
-            {
-                Values = new Dictionary<string, object>();
-            }
         }
 
         /// <summary>
@@ -181,6 +159,8 @@ namespace DotaHeroes.API.Features
             Player = player;
             SideType = sideType;
 
+            Money = 1000;
+            Inventory = new Inventory(this);
             Effects = new List<Effect>();
             Values = new Dictionary<string, object>();
 
@@ -191,51 +171,278 @@ namespace DotaHeroes.API.Features
 
             HeroController = Player.GameObject.GetComponent<HeroController>();
 
+            Log.Info("п");
+
             foreach (var ability in Abilities)
             {
-                if (typeof(ILevelValues).IsAssignableFrom(ability.GetType()))
+                if (ability is ILevelValues levelValues)
                 {
-                    var values = (ability as ILevelValues).Values;
-                    if (values.ContainsKey("cooldown"))
+                    if (levelValues.Values.ContainsKey("cooldown"))
                     {
-                        Cooldowns.AddCooldown(player.Id, new CooldownInfo(ability.Name, (int)values["cooldown"][ability.Level]));
+                        Cooldowns.AddCooldown(player.Id, new CooldownInfo(ability.Slug, (int)levelValues.Values["cooldown"][0]));
                     }
                 }
 
-                if (typeof(PassiveAbility).IsAssignableFrom(ability.GetType()))
+                if (ability is PassiveAbility passiveAbility)
                 {
-                    (ability as PassiveAbility).Register(this);
+                    passiveAbility.Register(this);
                 }
             }
         }
 
         /// <summary>
-        /// Add item.
+        /// Level up.
         /// </summary>
-        public void AddItem<T>() where T : Item, new()
+        public void LevelUp()
         {
-            var item = new T();
-            HeroStatistics.AddOrReduceStatistics(item.Statistics, false);
-            item.Added();
+            if (Level >= 30) return;
 
-            Items.Add(item);
+            HeroStatistics.LevelUp();
+            Level++;
+
+            if (Level > 1)
+            {
+                Log.Info($"Player {Player.Nickname} hero {HeroName} is level up from {Level - 1} to {Level}");
+            }
         }
 
         /// <summary>
-        /// Remove item.
+        /// Level up.
         /// </summary>
-        public void RemoveItem<T>() where T : Item, new()
+        public void LevelUpAbilty(string name)
         {
-            var copyItem = new T();
+            if (Level >= 30 || PointsToLevelUp == 0 || lastAbilityLevelUpped.Name == name) return;
 
-            var item = Items.FirstOrDefault(_item => _item.Name == copyItem.Name);
+            var ability = Abilities.FirstOrDefault(ability => ability.Name == name);
 
-            if (item == default) return;
-            HeroStatistics.AddOrReduceStatistics(item.Statistics, true);
+            if (ability == default) return;
 
-            item.Removed();
+            ability.LevelUp(this);
 
-            Items.Remove(item);
+            lastAbilityLevelUpped = ability;
+
+            if (ability.Level > 1)
+            {
+                Log.Info($"Player {Player.Nickname} hero {HeroName} is level up ability {ability.Name} from {ability.Level - 1} to {ability.Level}");
+            }
+        }
+
+        /// <summary>
+        /// Level up.
+        /// </summary>
+        public void LevelUpAbilty<T>() where T : Ability, new()
+        {
+            LevelUpAbilty(new T().Name);
+        }
+
+        /// <summary>
+        /// Execute ability by name.
+        /// </summary>
+        public bool ExecuteAbility(string slug, ref string response, bool ignoreAvailability = false)
+        {
+            if (HeroStateType != HeroStateType.None) return false;
+
+            Ability ability = default;
+
+            if (ignoreAvailability)
+            {
+                ability = API.GetAbilityOrDefaultBySlug(slug);
+            }
+            else
+            {
+                ability = Abilities.First(ability => ability.Slug == slug);
+            }
+
+            if (ability == default)
+            {
+                return false;
+            }
+
+            Hud.Update();
+
+            Log.Info(slug);
+
+            if (ability is not PassiveAbility)
+            {
+                var executingAbility = new HeroExecutingAbilityEventArgs(this, ability, true);
+                Events.Handlers.Hero.OnHeroExecutingAbility(executingAbility);
+
+                if (!executingAbility.IsAllowed) return false;
+
+                ability = executingAbility.Ability;
+
+                if (ability is ActiveAbility activeAbility)
+                {
+                    activeAbility.CheckAndExecute(this, Utils.EmptyArraySegment, out response);
+                }
+
+                if (ability is ToggleAbility toggleAbility)
+                {
+                    toggleAbility.CheckAndExecute(this, Utils.EmptyArraySegment, out response);
+                }
+
+                var executedAbility = new HeroExecutedAbilityEventArgs(this, ability);
+                Events.Handlers.Hero.OnHeroExecutedAbility(executedAbility);
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// Execute ability by type.
+        /// </summary>
+        public bool ExecuteAbility(Ability ability, ref string response)
+        {
+            ExecuteAbility(ability.Slug, ref response);
+
+            return true;
+        }
+
+        /// <summary>
+        /// Execute ability by type.
+        /// </summary>
+        public bool ExecuteAbility<T>(ref string response) where T : Ability, new()
+        {
+            ExecuteAbility(new T().Slug, ref response);
+
+            return true;
+        }
+
+        /// <summary>
+        /// Take damage
+        /// </summary>
+        public virtual decimal TakeDamage(Hero attacker, decimal damage, DamageType damageType, bool isCheckDead = true)
+        {
+            if (Plugin.Instance.Config.Debug) Log.Info("First damage " + damage + " by " + (attacker == null ? "attacker is null lol" : attacker.Player.Nickname));
+
+            var takingDamage = new HeroTakingDamageEventArgs(this, attacker, damage, damageType, true);
+            Events.Handlers.Hero.OnHeroTakingDamage(takingDamage);
+
+            if (!takingDamage.IsAllowed) return -1;
+
+            decimal _damage = takingDamage.Damage;
+            if (Plugin.Instance.Config.Debug) Log.Info("Second Damage " + _damage + " by " + (attacker == null ? "attacker is null lol" : attacker.Player.Nickname));
+            decimal total_damage = 0;
+
+            switch (damageType)
+            {
+                case DamageType.None: break;
+                case DamageType.Physical:
+                    total_damage = HeroStatistics.Armor.GetPhysicalDamage(_damage, HeroStatistics.Agility);
+                    break;
+                case DamageType.Magical:
+                    total_damage = HeroStatistics.Resistance.GetMagicalDamage(_damage, HeroStatistics.Intelligence);
+
+                    break;
+                case DamageType.Pure:
+                    total_damage = _damage;
+                    break;
+                default:
+                    total_damage = _damage;
+                    break;
+            }
+
+            if (Plugin.Instance.Config.Debug) Log.Info("Third Damage " + total_damage + " by " + (attacker == null ? "attacker is null lol" : attacker.Player.Nickname));
+
+            ReduceHealthAndCheckForDead(total_damage, isCheckDead);
+
+            var takedDamage = new HeroTakedDamageEventArgs(this, attacker, total_damage, damageType);
+            Events.Handlers.Hero.OnHeroTakedDamage(takedDamage);
+
+            return total_damage;
+        }
+
+        /// <summary>
+        /// Take damage without attacker
+        /// </summary>
+        public virtual decimal TakeDamage(decimal damage, DamageType damageType, bool isCheckDead = true)
+        {
+            var result = TakeDamage(null, damage, damageType, isCheckDead);
+
+            return result;
+        }
+
+        /// <summary>
+        /// Heal
+        /// </summary>
+        public virtual void Heal(decimal heal, Hero hero)
+        {
+            var healing = new HeroHealingEventArgs(this, hero, heal, true);
+            Events.Handlers.Hero.OnHeroHealing(healing);
+
+            if (!healing.IsAllowed) return;
+
+            if (Plugin.Instance.Config.Debug) Log.Info("Healed " + heal);
+
+            HeroStatistics.HealthAndMana.Health += healing.Heal;
+
+            var healed = new HeroHealedEventArgs(this, hero, healing.Heal);
+            Events.Handlers.Hero.OnHeroHealed(healed);
+        }
+
+        /// <summary>
+        /// Heal without player
+        /// </summary>
+        public virtual void Heal(int heal)
+        {
+            Heal(heal, null);
+        }
+
+        /// <summary>
+        /// Attack to target
+        /// </summary>
+        public virtual void Attack(Hero target)
+        {
+            if (HeroStateType != HeroStateType.None) return;
+
+            var attacking = new HeroAttackingEventArgs(this, target, HeroStatistics.Attack.FullDamage, DamageType.Physical, true);
+            Events.Handlers.Hero.OnHeroAttacking(attacking);
+
+            if (!attacking.IsAllowed) return;
+
+            target.TakeDamage(attacking.Damage, attacking.DamageType);
+
+            var attacked = new HeroAttackedEventArgs(this, target, HeroStatistics.Attack.FullDamage, DamageType.Physical);
+            Events.Handlers.Hero.OnHeroAttacked(attacked);
+        }
+
+        /// <summary>
+        /// Dead
+        /// </summary>
+        public virtual void Dead()
+        {
+            var dying = new HeroDyingEventArgs(this, true);
+            Events.Handlers.Hero.OnHeroDying(dying);
+
+            if (!dying.IsAllowed) return;
+
+            Hud.Clear(this);
+
+            ApplyDispel(DispelType.Dead);
+
+            Player.Role.Set(RoleTypeId.Spectator);
+
+            foreach (var ability in Abilities)  
+            {
+                if (ability is ToggleAbility toggleAbility)
+                {
+                    toggleAbility.IsActive = false;
+                    toggleAbility.Deactivate(this, new ArraySegment<string>(), out string response);
+                }
+            }
+
+            foreach (var effect in Effects)
+            {
+                DisableEffect(effect);
+            }
+
+            IsHealthRegeneration = false;
+            IsManaRegeneration = false;
+
+            IsHeroDead = true;
+
+            var died = new HeroDiedEventArgs(this);
+            Events.Handlers.Hero.OnHeroDied(died);
         }
 
         /// <summary>
@@ -295,7 +502,6 @@ namespace DotaHeroes.API.Features
                         dispelledEffects.Add(effect);
                     }
                 }
-
                 return;
             }
 
@@ -309,7 +515,6 @@ namespace DotaHeroes.API.Features
                 effect.Dispel();
                 Effects.Remove(effect);
             }
-
             Hud.Update();
 
             var dispelled = new HeroDispelledEventArgs(this, dispeller, dispelledEffects, dispelType);
@@ -325,108 +530,31 @@ namespace DotaHeroes.API.Features
         }
 
         /// <summary>
-        /// Level up.
-        /// </summary>
-        public void LevelUp()
-        {
-            if (Level >= 30) return;
-
-            HeroStatistics.LevelUp();
-            Level++;
-
-            if (Level > 1)
-            {
-                Log.Info($"Player {Player.Nickname} hero {HeroName} is level up from {Level - 1} to {Level}");
-            }
-        }
-
-        /// <summary>
-        /// Level up.
-        /// </summary>
-        public void LevelUpAbilty<T>() where T : Ability, new()
-        {
-            if (Level >= 30 || PointsToLevelUp == 0) return;
-
-            var ability = Abilities.FirstOrDefault(ability => ability.Name == new T().Name);
-
-            if (ability == default) return;
-
-            ability.LevelUp(this);
-
-            if (ability.Level > 1)
-            {
-                Log.Info($"Player {Player.Nickname} hero {HeroName} is level up ability {ability.Name} from {ability.Level - 1} to {ability.Level}");
-            }
-        }
-
-        /// <summary>
-        /// Execute ability by name.
-        /// </summary>
-        public bool ExecuteAbility(string name)
-        {
-            if (HeroStateType != HeroStateType.None) return false;
-
-            var ability = Abilities.First(ability => ability.Name == name);
-
-            if (ability == default)
-            {
-                return false;
-            }
-
-            Hud.Update();
-
-            if (typeof(ActiveAbility).IsAssignableFrom(ability.GetType()))
-            {
-                (ability as ActiveAbility).Execute(this, emptyArraySegment, out string response);
-            }
-
-            if (typeof(ToggleAbility).IsAssignableFrom(ability.GetType()))
-            {
-                (ability as ToggleAbility).Execute(this, emptyArraySegment, out string response);
-            }
-
-            return true;
-        }
-
-        /// <summary>
-        /// Execute ability by type.
-        /// </summary>
-        public bool ExecuteAbility<T>() where T : Ability, new()
-        {
-            ExecuteAbility(new T().Name);
-
-            return true;
-        }
-
-        /// <summary>
-        /// Enable effect by type.
-        /// </summary>
-        public T EnableEffect<T>() where T : Effect, new()
-        {
-            Hud.Update();
-
-            return (T)EnableEffect(new T());
-        }
-
-        /// <summary>
         /// Enable effect by copy.
         /// </summary>
-        public Effect EnableEffect(Effect _effect)
+        public Effect EnableEffect(Effect _effect, float duration = 3f)
         {
             if (TryGetEffect(_effect, out Effect result))
             {
                 return result;
             }
 
-            Hud.Update();
-
             var receivingEffect = new HeroReceivingEffectEventArgs(this, _effect, true);
             Events.Handlers.Hero.OnHeroReceivingEffect(receivingEffect);
 
             if (!receivingEffect.IsAllowed) return null;
 
+            if (receivingEffect.Effect is IEffectDuration _duration)
+            {
+                _duration.Duration = duration;
+            }
+
+            Utils.AddModifier(this, receivingEffect.Effect as IModifier);
+
             receivingEffect.Effect.Enable();
             Effects.Add(receivingEffect.Effect);
+
+            Hud.Update(this);
 
             return receivingEffect.Effect;
         }
@@ -474,6 +602,7 @@ namespace DotaHeroes.API.Features
             result.Disable();
             Effects.Remove(result);
 
+            Utils.RemoveModifier(this, result as IModifier);
             Hud.Update();
 
             var disabledEffect = new HeroDisabledEffectEventArgs(this, result);
@@ -493,6 +622,7 @@ namespace DotaHeroes.API.Features
             result.Disable();
             Effects.Remove(result);
 
+            Utils.RemoveModifier(this, result as IModifier);
             Hud.Update();
 
             var disabledEffect = new HeroDisabledEffectEventArgs(this, effect);
@@ -513,14 +643,6 @@ namespace DotaHeroes.API.Features
         public Effect GetEffectOrDefault(Effect effect)
         {
             return Effects.FirstOrDefault(_effect => _effect.Name == effect.Name);
-        }
-
-        /// <summary>
-        ///     Get effects (new copy).
-        /// </summary>
-        public List<Effect> GetEffects()
-        {
-            return new List<Effect>(Effects);
         }
 
         /// <summary>
@@ -555,141 +677,9 @@ namespace DotaHeroes.API.Features
             return true;
         }
 
-        /// <summary>
-        /// Take damage
-        /// </summary>
-        public virtual decimal TakeDamage(Hero attacker, decimal damage, DamageType damageType)
+        public List<Effect> GetEffects()
         {
-            if (Plugin.Instance.Config.Debug) Log.Info("First damage " + damage + " by " + attacker.Player.Nickname);
-
-            var takingDamage = new HeroTakingDamageEventArgs(this, attacker, damage, damageType, true);
-            Events.Handlers.Hero.OnHeroTakingDamage(takingDamage);
-
-            if (!takingDamage.IsAllowed) return -1;
-
-            decimal _damage = takingDamage.Damage;
-            if (Plugin.Instance.Config.Debug) Log.Info("Second Damage " + _damage + " by " + attacker.Player.Nickname);
-            decimal total_damage = 0;
-
-            switch (damageType)
-            {
-                case DamageType.None: break;
-                case DamageType.Physical:
-                    total_damage = HeroStatistics.Armor.GetPhysicalDamage(damage, HeroStatistics.Agility);
-                    break;
-                case DamageType.Magical:
-                    total_damage = HeroStatistics.Resistance.GetMagicalDamage(damage, HeroStatistics.Intelligence);
-
-                    break;
-                case DamageType.Pure:
-                    total_damage = _damage;
-                    break;
-                default:
-                    total_damage = _damage;
-                    break;
-            }
-
-            if (Plugin.Instance.Config.Debug) Log.Info("Third Damage " + total_damage + " by " + attacker.Player.Nickname);
-
-            ReduceHealthAndCheckForDead(total_damage);
-
-            var takedDamage = new HeroTakedDamageEventArgs(this, attacker, _damage, damageType);
-            Events.Handlers.Hero.OnHeroTakedDamage(takedDamage);
-
-            return total_damage;
-        }
-
-        /// <summary>
-        /// Take damage without attacker
-        /// </summary>
-        public virtual decimal TakeDamage(decimal damage, DamageType damageType)
-        {
-            var result = TakeDamage(null, damage, damageType);
-
-            return result;
-        }
-
-        /// <summary>
-        /// Heal
-        /// </summary>
-        public virtual void Heal(decimal heal, Hero hero)
-        {
-            var healing = new HeroHealingEventArgs(this, hero, heal, true);
-            Events.Handlers.Hero.OnHeroHealing(healing);
-
-            if (!healing.IsAllowed) return;
-
-            if (Plugin.Instance.Config.Debug) Log.Info("Healed " + heal);
-
-            HeroStatistics.HealthAndMana.Health += healing.Heal;
-
-            var healed = new HeroHealedEventArgs(this, hero, healing.Heal);
-            Events.Handlers.Hero.OnHeroHealed(healed);
-        }
-
-        /// <summary>
-        /// Heal without player
-        /// </summary>
-        public virtual void Heal(int heal)
-        {
-            Heal(heal, null);
-        }
-
-        /// <summary>
-        /// Attack to target
-        /// </summary>
-        public virtual void Attack(Hero target)
-        {
-            if (HeroStateType != HeroStateType.None) return;
-
-            var attacking = new HeroAttackingEventArgs(this, target, HeroStatistics.Attack.FullDamage, DamageType.Physical, true);
-            Events.Handlers.Hero.OnHeroAttacking(attacking);
-
-            if (!attacking.IsAllowed) return;
-
-            target.TakeDamage(attacking.Damage, attacking.DamageType);
-
-            var attacked = new HeroAttackedEventArgs(this, target, HeroStatistics.Attack.FullDamage, DamageType.Physical);
-            Events.Handlers.Hero.OnHeroAttacked(attacked);
-        }
-
-        /// <summary>
-        /// Dead
-        /// </summary>
-        public virtual void Dead()
-        {
-            var dying = new HeroDyingEventArgs(this, true);
-            Events.Handlers.Hero.OnHeroDying(dying);
-
-            if (!dying.IsAllowed) return;
-
-            ApplyDispel(DispelType.Dead);
-
-            Player.Role.Set(RoleTypeId.Spectator);
-
-            foreach (var ability in Abilities)  
-            {
-                if (typeof(ToggleAbility).IsAssignableFrom(ability.GetType()))
-                {
-                    var toggle = ability as ToggleAbility;
-
-                    toggle.IsActive = false;
-                    toggle.Deactivate(this, new ArraySegment<string>(), out string response);
-                }
-            }
-
-            foreach (var effect in Effects)
-            {
-                DisableEffect(effect);
-            }
-
-            IsHealthRegeneration = false;
-            IsManaRegeneration = false;
-
-            IsHeroDead = true;
-
-            var died = new HeroDiedEventArgs(this);
-            Events.Handlers.Hero.OnHeroDied(died);
+            return new List<Effect>(Effects);
         }
 
         /// <summary>
@@ -706,6 +696,19 @@ namespace DotaHeroes.API.Features
         }
 
         /// <summary>
+        /// Clearing projectiles
+        /// </summary>
+        public virtual void ClearProjectiles()
+        {
+            foreach (var projectile in ProjectilesFollow)
+            {
+                if (projectile.IsIgnoreClear) continue;
+
+                projectile.Target = null;
+            }
+        }
+
+        /// <summary>
         /// To string
         /// </summary>
         public override string ToString()
@@ -714,6 +717,7 @@ namespace DotaHeroes.API.Features
 
             stringBuilder.AppendLine("Name: " + HeroName);
             stringBuilder.AppendLine("Level: " + Level);
+            stringBuilder.AppendLine("Money: " + Money);
             stringBuilder.AppendLine("Hero statistics: " + HeroStatistics.ToString());
 
             if (Effects.Count > 0)
@@ -739,8 +743,6 @@ namespace DotaHeroes.API.Features
 
             return StringBuilderPool.Shared.ToStringReturn(stringBuilder);
         }
-
-        public abstract Hero Create();
 
         public abstract Hero Create(Player player, SideType sideType);
 
@@ -772,13 +774,20 @@ namespace DotaHeroes.API.Features
             }
         }
 
-        private void ReduceHealthAndCheckForDead(decimal damage)
+        private void ReduceHealthAndCheckForDead(decimal damage, bool isCheck = true)
         {
             HeroStatistics.HealthAndMana.Health -= damage;
 
             if (HeroStatistics.HealthAndMana.Health < 0)
             {
-                Dead();
+                if (isCheck)
+                {
+                    Dead();
+                }
+                else
+                {
+                    HeroStatistics.HealthAndMana.Health = 1;
+                }
             }
         }
     }

@@ -16,11 +16,11 @@ using UnityEngine;
 
 namespace DotaHeroes.API.Abilities.Pudge
 {
-    [CommandHandler(typeof(ClientCommandHandler))]
-    [CommandHandler(typeof(RemoteAdminCommandHandler))]
     public class Dismember : ActiveAbility, ILevelValues
     {
         public override string Name => "Dismember";
+
+        public override string Slug => "dismember";
 
         public override string Description => "Eating lol";
 
@@ -30,44 +30,44 @@ namespace DotaHeroes.API.Abilities.Pudge
 
         public override TargetType TargetType => TargetType.ToFriendAndEnemy;
 
-        public Dictionary<string, List<float>> Values => Plugin.Instance.Config.Abilites["dismember"].Values;
+        public Dictionary<string, List<decimal>> Values { get; } = Plugin.Instance.Config.Abilites["dismember"].Values;
 
         public int MaxLevel { get; set; } = 3;
 
         public int MinLevel { get; set; } = 0;
 
-        public const float Duration = 3.5f;
+        public const decimal Duration = 3.5m;
 
-        public IReadOnlyList<int> HeroLevelToLevelUp { get; set; } = new List<int>()
-        {
-            6,
-            12,
-            18
-        };
+        public IReadOnlyList<int> HeroLevelToLevelUp { get; set; } = Features.Utils.DefaultLevelsUltimateList;
+
+        public static string SoundsPath = Plugin.Instance.SoundsPath + "\\pudge\\dismember";
 
         public Dismember() : base() { }
 
-        public override bool Execute(Hero hero, ArraySegment<string> arguments, out string response)
+        protected override bool Execute(Hero hero, ArraySegment<string> arguments, out string response)
         {
             var player = hero.Player;
 
-            if (!Features.Utils.GetHeroFromPlayerEyeDirection(player, 5, out response, out Hero target))
+            if (!Features.Utils.GetHeroFromPlayerEyeDirection(hero, 5, out response, out Hero target))
             {
                 return false;
             }
 
             var duration = target.HeroStatistics.Resistance.GetEffectDuration(Duration);
 
-            player.EnableEffect<Ensnared>(Duration);
+            hero.HeroStateType = HeroStateType.Casting;
+
+            player.EnableEffect<Ensnared>((float)Duration);
             target.EnableEffect(new Stun(target)
             {
-                Duration = duration
+                Duration = (float)duration
             });
 
 
             response = "You eating " + target.Player.Nickname;
 
-            Timing.RunCoroutine(DamageCoroutine(hero, target, (decimal)Values["damage"][Level], DamageType.Magical, duration));
+            Timing.RunCoroutine(DamageCoroutine(hero, target, Values["damage"][Level], DamageType.Magical, (float)duration));
+            Timing.RunCoroutine(SoundCoroutine(hero));
 
             return true;
         }
@@ -75,7 +75,7 @@ namespace DotaHeroes.API.Abilities.Pudge
         private IEnumerator<float> DamageCoroutine(Hero hero, Hero target, decimal damage, DamageType damageType, float duration)
         {
             decimal times = (decimal)(duration / 0.1f);
-            var damageOverTime = new DamageOverTime(target, damage / times, damageType, (int)times, 0.1f, hero);
+            var damageOverTime = new DamageOverTime(target, Math.Round((damage / times) * 2), damageType, (int)times, 0.1f, hero);
             damageOverTime.Run();
 
             for (int i = 0; i < times; i++)
@@ -97,6 +97,28 @@ namespace DotaHeroes.API.Abilities.Pudge
 
             hero.Player.DisableEffect<Ensnared>();
             target.DisableEffect<Stun>();
+            hero.HeroStateType = HeroStateType.None;
+        }
+
+        private IEnumerator<float> SoundCoroutine(Hero hero)
+        {
+            for (int i = 0;i < 3;i++)
+            {
+                Audio.Play(hero.Player.Position, SoundsPath + $"\\blood{i}.ogg");
+                Audio.Play(hero.Player.Position, SoundsPath + $"\\swing{i}.ogg");
+
+                yield return Timing.WaitForSeconds(0.5f);
+            }
+
+            yield return Timing.WaitForSeconds(0.5f);
+
+            for (int i = 0; i < 2; i++)
+            {
+                Audio.Play(hero.Player.Position, SoundsPath + $"\\blood{i}.ogg");
+                Audio.Play(hero.Player.Position, SoundsPath + $"\\swing{i}.ogg");
+
+                yield return Timing.WaitForSeconds(0.5f);
+            }
         }
     }
 }

@@ -32,94 +32,21 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="0Harmony">
-      <HintPath>..\Imports\0Harmony.dll</HintPath>
-    </Reference>
-    <Reference Include="Assembly-CSharp">
-      <HintPath>..\Imports\Assembly-CSharp.dll</HintPath>
-    </Reference>
-    <Reference Include="Assembly-CSharp-firstpass">
-      <HintPath>..\Imports\Assembly-CSharp-firstpass.dll</HintPath>
-    </Reference>
-    <Reference Include="CommandSystem.Core">
-      <HintPath>..\Imports\CommandSystem.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="Exiled.API">
-      <HintPath>..\Imports\Exiled.API.dll</HintPath>
-    </Reference>
-    <Reference Include="Exiled.CreditTags">
-      <HintPath>..\Imports\Exiled.CreditTags.dll</HintPath>
-    </Reference>
-    <Reference Include="Exiled.CustomRoles">
-      <HintPath>..\Imports\Exiled.CustomRoles.dll</HintPath>
-    </Reference>
-    <Reference Include="Exiled.Events">
-      <HintPath>..\Imports\Exiled.Events.dll</HintPath>
-    </Reference>
-    <Reference Include="Exiled.Permissions">
-      <HintPath>..\Imports\Exiled.Permissions.dll</HintPath>
-    </Reference>
-    <Reference Include="Exiled.Updater">
-      <HintPath>..\Imports\Exiled.Updater.dll</HintPath>
-    </Reference>
-    <Reference Include="Mirror">
-      <HintPath>..\Imports\Mirror.dll</HintPath>
-    </Reference>
-    <Reference Include="Mirror.Components">
-      <HintPath>..\Imports\Mirror.Components.dll</HintPath>
-    </Reference>
-    <Reference Include="NorthwoodLib">
-      <HintPath>..\Imports\NorthwoodLib.dll</HintPath>
-    </Reference>
-    <Reference Include="PluginAPI">
-      <HintPath>..\Imports\PluginAPI.dll</HintPath>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Xml" />
-    <Reference Include="Unity.TextMeshPro">
-      <HintPath>..\Imports\Unity.TextMeshPro.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.CoreModule">
-      <HintPath>..\Imports\UnityEngine.CoreModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.PhysicsModule">
-      <HintPath>..\Imports\UnityEngine.PhysicsModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.TextCoreFontEngineModule">
-      <HintPath>..\Imports\UnityEngine.TextCoreFontEngineModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.TextCoreTextEngineModule">
-      <HintPath>..\Imports\UnityEngine.TextCoreTextEngineModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.TextRenderingModule">
-      <HintPath>..\Imports\UnityEngine.TextRenderingModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.UI">
-      <HintPath>..\Imports\UnityEngine.UI.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.UIElementsModule">
-      <HintPath>..\Imports\UnityEngine.UIElementsModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.UIElementsNativeModule">
-      <HintPath>..\Imports\UnityEngine.UIElementsNativeModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.UIModule">
-      <HintPath>..\Imports\UnityEngine.UIModule.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-  <ItemGroup>
+    <Compile Include="API\Abilities\Items\UnholyStrength.cs" />
     <Compile Include="API\Abilities\Pudge\Dismember.cs" />
     <Compile Include="API\Abilities\Pudge\FleshHeap.cs" />
     <Compile Include="API\Abilities\Pudge\MeatHook.cs" />
     <Compile Include="API\Abilities\Pudge\Rot.cs" />
+    <Compile Include="API\Abilities\SpiritBreaker\Bulldoze.cs" />
+    <Compile Include="API\Abilities\SpiritBreaker\ChargeOfDarkness.cs" />
+    <Compile Include="API\Abilities\SpiritBreaker\GreaterBash.cs" />
+    <Compile Include="API\Abilities\SpiritBreaker\NetherStrike.cs" />
     <Compile Include="API\Effects\Pudge\FleshHeap.cs" />
     <Compile Include="API\Effects\Pudge\FleshHeapShield.cs" />
+    <Compile Include="API\Effects\Silence.cs" />
+    <Compile Include="API\Effects\SpellImmunity.cs" />
+    <Compile Include="API\Effects\SpiritBreaker\Bulldoze.cs" />
+    <Compile Include="API\Effects\SpiritBreaker\ChargeOfDarknessSpeed.cs" />
     <Compile Include="API\Enums\HeroStateType.cs" />
     <Compile Include="API\Enums\StatisticsType.cs" />
     <Compile Include="API\Events\EventArgs\Hero\HeroDiedEventArgs.cs" />
@@ -134,10 +61,13 @@
     <Compile Include="API\Events\EventArgs\Hero\HeroRespawningEventArgs.cs" />
     <Compile Include="API\Events\EventArgs\Hero\HeroTakingDamageEventArgs.cs" />
     <Compile Include="API\Events\EventArgs\Hero\HeroTakedDamageEventArgs.cs" />
+    <Compile Include="API\Events\EventArgs\Hero\HeroExecutedAbilityEventArgs.cs" />
+    <Compile Include="API\Events\EventArgs\Hero\HeroExecutingAbilityEventArgs.cs" />
     <Compile Include="API\Events\EventArgs\Interfaces\IHeroEvent.cs" />
     <Compile Include="API\Extensions\PlayerExtension.cs" />
     <Compile Include="API\Features\Ability.cs" />
     <Compile Include="API\API.cs" />
+    <Compile Include="API\Features\Audio.cs" />
     <Compile Include="API\Features\Constants.cs" />
     <Compile Include="API\Features\CooldownInfo.cs" />
     <Compile Include="API\Features\DamageOverTime.cs" />
@@ -156,6 +86,8 @@
     <Compile Include="API\Extensions\EnumExtension.cs" />
     <Compile Include="API\Features\Components\HeroController.cs" />
     <Compile Include="API\Features\Cooldowns.cs" />
+    <Compile Include="API\Features\Effects.cs" />
+    <Compile Include="API\Features\Inventory.cs" />
     <Compile Include="API\Features\Objects\MeatHookObject.cs" />
     <Compile Include="API\Features\Objects\ProjectileObject.cs" />
     <Compile Include="API\Features\Hero.cs" />
@@ -182,13 +114,36 @@
     <Compile Include="API\Features\PassiveAbility.cs" />
     <Compile Include="API\Interfaces\IEvasionModifier.cs" />
     <Compile Include="API\Interfaces\ILevelUp.cs" />
+    <Compile Include="API\Interfaces\IModifier.cs" />
     <Compile Include="API\Interfaces\INegativeArmorModifier.cs" />
     <Compile Include="API\Interfaces\IPierceDebuffImmunity.cs" />
     <Compile Include="API\Interfaces\IResistanceModifier.cs" />
     <Compile Include="API\Interfaces\ILevelValues.cs" />
     <Compile Include="API\Features\Item.cs" />
+    <Compile Include="API\Interfaces\ISpeedModifier.cs" />
+    <Compile Include="API\Items\ArmletOfMordiggian.cs" />
+    <Compile Include="API\Items\BladesOfAttack.cs" />
     <Compile Include="API\Items\Bracer.cs" />
     <Compile Include="API\Features\Value.cs" />
+    <Compile Include="API\Items\Circlet.cs" />
+    <Compile Include="API\Items\GauntletsOfStrength.cs" />
+    <Compile Include="API\Items\GlovesOfHaste.cs" />
+    <Compile Include="API\Items\HelmOfIronWill.cs" />
+    <Compile Include="API\Items\MantleOfIntelligence.cs" />
+    <Compile Include="API\Items\NullTalisman.cs" />
+    <Compile Include="API\Items\Recipes\ArmletOfMordiggianRecipe.cs" />
+    <Compile Include="API\Items\Recipes\BracerRecipe.cs" />
+    <Compile Include="API\Items\Recipes\NullTalismanRecipe.cs" />
+    <Compile Include="API\Items\Recipes\WraithBandRecipe.cs" />
+    <Compile Include="API\Items\SlippersOfAgility.cs" />
+    <Compile Include="API\Items\WraithBand.cs" />
+    <Compile Include="API\Modifiers\AccuracyModifier.cs" />
+    <Compile Include="API\Modifiers\ArmorModifier.cs" />
+    <Compile Include="API\Modifiers\BlindModifier.cs" />
+    <Compile Include="API\Modifiers\EvasionModifier.cs" />
+    <Compile Include="API\Modifiers\NegativeArmorModifier.cs" />
+    <Compile Include="API\Modifiers\ResistanceModifier.cs" />
+    <Compile Include="API\Modifiers\SpeedModifier.cs" />
     <Compile Include="API\Statistics\ArmorStatistics.cs" />
     <Compile Include="API\Statistics\AttackStatistics.cs" />
     <Compile Include="API\Statistics\EvasionStatistics.cs" />
@@ -204,6 +159,10 @@
     <Compile Include="Commands\Admin\SetHero.cs" />
     <Compile Include="Commands\Admin\Statistics.cs" />
     <Compile Include="Commands\HeroCommandBase.cs" />
+    <Compile Include="Commands\User\Hero\BuyItem.cs" />
+    <Compile Include="Commands\User\Hero\Inventory.cs" />
+    <Compile Include="Commands\User\Hero\SellItem.cs" />
+    <Compile Include="Commands\User\Hero\UseAbility.cs" />
     <Compile Include="Commands\User\Hero\Attack.cs" />
     <Compile Include="Commands\User\Hero\Parent.cs" />
     <Compile Include="Config.cs" />
@@ -213,12 +172,122 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="NAudio.Vorbis">
+      <Version>1.5.0</Version>
+    </PackageReference>
     <PackageReference Include="YamlDotNet">
       <Version>13.4.0</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="API\Abilities\Spirit Breaker\" />
+    <Reference Include="0Harmony, Version=2.2.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Imports\0Harmony.dll</HintPath>
+    </Reference>
+    <Reference Include="Assembly-CSharp, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Imports\Assembly-CSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="Assembly-CSharp-firstpass, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Imports\Assembly-CSharp-firstpass.dll</HintPath>
+    </Reference>
+    <Reference Include="CommandSystem.Core, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Imports\CommandSystem.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="CustomHudAPI">
+      <HintPath>..\Imports\CustomHudAPI.dll</HintPath>
+    </Reference>
+    <Reference Include="Exiled.API, Version=8.1.0.0, Culture=neutral, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Imports\Exiled.API.dll</HintPath>
+    </Reference>
+    <Reference Include="Exiled.CreditTags, Version=8.0.2.0, Culture=neutral, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Imports\Exiled.CreditTags.dll</HintPath>
+    </Reference>
+    <Reference Include="Exiled.CustomItems, Version=8.0.2.0, Culture=neutral, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Imports\Exiled.CustomItems.dll</HintPath>
+    </Reference>
+    <Reference Include="Exiled.CustomRoles, Version=8.0.2.0, Culture=neutral, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Imports\Exiled.CustomRoles.dll</HintPath>
+    </Reference>
+    <Reference Include="Exiled.Events, Version=8.0.2.0, Culture=neutral, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Imports\Exiled.Events.dll</HintPath>
+    </Reference>
+    <Reference Include="Exiled.Permissions, Version=8.0.2.0, Culture=neutral, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Imports\Exiled.Permissions.dll</HintPath>
+    </Reference>
+    <Reference Include="Exiled.Updater, Version=3.1.2.0, Culture=neutral, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Imports\Exiled.Updater.dll</HintPath>
+    </Reference>
+    <Reference Include="Mirror, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Imports\Mirror.dll</HintPath>
+    </Reference>
+    <Reference Include="Mirror.Components, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Imports\Mirror.Components.dll</HintPath>
+    </Reference>
+    <Reference Include="NorthwoodLib, Version=1.3.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Imports\NorthwoodLib.dll</HintPath>
+    </Reference>
+    <Reference Include="PluginAPI, Version=13.1.1.0, Culture=neutral, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Imports\PluginAPI.dll</HintPath>
+    </Reference>
+    <Reference Include="SCPSLAudioApi">
+      <HintPath>..\Imports\SCPSLAudioApi.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="Unity.TextMeshPro, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Imports\Unity.TextMeshPro.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Imports\UnityEngine.CoreModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.PhysicsModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Imports\UnityEngine.PhysicsModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.TextCoreFontEngineModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Imports\UnityEngine.TextCoreFontEngineModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.TextCoreTextEngineModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Imports\UnityEngine.TextCoreTextEngineModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.TextRenderingModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Imports\UnityEngine.TextRenderingModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UI, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Imports\UnityEngine.UI.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UIElementsModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Imports\UnityEngine.UIElementsModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UIElementsNativeModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Imports\UnityEngine.UIElementsNativeModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UIModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Imports\UnityEngine.UIModule.dll</HintPath>
+    </Reference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

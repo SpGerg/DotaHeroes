@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace DotaHeroes.API.Interfaces
 {
-    public interface IEvasionModifier
+    public interface IEvasionModifier : IModifier
     {
-        decimal Evasion { get; }
+        decimal Evasion { get; set; }
     }
 }

@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace DotaHeroes.API.Interfaces
 {
-    public interface IAccuracyModifier
+    public interface IAccuracyModifier : IModifier
     {
-        decimal Accuracy { get; }
+        decimal Accuracy { get; set; }
     }
 }

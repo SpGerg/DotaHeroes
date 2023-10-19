@@ -13,25 +13,22 @@ namespace DotaHeroes.API.Heroes
     {
         public override string HeroName => "Pudge";
 
-        public override List<Ability> Abilities { get; } = Ability.ToAbilitiesFromStringList(Plugin.Instance.Config.Heroes["Pudge"].Abilties);
+        public override string Slug => "pudge";
 
-        public override HeroClassType HeroClassType { get; set; } = Plugin.Instance.Config.Heroes["Pudge"].HeroClassType;
+        public override List<Ability> Abilities { get; } = Ability.ToAbilitiesFromStringList(Plugin.Instance.Config.Heroes["pudge"].Abilties);
+
+        public override HeroClassType HeroClassType { get; set; } = Plugin.Instance.Config.Heroes["pudge"].HeroClassType;
 
         public Pudge() : base()
         {
             SideType = SideType.Dire;
 
-            HeroStatistics = new HeroStatistics(Plugin.Instance.Config.Heroes[HeroName].DefaultHeroStatistics.ToHeroStatistics(this), this);
+            HeroStatistics = new HeroStatistics(Plugin.Instance.Config.Heroes[Slug].DefaultHeroStatistics.ToHeroStatistics(this), this);
         }
 
-        public Pudge(Player player, SideType sideType) : base(player, sideType) 
+        protected Pudge(Player player, SideType sideType) : base(player, sideType)
         {
-            HeroStatistics = new HeroStatistics(Plugin.Instance.Config.Heroes[HeroName].DefaultHeroStatistics.ToHeroStatistics(this), this);
-        }
-
-        public override Hero Create()
-        {
-            return new Pudge();
+            HeroStatistics = new HeroStatistics(Plugin.Instance.Config.Heroes[Slug].DefaultHeroStatistics.ToHeroStatistics(this), this);
         }
 
         public override Hero Create(Player player, SideType sideType)

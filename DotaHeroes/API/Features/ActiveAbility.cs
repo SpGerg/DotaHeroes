@@ -1,4 +1,5 @@
 ﻿using CommandSystem;
+using DotaHeroes.API.Events.Handlers;
 using DotaHeroes.API.Features;
 using Exiled.API.Features;
 using System;
@@ -9,45 +10,37 @@ using System.Threading.Tasks;
 
 namespace DotaHeroes.API.Features
 {
-    public abstract class ActiveAbility : Ability, ICommand
+    public abstract class ActiveAbility : Ability
     {
-        public virtual string Command { get; set; }
-
-        public virtual string[] Aliases { get; set; } = Array.Empty<string>();
-
         /// <summary>
         /// Initializes a new instance of the <see cref="ActiveAbility" /> class.
         /// </summary>
-        public ActiveAbility() : base()
-        {
-            if (string.IsNullOrEmpty(Command))
-            {
-                Command = Name.Replace(" ", "").ToLower();
-            }
-        }
+        public ActiveAbility() : base() { }
+
+        protected abstract bool Execute(Hero hero, ArraySegment<string> arguments, out string response);
 
         /// <summary>
-        /// Abstract execute. ICommandSender to Hero.
+        /// Execute.
         /// </summary>
-        public abstract bool Execute(Hero hero, ArraySegment<string> arguments, out string response);
-
-        /// <summary>
-        /// Base ICommand execute.
-        /// </summary>
-        public bool Execute(ArraySegment<string> arguments, ICommandSender sender, out string response)
+        public virtual bool CheckAndExecute(Hero hero, ArraySegment<string> arguments, out string response)
         {
-            if (!base.Execute(sender, out response, out Hero hero))
+            if (!base.Execute(hero, out response, true))
             {
                 return false;
             }
 
-            if (!CheckAndRunCooldown(hero, out string _response))
+            if (!CheckCooldown(hero, out response, out CooldownInfo cooldown))
             {
-                response = _response;
                 return false;
             }
 
-            return Execute(hero, arguments, out response);
+            if (!Execute(hero, arguments, out response))
+            {
+                return false;
+            }
+
+            RunCooldown(hero, cooldown);
+            return true;
         }
     }
 }

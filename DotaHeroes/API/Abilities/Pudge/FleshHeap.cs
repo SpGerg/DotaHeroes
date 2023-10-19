@@ -12,11 +12,11 @@ using System.Threading.Tasks;
 
 namespace DotaHeroes.API.Abilities.Pudge
 {
-    [CommandHandler(typeof(ClientCommandHandler))]
-    [CommandHandler(typeof(RemoteAdminCommandHandler))]
     public class FleshHeap : ActiveAbility, ILevelValues
     {
         public override string Name => "Flesh heap";
+
+        public override string Slug => "flesh_heap";
 
         public override string Description => "Flesh heap";
 
@@ -26,13 +26,15 @@ namespace DotaHeroes.API.Abilities.Pudge
 
         public override TargetType TargetType => TargetType.None;
 
-        public Dictionary<string, List<float>> Values => Plugin.Instance.Config.Abilites["fleshheap"].Values;
+        public Dictionary<string, List<decimal>> Values { get; } = Plugin.Instance.Config.Abilites["flesh_heap"].Values;
 
         public int MaxLevel { get; set; } = 4;
 
         public int MinLevel { get; set; } = 0;
 
-        public IReadOnlyList<int> HeroLevelToLevelUp { get; set; } = new List<int>();
+        public IReadOnlyList<int> HeroLevelToLevelUp { get; set; } = Features.Utils.EmptyLevelsList;
+
+        public static string SoundsPath = Plugin.Instance.SoundsPath + "\\pudge\\flesh_heap";
 
         public FleshHeap() : base() { }
 
@@ -49,7 +51,7 @@ namespace DotaHeroes.API.Abilities.Pudge
             base.LevelUp(hero);
         }
 
-        public override bool Execute(Hero hero, ArraySegment<string> arguments, out string response)
+        protected override bool Execute(Hero hero, ArraySegment<string> arguments, out string response)
         {
             var blockDamage = hero.EnableEffect(new FleshHeapShield(hero)) as FleshHeapShield;
             blockDamage.DamageBlock = (int)Values["damage_block"][Level];

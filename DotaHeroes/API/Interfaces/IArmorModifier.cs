@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace DotaHeroes.API.Interfaces
 {
-    public interface IArmorModifier
+    public interface IArmorModifier : IModifier
     {
-        float Armor { get; set; }
+        decimal Armor { get; set; }
     }
 }

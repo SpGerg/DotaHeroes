@@ -20,6 +20,8 @@ namespace DotaHeroes.API.Features
     {
         public abstract string Name { get; }
 
+        public abstract string Slug { get; }
+
         public abstract string Description { get; }
 
         public abstract string Lore { get; }
@@ -37,14 +39,9 @@ namespace DotaHeroes.API.Features
             {
                 return isStop;
             }
-            set
+            private set
             {
                 isStop = value;
-
-                if (isStop)
-                {
-                    Stop();
-                }
             }
         }
 
@@ -81,23 +78,27 @@ namespace DotaHeroes.API.Features
 
                 if (levelValues.Values.ContainsKey("cooldown"))
                 {
-                    var cooldown = Cooldowns.GetCooldown(hero.Player.Id, Name);
-                    cooldown.Duration = (int)(this as ILevelValues).Values["cooldown"][Level];
+                    var cooldown = Cooldowns.GetCooldown(hero.Player.Id, Slug);
+
+                    if (cooldown != default)
+                    {
+                        cooldown.Duration = (float)levelValues.Values["cooldown"][Level];
+                    }
                 }
 
                 if (levelValues.Values.ContainsKey("damage") && this is IDamage)
                 {
-                    (this as IDamage).Damage = (decimal)levelValues.Values["damage"][Level];
+                    (this as IDamage).Damage = levelValues.Values["damage"][Level];
                 }
 
                 if (levelValues.Values.ContainsKey("mana_cost") && this is ICost)
                 {
-                    (this as ICost).ManaCost = (int)(decimal)levelValues.Values["mana_cost"][Level];
+                    (this as ICost).ManaCost = (int)levelValues.Values["mana_cost"][Level];
                 }
 
                 if (levelValues.Values.ContainsKey("health_cost") && this is ICost)
                 {
-                    (this as ICost).HealthCost = (int)(decimal)levelValues.Values["health_cost"][Level];
+                    (this as ICost).HealthCost = (int)levelValues.Values["health_cost"][Level];
                 } //thats sucks im know
             }
         }
@@ -105,41 +106,12 @@ namespace DotaHeroes.API.Features
         /// <summary>
         /// Protected execute.
         /// </summary>
-        protected virtual bool Execute(ICommandSender sender, out string response, out Hero hero, bool isCooldown = false)
+        protected virtual bool Execute(Hero executor, out string response, bool isCooldown = false)
         {
             if (!IsEnabled)
             {
                 response = "Ability is disabled";
-                hero = null;
 
-                return false;
-            }
-
-            if (sender is not PlayerCommandSender)
-            {
-                response = "You cannot use this ability in console.";
-                hero = null;
-
-                return false;
-            }
-
-            var player = Player.Get(sender);
-
-            var _hero = API.GetHeroOrDefault(player.Id);
-
-            if (_hero == default)
-            {
-                response = "You are not hero. (Im mean in game, ok?)";
-                hero = null;
-
-                return false;
-            }
-
-            hero = _hero;
-
-            if (_hero.Abilities.FirstOrDefault(ability => ability.Name == Name) == default)
-            {
-                response = "You havent this ability.";
                 return false;
             }
 
@@ -150,46 +122,60 @@ namespace DotaHeroes.API.Features
         /// <summary>
         /// Stop. sToP.
         /// </summary>
-        public virtual void Stop()
+        public virtual void Stop(Hero hero)
         {
-
+            IsStop = true;
         }
 
         /// <summary>
         /// Check and run cooldown.
         /// </summary>
-        protected bool CheckAndRunCooldown(Hero hero, out string response)
+        protected void RunCooldown(Hero hero, CooldownInfo cooldown)
         {
-            if (this is ILevelValues && (this as ILevelValues).Values.ContainsKey("cooldown"))
+            if (cooldown == default)
             {
-                var cooldown = Cooldowns.GetCooldown(hero.Player.Id, Name);
+                return;
+            }
 
-                if (cooldown == default)
-                {
-                    cooldown = Cooldowns.AddCooldown(hero.Player.Id, new CooldownInfo(Name, 3));
-                }
+            cooldown.Run();
+        }
 
-                if (!cooldown.IsReady)
+        /// <summary>
+        /// Check and run cooldown.
+        /// </summary>
+        protected bool CheckCooldown(Hero hero, out string response, out CooldownInfo cooldown)
+        {
+            var _cooldown = Cooldowns.GetCooldown(hero.Player.Id, Slug);
+
+            if (this is ILevelValues levelValues && levelValues.Values.ContainsKey("cooldown"))
+            {
+                cooldown = _cooldown;
+
+                if (cooldown != default && !cooldown.IsReady)
                 {
                     response = $"Ability {Name} on cooldown.";
 
                     return false;
                 }
 
-                cooldown.Run();
+                response = $"Ability {Name} was used.";
+                return true;
             }
 
+            cooldown = null;
             response = $"Ability {Name} was used.";
-            return true;
+            return false;
         }
 
         public static List<Ability> ToAbilitiesFromStringList(List<string> abilties)
         {
             List<Ability> result = new List<Ability>();
 
+            if (abilties == null || abilties.IsEmpty()) return result;
+
             foreach (var ability in abilties)
             {
-                var _ability = API.GetAbilityOrDefaultWithIgnoreCaseAndSpaces(ability);
+                var _ability = API.GetAbilityOrDefaultBySlug(ability);
 
                 if (_ability == default) continue;
                 
@@ -227,7 +213,7 @@ namespace DotaHeroes.API.Features
             stringBuilder.AppendLine("Lore: " + Lore);
             stringBuilder.AppendLine("Ability Type: " + AbilityType.ToString());
             stringBuilder.AppendLine("Target Type: " + TargetType.ToString());
-            stringBuilder.AppendLine("Cooldown: " + Cooldowns.ToStringIsCooldown(hero.Player.Id, Name));
+            stringBuilder.AppendLine("Cooldown: " + Cooldowns.ToStringIsCooldown(hero.Player.Id, Slug));
 
             return StringBuilderPool.Shared.ToStringReturn(stringBuilder);
         }

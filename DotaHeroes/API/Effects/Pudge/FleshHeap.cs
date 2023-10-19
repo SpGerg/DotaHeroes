@@ -56,25 +56,25 @@ namespace DotaHeroes.API.Effects.Pudge
 
         public FleshHeap(Hero owner) : base(owner) { }
 
-        public override bool Enable()
+        public override void Enable()
         {
             var fleshHeap = Hero.Abilities.FirstOrDefault(ability => ability.Name == "Flesh heap");
 
             if (fleshHeap == default)
             {
-                return false;
+                return;
             }
 
             IsVisible = false;
 
-            return base.Enable();
+            base.Enable();
         }
 
-        public override bool Execute()
+        public override void Execute()
         {
             Stack++;
 
-            return base.Execute();
+            base.Execute();
         }
     }
 }

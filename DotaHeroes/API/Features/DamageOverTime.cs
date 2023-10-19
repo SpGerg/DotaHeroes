@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UnityEngine;
 
 namespace DotaHeroes.API.Features
 {
@@ -42,6 +43,11 @@ namespace DotaHeroes.API.Features
             TimesDamage = timesDamage;
             Interval = interval;
             Attacker = attacker;
+
+            if (TimesDamage <= -1)
+            {
+                TimesDamage = int.MaxValue;
+            }
         }
 
         /// <summary>

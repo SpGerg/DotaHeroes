@@ -41,9 +41,7 @@ namespace DotaHeroes.API.Features
             }
             catch (KeyNotFoundException)
             {
-                cooldowns[id] = new Dictionary<string, CooldownInfo>();
-                cooldowns[id][name] = new CooldownInfo(name, 3);
-                return cooldowns[id][name];
+                return default;
             }
         }
 

@@ -11,9 +11,9 @@ namespace DotaHeroes.API.Statistics
 {
     public class ResistanceStatistics
     {
-        public decimal MagicResistance { get; set; }
+        public decimal BaseMagicResistance { get; set; }
 
-        public decimal EffectResistance { get; set; }
+        public decimal BaseEffectResistance { get; set; }
 
         public List<IResistanceModifier> ResistanceModifiers { get; set; }
 
@@ -21,15 +21,15 @@ namespace DotaHeroes.API.Statistics
 
         public ResistanceStatistics()
         {
-            MagicResistance = BaseResistance;
-            EffectResistance = BaseResistance;
+            BaseMagicResistance = BaseResistance;
+            BaseEffectResistance = BaseResistance;
             ResistanceModifiers = new List<IResistanceModifier>();
         }
 
         public ResistanceStatistics(decimal magicResistance, decimal baseEffectResistance)
         {
-            MagicResistance = magicResistance;
-            EffectResistance = baseEffectResistance;
+            BaseMagicResistance = magicResistance;
+            BaseEffectResistance = baseEffectResistance;
             ResistanceModifiers = new List<IResistanceModifier>();
         }
 
@@ -39,30 +39,46 @@ namespace DotaHeroes.API.Statistics
             return damage - percent * GetMagicResistance(intelligence);
         }
 
-        public float GetEffectResistance()
+        public decimal GetEffectResistance()
         {
-            return Mathf.Clamp(1 - (1 - (float)EffectResistance / 10) * GetEffectResistanceFromModifiers(), 0, 99) * 10;
+            decimal baseEffectResistance = (BaseEffectResistance / 100);
+            decimal effectResistanceFromModifiers = GetEffectResistanceFromModifiers();
+
+            return (1 - ((1 - baseEffectResistance) * effectResistanceFromModifiers)) * 100;
         }
 
-        public float GetEffectDuration(float originalDuration)
+        public decimal GetEffectDuration(decimal originalDuration)
         {
             return originalDuration * ((100 - GetEffectResistance()) / 100);
         }
 
         public decimal GetMagicResistance(decimal intelligence)
         {
-            return MagicResistance + (intelligence / 10);
+            decimal baseMagicResistance = (BaseMagicResistance / 100);
+            decimal magicResistanceFromModifiers = GetMagicResistanceFromModifiers();
+
+            return ((1 - ((1 - baseMagicResistance) * magicResistanceFromModifiers)) + ((intelligence / 10) / 100)) * 100;
         }
 
-        private float GetEffectResistanceFromModifiers()
+        private decimal GetEffectResistanceFromModifiers()
         {
-            ResistanceModifiers.Sort();
-
-            float result = 1;
+            decimal result = 1;
 
             foreach (var modifier in ResistanceModifiers)
             {
-                result *= (1 - modifier.EffectResistance / 10);
+                result *= 1 - (modifier.EffectResistance / 100);
+            }
+
+            return result;
+        }
+
+        private decimal GetMagicResistanceFromModifiers()
+        {
+            decimal result = 1;
+
+            foreach (var modifier in ResistanceModifiers)
+            {
+                result *= 1 - (modifier.MagicResistance / 100);
             }
 
             return result;
@@ -75,7 +91,7 @@ namespace DotaHeroes.API.Statistics
 
         public string ToString(decimal intelligence)
         {
-            return $"Magic resistance: {GetMagicResistance(intelligence)} Effect resistance: {GetEffectResistance()}";
+            return $"Magic resistance: {Math.Round(GetMagicResistance(intelligence), 1)} Effect resistance: {Math.Round(GetEffectResistance(), 1)}";
         }
     }
 }

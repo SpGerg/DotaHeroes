@@ -21,6 +21,9 @@ namespace DotaHeroes
         [Description("Debug or not")]
         public bool Debug { get; set; }
 
+        [Description("Is sounds using. Very lagy, not recommended.")]
+        public bool IsUsingSounds { get; set; }
+
         [Description("Giving money from kill")]
         public int KillFromMoney { get; set; }
 
@@ -30,12 +33,12 @@ namespace DotaHeroes
         [Description("Heroes abilities, default hero statistics")]
         public Dictionary<string, HeroSerializable> Heroes { get; set; } = new()
         {
-            { "Pudge", new HeroSerializable("Pudge", "Pudge",
+            { "pudge", new HeroSerializable(
                 new List<string>
                 {
-                    "meathook",
+                    "meat_hook",
                     "rot",
-                    "fleshheap",
+                    "flesh_heap",
                     "dismember"
                 },
                 new List<RoleTypeId>
@@ -57,19 +60,22 @@ namespace DotaHeroes
                     BaseMana = 75,
                     BaseAttackDamage = 45,
                     BaseAttackSpeed = 10,
-                    BaseAttackRange = 0.6m,
+                    BaseAttackRange = 2m,
                     BaseAttackProjectileSpeed = 0,
                     BaseArmor = -1,
                     BaseMagicResistance = ResistanceStatistics.BaseResistance,
-                    BaseEffectResistance = ResistanceStatistics.BaseResistance,
-                    BaseSpeed = 0
+                    BaseEffectResistance = 0,
+                    BaseSpeed = 35
                 }
             )
             },
-            { "Spirit breaker", new HeroSerializable("Spirit breaker", "Spirit breaker",
+            { "spirit_breaker", new HeroSerializable(
                 new List<string>
                 {
-                    "meathook",
+                    "charge_of_darkness",
+                    "bulldoze",
+                    "greater_bash",
+                    "nether_strike"
                 },
                 new List<RoleTypeId>
                 {
@@ -91,12 +97,12 @@ namespace DotaHeroes
                     BaseManaRegeneration = 0.5m,
                     BaseAttackDamage = 31,
                     BaseAttackSpeed = 10,
-                    BaseAttackRange = 0.6m,
+                    BaseAttackRange = 2m,
                     BaseAttackProjectileSpeed = 0,
                     BaseArmor = 1,
                     BaseMagicResistance = ResistanceStatistics.BaseResistance,
-                    BaseEffectResistance = ResistanceStatistics.BaseResistance,
-                    BaseSpeed = 0
+                    BaseEffectResistance = 0,
+                    BaseSpeed = 45
                 }
             )
             },
@@ -105,49 +111,93 @@ namespace DotaHeroes
         [Description("Abilties damage, mana cost, cast range and other")]
         public Dictionary<string, AbilitySerializable> Abilites { get; set; } = new()
         {
-            { "meathook", new AbilitySerializable("Meat hook", "Meat hook",
-                new Dictionary<string, List<float>>
+            { "meat_hook", new AbilitySerializable(
+                new Dictionary<string, List<decimal>>
                 {
-                    { "damage", new List<float> { 120, 180, 210, 240 } },
-                    { "mana_cost", new List<float> { 120, 130, 140, 150 } },
-                    { "cooldown", new List<float> { 12, 11, 9, 8 } },
-                    { "cast_range", new List<float> { 20, 30, 40, 50 } }
+                    { "damage", new List<decimal> { 120, 180, 210, 240 } },
+                    { "mana_cost", new List<decimal> { 120, 130, 140, 150 } },
+                    { "cooldown", new List<decimal> { 12, 11, 9, 8 } },
+                    { "cast_range", new List<decimal> { 20, 30, 40, 50 } }
                 }
             )
             },
-            { "rot", new AbilitySerializable("Rot", "Rot",
-                new Dictionary<string, List<float>>
+            { "rot", new AbilitySerializable(
+                new Dictionary<string, List<decimal>>
                 {
-                    { "damage", new List<float> { 30, 50, 80, 110 } },
-                    { "mana_cost", new List<float> { 0, 0, 0, 0 } },
+                    { "damage", new List<decimal> { 30, 50, 80, 110 } },
+                    { "mana_cost", new List<decimal> { 0, 0, 0, 0 } },
                 }
             )
             },
-            { "fleshheap", new AbilitySerializable("Flesh heap", "Flesh heap",
-                new Dictionary<string, List<float>>
+            { "flesh_heap", new AbilitySerializable(
+                new Dictionary<string, List<decimal>>
                 {
-                    { "damage_block", new List<float> { 8, 14, 20, 26 } },
-                    { "mana_cost", new List<float> { 120, 130, 140, 150 } },
-                    { "cooldown", new List<float> { 12, 11, 9, 8 } },
+                    { "damage_block", new List<decimal> { 8, 14, 20, 26 } },
+                    { "mana_cost", new List<decimal> { 120, 130, 140, 150 } },
+                    { "cooldown", new List<decimal> { 12, 11, 9, 8 } },
                 }
             )
             },
-            { "dismember", new AbilitySerializable("Dismember", "Dismember",
-                new Dictionary<string, List<float>>
+            { "dismember", new AbilitySerializable(
+                new Dictionary<string, List<decimal>>
                 {
-                    { "damage", new List<float>() { 120, 150, 180, 210 } },
-                    { "cooldown", new List<float>() { 30, 25, 20, 15 } },
-                    { "range", new List<float>() { 2, 2, 2, 2 } },
-                    { "strength_to_damage", new List<float>() { 30, 60, 90 } },
+                    { "damage", new List<decimal>() { 120, 150, 180, 210 } },
+                    { "cooldown", new List<decimal>() { 30, 25, 20, 15 } },
+                    { "range", new List<decimal>() { 2, 2, 2, 2 } },
+                    { "strength_to_damage", new List<decimal>() { 30, 60, 90 } },
                 }
             )
             },
+            { "charge_of_darkness", new AbilitySerializable(
+                new Dictionary<string, List<decimal>>
+                {
+                    { "extra_speed", new List<decimal> { 25, 40, 55, 70 } },
+                    { "stun", new List<decimal> { 1.2m, 1.5m, 1.2m, 2.1m } },
+                    { "cooldown", new List<decimal> { 21, 18, 15, 12 } },
+                }
+            )
+            },
+            { "bulldoze", new AbilitySerializable(
+                new Dictionary<string, List<decimal>>
+                {
+                    { "duration", new List<decimal> { 8, 8, 8, 8 } },
+                    { "extra_effect_resistance", new List<decimal> { 40, 50, 60, 70 } },
+                    { "extra_speed", new List<decimal> { 25, 40, 55, 70 } },
+                    { "cooldown", new List<decimal> { 22, 20, 18, 16 } },
+                }
+            )
+            },
+            { "greater_bash", new AbilitySerializable(
+                new Dictionary<string, List<decimal>>
+                {
+                    { "stun", new List<decimal> { 0.9m, 1.1m, 1.3m, 1.5m } },
+                    { "damage_from_speed", new List<decimal> { 25, 30, 35, 40 } },
+                    { "chance", new List<decimal> { 17, 17, 17, 17 } },
+                    { "cooldown", new List<decimal> { 2, 2, 2 } },
+                }
+            )
+            },
+            { "nether_strike", new AbilitySerializable(
+                new Dictionary<string, List<decimal>>
+                {
+                    { "damage", new List<decimal> { 125, 200, 275 } },
+                    { "cooldown", new List<decimal> { 90, 70, 50 } },
+                }
+            )
+            }
         };
 
         [Description("Items damage, mana cost, cast range and other")]
         public Dictionary<string, ItemSerializable> Items { get; set; } = new()
         {
-            { "bracer", new ItemSerializable("Bracer", "Bracer description", "Bracer lore", string.Empty,
+            { "bracer", new ItemSerializable(505, 250, string.Empty, new List<string>(),
+                new List<string>()
+                {
+                    "circlet",
+                    "gauntlets_of_strength",
+                    "bracer_recipe"
+                },
+                new List<string>() {},
                 new Dictionary<StatisticsType, Value>()
                 {
                     { StatisticsType.Strength, new Value(5, false) },
@@ -155,6 +205,187 @@ namespace DotaHeroes
                     { StatisticsType.Intelligence, new Value(2, false) },
                     { StatisticsType.HealthRegeneration, new Value(0.75m, false) },
                     { StatisticsType.ExtraAttackDamage, new Value(3, false) },
+                }
+            )
+            },
+            { "wraith_band", new ItemSerializable(505, 250, string.Empty, new List<string>(),
+                new List<string>()
+                {
+                    "circlet",
+                    "slippers_of_agility",
+                    "wraith_band_recipe"
+                },
+                new List<string>() {},
+                new Dictionary<StatisticsType, Value>()
+                {
+                    { StatisticsType.Strength, new Value(2, false) },
+                    { StatisticsType.Agility, new Value(5, false) },
+                    { StatisticsType.Intelligence, new Value(2, false) },
+                    { StatisticsType.Armor, new Value(2, false) },
+                    { StatisticsType.AttackSpeed, new Value(5, false) },
+                }
+            )
+            },
+            { "null_talisman", new ItemSerializable(505, 250, string.Empty, new List<string>(),
+                new List<string>()
+                {
+                    "circlet",
+                    "mantle_of_intelligence",
+                    "null_talisman_recipe"
+                },
+                new List<string>() {},
+                new Dictionary<StatisticsType, Value>()
+                {
+                    { StatisticsType.Strength, new Value(2, false) },
+                    { StatisticsType.Agility, new Value(2, false) },
+                    { StatisticsType.Intelligence, new Value(5, false) },
+                    { StatisticsType.Mana, new Value(3, true) },
+                    { StatisticsType.ManaRegeneration, new Value(0.75m, false) },
+                }
+            )
+            },
+            { "circlet", new ItemSerializable(155, 77, string.Empty, new List<string>(), new List<string>(),
+                new List<string>()
+                {
+                    "wraith_band",
+                    "bracer",
+                    "null_talisman"
+                },
+                new Dictionary<StatisticsType, Value>()
+                {
+                    { StatisticsType.AllAttributes, new Value(2, false) }
+                }
+            )
+            },
+            { "mantle_of_intelligence", new ItemSerializable(140, 70, string.Empty, new List<string>(), new List<string>(),
+                new List<string>()
+                {
+                    "null_talisman"
+                },
+                new Dictionary<StatisticsType, Value>()
+                {
+                    { StatisticsType.Intelligence, new Value(3, false) }
+                }
+            )
+            },
+            { "slippers_of_agility", new ItemSerializable(140, 70, string.Empty, new List<string>(), new List<string>(),
+                new List<string>()
+                {
+                    "wraith_band"
+                },
+                new Dictionary<StatisticsType, Value>()
+                {
+                    { StatisticsType.Agility, new Value(3, false) }
+                }
+            )
+            },
+            { "gauntlets_of_strength", new ItemSerializable(140, 70, string.Empty, new List<string>(), new List<string>(),
+                new List<string>()
+                {
+                    "bracer",
+                },
+                new Dictionary<StatisticsType, Value>()
+                {
+                    { StatisticsType.Strength, new Value(3, false) }
+                }
+            )
+            },
+            { "bracer_recipe", new ItemSerializable(210, 210, string.Empty, new List<string>(), new List<string>(),
+                new List<string>()
+                {
+                    "bracer",
+                },
+                new Dictionary<StatisticsType, Value>()
+                { }
+            )
+            },
+            { "wraith_band_recipe", new ItemSerializable(210, 210, string.Empty, new List<string>(), new List<string>(),
+                new List<string>()
+                {
+                    "wraith_band"
+                },
+                new Dictionary<StatisticsType, Value>()
+                { }
+            )
+            },
+            { "null_talisman_recipe", new ItemSerializable(210, 210, string.Empty, new List<string>(), new List<string>(),
+                new List<string>()
+                {
+                    "null_talisman"
+                },
+                new Dictionary<StatisticsType, Value>()
+                { }
+            )
+            },
+            { "armlet_of_mordiggian", new ItemSerializable(2500, 1250, string.Empty, new List<string>(),
+                new List<string>()
+                {
+                    "helm_of_iron_will",
+                    "gloves_of_haste",
+                    "blades_of_attack",
+                    "armlet_of_mordiggian_recipe"
+                },
+                new List<string>()
+                { },
+                new Dictionary<StatisticsType, Value>()
+                {
+                    { StatisticsType.HealthRegeneration, new Value(5, false) },
+                    { StatisticsType.Armor, new Value(6, false) },
+                    { StatisticsType.ExtraAttackDamage, new Value(15, false) },
+                    { StatisticsType.AttackSpeed, new Value(25, false) }
+                }
+            )
+            },
+            { "helm_of_iron_will", new ItemSerializable(975, 487, string.Empty, new List<string>(),
+                new List<string>()
+                {
+                    "armlet_of_mordiggian"
+                },
+                new List<string>()
+                { },
+                new Dictionary<StatisticsType, Value>()
+                {
+                    { StatisticsType.HealthRegeneration, new Value(5, false) },
+                    { StatisticsType.Armor, new Value(6, false) },
+                }
+            )
+            },
+            { "gloves_of_haste", new ItemSerializable(450, 225, string.Empty, new List<string>(),
+                new List<string>()
+                {
+                    "armlet_of_mordiggian"
+                },
+                new List<string>()
+                { },
+                new Dictionary<StatisticsType, Value>()
+                {
+                    { StatisticsType.AttackSpeed, new Value(20, false) },
+                }
+            )
+            },
+            { "blades_of_attack", new ItemSerializable(450, 225, string.Empty, new List<string>(),
+                new List<string>()
+                {
+                    "armlet_of_mordiggian"
+                },
+                new List<string>()
+                { },
+                new Dictionary<StatisticsType, Value>()
+                {
+                    { StatisticsType.ExtraAttackDamage, new Value(9, false) },
+                }
+            )
+            },
+            { "armlet_of_mordiggian_recipe", new ItemSerializable(625, 625, string.Empty, new List<string>(),
+                new List<string>()
+                {
+                    "armlet_of_mordiggian"
+                },
+                new List<string>()
+                { },
+                new Dictionary<StatisticsType, Value>()
+                {
+                    { StatisticsType.ExtraAttackDamage, new Value(9, false) },
                 }
             )
             },

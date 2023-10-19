@@ -39,6 +39,10 @@ namespace DotaHeroes.API.Events.Handlers
 
         public static Event<HeroDispelledEventArgs> Dispelled { get; set; } = new();
 
+        public static Event<HeroExecutingAbilityEventArgs> ExecutingAbility { get; set; } = new();
+
+        public static Event<HeroExecutedAbilityEventArgs> ExecutedAbility { get; set; } = new();
+
         public static void OnHeroAttacking(HeroAttackingEventArgs ev) => Attacking.InvokeSafely(ev);
 
         public static void OnHeroAttacked(HeroAttackedEventArgs ev) => Attacked.InvokeSafely(ev);
@@ -66,5 +70,9 @@ namespace DotaHeroes.API.Events.Handlers
         public static void OnHeroDispelling(HeroDispellingEventArgs ev) => Dispelling.InvokeSafely(ev);
 
         public static void OnHeroDispelled(HeroDispelledEventArgs ev) => Dispelled.InvokeSafely(ev);
+
+        public static void OnHeroExecutingAbility(HeroExecutingAbilityEventArgs ev) => ExecutingAbility.InvokeSafely(ev);
+
+        public static void OnHeroExecutedAbility(HeroExecutedAbilityEventArgs ev) => ExecutedAbility.InvokeSafely(ev);
     }
 }

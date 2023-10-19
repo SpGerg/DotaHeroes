@@ -2,6 +2,7 @@
 using DotaHeroes.API.Enums;
 using DotaHeroes.API.Features;
 using DotaHeroes.API.Interfaces;
+using DotaHeroes.API.Modifiers;
 using DotaHeroes.API.Statistics;
 using Exiled.API.Features;
 using NorthwoodLib.Pools;
@@ -121,7 +122,7 @@ namespace DotaHeroes.API.Statistics
             Attack = new AttackStatistics();
             Armor = new ArmorStatistics();
             Resistance = new ResistanceStatistics();
-            Speed = new SpeedStatistics(hero);
+            Speed = new SpeedStatistics(hero, hero.HeroStatistics.Speed.Speed);
         }
 
         public HeroStatistics(AttributeType attribute, decimal strength, decimal strengthFromLevel, decimal agility, decimal agilityFromLevel, decimal intelligence, decimal intelligenceFromLevel, HealthAndManaStatistics healthAndManaStatistics, AttackStatistics attackStatistics, ArmorStatistics armorStatistics, ResistanceStatistics resistanceStatistics, SpeedStatistics speedStatistics)
@@ -147,7 +148,7 @@ namespace DotaHeroes.API.Statistics
             Attack = heroStatistics.Attack;
             Armor = heroStatistics.Armor;
             Resistance = heroStatistics.Resistance;
-            Speed = new SpeedStatistics(hero);
+            Speed = new SpeedStatistics(hero, heroStatistics.Speed.Speed);
             Hero = hero;
             StrengthFromLevel = heroStatistics.StrengthFromLevel;
             AgilityFromLevel = heroStatistics.AgilityFromLevel;
@@ -173,6 +174,11 @@ namespace DotaHeroes.API.Statistics
                     case StatisticsType.Intelligence:
                         Intelligence += GetValue(value.Value.CoolValue, Intelligence, value.Value.IsPercent, isReduce);
                         break;
+                    case StatisticsType.AllAttributes:
+                        Strength += GetValue(value.Value.CoolValue, Strength, value.Value.IsPercent, isReduce);
+                        Agility += GetValue(value.Value.CoolValue, Agility, value.Value.IsPercent, isReduce);
+                        Intelligence += GetValue(value.Value.CoolValue, Intelligence, value.Value.IsPercent, isReduce);
+                        break;
                     case StatisticsType.Health:
                         HealthAndMana.Health += GetValue(value.Value.CoolValue, HealthAndMana.Health, value.Value.IsPercent, isReduce);
                         break;
@@ -190,6 +196,34 @@ namespace DotaHeroes.API.Statistics
                         break;
                     case StatisticsType.BaseAttackDamage:
                         Attack.AttackDamage += (int)GetValue(value.Value.CoolValue, Attack.AttackDamage, value.Value.IsPercent, isReduce);
+                        break;
+                    case StatisticsType.Accuracy:
+                        if (Evasion.AccuracyModifier.Accuracy > value.Value.CoolValue) return;
+                        Evasion.AccuracyModifier.Accuracy = GetValue(value.Value.CoolValue, Evasion.AccuracyModifier.Accuracy, value.Value.IsPercent, isReduce);
+                        break;
+                    case StatisticsType.Armor:
+                        Armor.ArmorModifiers.Add(new ArmorModifier(
+                            GetValue(value.Value.CoolValue, Armor.GetBaseArmor(Agility), value.Value.IsPercent, isReduce)));
+                        break;
+                    case StatisticsType.Blind:
+                        Evasion.BlindModifiers.Add(new BlindModifier(
+                            GetValue(value.Value.CoolValue, Evasion.GetBlind(), value.Value.IsPercent, isReduce)));
+                        break;
+                    case StatisticsType.Evasion:
+                        Evasion.EvasionModifiers.Add(new EvasionModifier(
+                            GetValue(value.Value.CoolValue, Evasion.GetEvasion(), value.Value.IsPercent, isReduce)));
+                        break;
+                    case StatisticsType.NegativeArmor:
+                        Armor.NegativeArmorModifiers.Add(new NegativeArmorModifier(
+                            GetValue(value.Value.CoolValue, Armor.GetNegativeArmorFromModifiers(), value.Value.IsPercent, isReduce)));
+                        break;
+                    case StatisticsType.MagicResistance:
+                        Resistance.ResistanceModifiers.Add(new ResistanceModifier(
+                            GetValue(value.Value.CoolValue, Resistance.GetMagicResistance(Intelligence), value.Value.IsPercent, isReduce), 0));
+                        break;
+                    case StatisticsType.EffectResistance:
+                        Resistance.ResistanceModifiers.Add(new ResistanceModifier(0,
+                            GetValue(value.Value.CoolValue, Resistance.GetEffectResistance(), value.Value.IsPercent, isReduce)));
                         break;
                 }
             }
@@ -242,6 +276,12 @@ namespace DotaHeroes.API.Statistics
             {
                 total_value = -total_value;
             }
+            else if (isReduce)
+            {
+                total_value = -total_value;
+            }
+
+            Log.Info(total_value);
 
             return total_value;
         }

@@ -19,6 +19,14 @@ namespace DotaHeroes.API.Enums
         AllAttributes = 8,
         AttackSpeed = 9,
         ExtraAttackDamage = 10,
-        BaseAttackDamage = 11
+        BaseAttackDamage = 11,
+        Accuracy = 12,
+        Armor = 13,
+        Blind = 14,
+        Evasion = 15,
+        NegativeArmor = 16,
+        MagicResistance = 17,
+        EffectResistance = 18,
+        Speed = 19
     }
 }

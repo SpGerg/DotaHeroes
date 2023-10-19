@@ -1,4 +1,5 @@
 ﻿using DotaHeroes.API.Interfaces;
+using Exiled.API.Features;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -46,7 +47,7 @@ namespace DotaHeroes.API.Statistics
 
         public decimal GetEvasion()
         {
-            decimal result = 0;
+            decimal result = 1;
 
             foreach (var modifier in EvasionModifiers)
             {
@@ -54,17 +55,27 @@ namespace DotaHeroes.API.Statistics
                 result *= value;
             }
 
+            if (result == 1)
+            {
+                return 0;
+            }
+
             return result * 100;
         }
 
         public decimal GetBlind()
         {
-            decimal result = 0;
+            decimal result = 1;
 
             foreach (var modifier in BlindModifiers)
             {
                 var value = modifier.Blind / 100;
                 result += value;
+            }
+
+            if (result == 1)
+            {
+                return 0;
             }
             
             return 1 - result * 100;
@@ -72,20 +83,27 @@ namespace DotaHeroes.API.Statistics
 
         public decimal GetEffectiveEvadeChance()
         {
-            return 1 - GetEvasion() * GetBlind() * 100;
+            return (1 - (1 - GetEvasion()) * (1 - GetBlind())) * 100;
         }
 
         public bool IsCanHit(IAccuracyModifier accuracyModifier)
         {
             decimal accuracy = 0;
 
+            decimal percentChance = 100;
+
             if (AccuracyModifier != null)
             {
-                accuracy = AccuracyModifier.Accuracy;
+                accuracy = 1 - AccuracyModifier.Accuracy / 100;
             }
 
-            var finalHitChance = (accuracy / 100) + (1 - (accuracy / 100)) * (GetEffectiveEvadeChance() / 100);
-            var percentChance = finalHitChance * 100;
+            var finalHitChance = 1 - (1 - GetEffectiveEvadeChance() / 100) * accuracy;
+            percentChance = finalHitChance * 100;
+
+            if (percentChance > 95)
+            {
+                return true;
+            }
 
             var random = UnityEngine.Random.Range(1, 100);
 

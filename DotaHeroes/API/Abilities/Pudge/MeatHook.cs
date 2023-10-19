@@ -15,11 +15,11 @@ using UnityEngine;
 
 namespace DotaHeroes.API.Abilities.Pudge
 {
-    [CommandHandler(typeof(ClientCommandHandler))]
-    [CommandHandler(typeof(RemoteAdminCommandHandler))]
     public class MeatHook : ActiveAbility, ICost, ILevelValues
     {
         public override string Name => "Meat hook";
+
+        public override string Slug => "meat_hook";
 
         public override string Description => string.Empty;
 
@@ -29,26 +29,30 @@ namespace DotaHeroes.API.Abilities.Pudge
 
         public override TargetType TargetType => TargetType.ToPoint;
 
-        public Dictionary<string, List<float>> Values => Plugin.Instance.Config.Abilites["meathook"].Values;
+        public Dictionary<string, List<decimal>> Values { get; } = Plugin.Instance.Config.Abilites["meat_hook"].Values;
 
         public int MaxLevel { get; set; } = 4;
 
         public int MinLevel { get; set; } = 0;
 
-        public IReadOnlyList<int> HeroLevelToLevelUp { get; set; } = new List<int>();
+        public IReadOnlyList<int> HeroLevelToLevelUp { get; set; } = Features.Utils.EmptyLevelsList;
 
         public int ManaCost { get; set; } = 0;
 
         public int HealthCost { get; set; } = -1;
+
+        public static string SoundsPath = Plugin.Instance.SoundsPath + "\\pudge\\meat_hook";
 
         public MeatHook() : base()
         {
             ManaCost = (int)Values["mana_cost"][0];
         }
 
-        public override bool Execute(Hero hero, ArraySegment<string> arguments, out string response)
+        protected override bool Execute(Hero hero, ArraySegment<string> arguments, out string response)
         {
             var player = hero.Player;
+
+            var sound = Audio.Play(player.Position, $"{SoundsPath}\\moving_to_target.ogg");
 
             Primitive primitive = Primitive.Create(player.Position, player.Rotation.eulerAngles, new Vector3(-0.5f, -0.5f, -0.5f), false);
             primitive.Type = PrimitiveType.Cube;
@@ -61,7 +65,8 @@ namespace DotaHeroes.API.Abilities.Pudge
                 (int)Values["cast_range"][Level],
                 25,
                 (int)Values["damage"][Level],
-                DamageType.Pure);
+                DamageType.Pure,
+                sound);
             var rigidbody = primitive.AdminToyBase.gameObject.AddComponent<Rigidbody>();
             rigidbody.isKinematic = true;
             player.EnableEffect<Ensnared>();

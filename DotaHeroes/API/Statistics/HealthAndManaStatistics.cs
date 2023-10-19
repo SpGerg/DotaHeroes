@@ -18,6 +18,11 @@ namespace DotaHeroes.API.Statistics
                 var oldValue = maximumHealth;
                 maximumHealth = value;
                 Health += maximumHealth - oldValue;
+
+                if (Health < 0)
+                {
+                    Health = 1;
+                }
             }
         }
 
@@ -32,6 +37,11 @@ namespace DotaHeroes.API.Statistics
                 var oldValue = maximumMana;
                 maximumMana = value;
                 Mana += maximumMana - oldValue;
+
+                if (Mana < 0)
+                {
+                    Mana = 1;
+                }
             }
         }
 

@@ -19,7 +19,7 @@ namespace DotaHeroes.API.Statistics
         public int FullDamage {
             get
             {
-                return BaseAttackDamage + AttackDamage + ExtraAttackDamage;
+                return AttackDamage + ExtraAttackDamage;
             }
         }
 

@@ -13,17 +13,17 @@ namespace DotaHeroes.API.Features
     {
         public string Name { get; set; }
 
-        public int Duration { get; set; }
+        public float Duration { get; set; }
 
         public int Cooldown {
             get
             {
-                if (Time.time - useTime > Duration)
+                if ((DateTime.Now - useTime).TotalSeconds > Duration)
                 {
                     return 0;
                 }
 
-                return Duration - (int)((int)Time.time - useTime);
+                return (int)Duration - (DateTime.Now - useTime).Seconds;
             }
         }
 
@@ -31,7 +31,7 @@ namespace DotaHeroes.API.Features
         {
             get
             {
-                if (Time.time - useTime > Duration)
+                if ((DateTime.Now - useTime).TotalSeconds > Duration)
                 {
                     return true;
                 }
@@ -40,14 +40,14 @@ namespace DotaHeroes.API.Features
             }
         }
 
-        private float useTime { get; set; }
+        private DateTime useTime { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CooldownInfo" /> class.
         /// </summary>
         /// <param name="name"><inheritdoc cref="Name" /></param>
         /// <param name="duration"><inheritdoc cref="Duration" /></param>
-        public CooldownInfo(string name, int duration)
+        public CooldownInfo(string name, float duration)
         {
             Name = name;
             Duration = duration;
@@ -58,7 +58,7 @@ namespace DotaHeroes.API.Features
         /// </summary>
         public void Run()
         {
-            useTime = Time.time;
+            useTime = DateTime.Now;
         }
     }
 }

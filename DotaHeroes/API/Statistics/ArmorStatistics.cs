@@ -45,31 +45,31 @@ namespace DotaHeroes.API.Statistics
 
         public decimal GetBaseArmor(decimal agility)
         {
-            return (BaseArmor + (agility / 6)) * (1 - GetNegativeArmorFromModifiers() / 10) + GetArmorFromModifiers();
+            return (BaseArmor + (agility / 6)) * (1 - GetNegativeArmorFromModifiers() / 10);
         }
 
         public decimal GetArmorFromModifiers()
         {
-            float result = 0;
+            decimal result = 0;
 
             foreach (var armor in ArmorModifiers)
             {
                 result += armor.Armor;
             }
 
-            return (decimal)result;
+            return result;
         }
 
         public decimal GetNegativeArmorFromModifiers()
         {
-            float result = 0;
+            decimal result = 0;
 
             foreach (var negativeArmor in NegativeArmorModifiers)
             {
                 result += negativeArmor.NegativeArmor;
             }
 
-            return (decimal)result;
+            return result;
         }
 
         public override string ToString()
@@ -79,6 +79,13 @@ namespace DotaHeroes.API.Statistics
 
         public string ToString(decimal agility)
         {
+            var armor = GetArmorFromModifiers();
+
+            if (armor > 0)
+            {
+                return $"Armor: {Math.Round(GetBaseArmor(agility))} + <color=green>{armor}</color>";
+            }
+
             return $"Armor: {Math.Round(GetBaseArmor(agility))}";
         }
     }

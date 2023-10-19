@@ -20,11 +20,11 @@ using Hero = DotaHeroes.API.Features.Hero;
 
 namespace DotaHeroes.API.Abilities.Pudge
 {
-    [CommandHandler(typeof(ClientCommandHandler))]
-    [CommandHandler(typeof(RemoteAdminCommandHandler))]
     public class Rot : ToggleAbility, ILevelValues, IDamage
     {
         public override string Name => "Rot";
+
+        public override string Slug => "rot";
 
         public override string Description => "A toxic cloud that deals intense damage and slows movement--harming not only enemy units but Pudge himself.";
 
@@ -34,19 +34,19 @@ namespace DotaHeroes.API.Abilities.Pudge
 
         public override TargetType TargetType => TargetType.None;
 
-        public override bool IsActive { get; set; }
-
-        public Dictionary<string, List<float>> Values => Plugin.Instance.Config.Abilites["rot"].Values;
+        public Dictionary<string, List<decimal>> Values { get; } = Plugin.Instance.Config.Abilites["rot"].Values;
 
         public int MaxLevel { get; set; } = 4;
 
         public int MinLevel { get; set; } = 0;
 
-        public IReadOnlyList<int> HeroLevelToLevelUp { get; set; } = new List<int>();
+        public IReadOnlyList<int> HeroLevelToLevelUp { get; set; } = Features.Utils.EmptyLevelsList;
 
         public decimal Damage { get; set; }
 
         public DamageType DamageType { get; set; }
+
+        public static string SoundsPath = Plugin.Instance.SoundsPath + "\\pudge\\rot";
 
         public Rot() : base()
         {
@@ -71,6 +71,7 @@ namespace DotaHeroes.API.Abilities.Pudge
             decorateRot.AdminToyBase.gameObject.AddComponent<RotDecorateObject>().Initialize(hero);
 
             hero.Values["decorate_rot"] = decorateRot;
+            hero.Values["audio_rot"] = Audio.Play(hero.Player.Position, SoundsPath + "\\rot.ogg", 100f, true, hero.Player);
 
             Timing.RunCoroutine(RotCoroutine(hero));
 
@@ -82,11 +83,11 @@ namespace DotaHeroes.API.Abilities.Pudge
         {
             hero.Values["is_rot"] = false;
             NetworkServer.Destroy((hero.Values["decorate_rot"] as Primitive).AdminToyBase.gameObject);
+            Audio.StopLoop(hero.Values["audio_rot"] as Player);
 
             response = "Rot is disabled";
             return true;
         }
-
 
         public override void LevelUp(Hero hero)
         {

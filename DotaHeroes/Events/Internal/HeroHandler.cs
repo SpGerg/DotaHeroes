@@ -1,4 +1,5 @@
-﻿using DotaHeroes.API.Events.EventArgs.Hero;
+﻿using DotaHeroes.API.Effects;
+using DotaHeroes.API.Events.EventArgs.Hero;
 using DotaHeroes.API.Features;
 using DotaHeroes.API.Interfaces;
 using Exiled.API.Features;
@@ -17,7 +18,7 @@ namespace DotaHeroes.Events.Internal
         {
             var damageBlockType = typeof(IDamageBlock);
 
-            var damageBlocks = ev.Hero.GetEffects().Where(effect => damageBlockType.IsAssignableFrom(effect.GetType()));
+            var damageBlocks = ev.Hero.GetEffects().Where(effect => damageBlockType.IsAssignableFrom(effect.GetType())); //For some reason, checking "effect is IDamageBlock" is not work.
 
             decimal total_damage = ev.Damage;
 
@@ -46,6 +47,13 @@ namespace DotaHeroes.Events.Internal
                     return;
                 }
             }
+        }
+        
+        internal static void Silence(HeroExecutingAbilityEventArgs ev)
+        {
+            if (!ev.Hero.TryGetEffect(out Silence effect)) return;
+
+            ev.IsAllowed = false;
         }
 
         internal static void UpdateHudOnTakedDamage(HeroTakedDamageEventArgs ev)

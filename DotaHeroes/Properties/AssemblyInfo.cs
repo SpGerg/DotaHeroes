@@ -6,13 +6,13 @@ using System.Runtime.InteropServices;
 // набора атрибутов. Измените значения этих атрибутов для изменения сведений,
 // связанные со сборкой.
 [assembly: AssemblyTitle("DotaHeroes")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("Da")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("SpGerg")]
 [assembly: AssemblyProduct("DotaHeroes")]
-[assembly: AssemblyCopyright("Copyright ©  2023")]
-[assembly: AssemblyTrademark("")]
-[assembly: AssemblyCulture("")]
+[assembly: AssemblyCopyright("Copyright ©Pelmeni  2023")]
+[assembly: AssemblyTrademark("Lol")]
+[assembly: AssemblyCulture("")] //this is thing makes errors lol
 
 // Установка значения False для параметра ComVisible делает типы в этой сборке невидимыми
 // для компонентов COM. Если необходимо обратиться к типу в этой сборке через

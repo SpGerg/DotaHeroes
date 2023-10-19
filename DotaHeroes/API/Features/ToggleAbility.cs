@@ -11,26 +11,16 @@ using static UnityEngine.UI.GridLayoutGroup;
 
 namespace DotaHeroes.API.Features
 {
-    public abstract class ToggleAbility : Ability, ICommand
+    public abstract class ToggleAbility : Ability
     {
-        public virtual string Command { get; }
-
-        public virtual string[] Aliases { get; } = Array.Empty<string>();
-
         public virtual string Desciption { get; }
 
-        public abstract bool IsActive { get; set; }
+        public bool IsActive { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ToggleAbility" /> class.
         /// </summary>
-        public ToggleAbility() : base()
-        {
-            if (string.IsNullOrEmpty(Command))
-            {
-                Command = Name.Replace(" ", "").ToLower();
-            }
-        }
+        public ToggleAbility() : base() { }
 
         /// <summary>
         /// Activate
@@ -45,42 +35,42 @@ namespace DotaHeroes.API.Features
         /// <summary>
         /// Base ability execute
         /// </summary>
-        public bool Execute(Hero hero, ArraySegment<string> arguments, out string response)
+        public virtual bool CheckAndExecute(Hero hero, ArraySegment<string> arguments, out string response)
         {
-            IsActive = !IsActive;
-
-            if (IsActive)
-            {
-                return Activate(hero, arguments, out response);
-            }
-            else
-            {
-                return Deactivate(hero, arguments, out response);
-            }
-        }
-
-        /// <summary>
-        /// Execute
-        /// </summary>
-        public bool Execute(ArraySegment<string> arguments, ICommandSender sender, out string response)
-        {
-            if (!base.Execute(sender, out response, out Hero hero, true))
+            if (!base.Execute(hero, out response, true))
             {
                 return false;
             }
 
-            IsActive = !IsActive;
+            //if (!CheckCooldown(hero, out response, out CooldownInfo cooldown))
+            //{
+                //return false;
+            //}
 
-            CheckAndRunCooldown(hero, out string _);
+            IsActive = !IsActive;
 
             if (IsActive)
             {
-                return Activate(hero, arguments, out response);
+                if (!Activate(hero, arguments, out response))
+                {
+                    return false;
+                }
             }
             else
             {
-                return Deactivate(hero, arguments, out response);
+                if (!Deactivate(hero, arguments, out response))
+                {
+                    return false;
+                }
             }
+
+            RunCooldown(hero, default);
+            return true;
+        }
+
+        public string ToStringIsActive()
+        {
+            return IsActive == true ? "Enabled" : "Disabled";
         }
     }
 }

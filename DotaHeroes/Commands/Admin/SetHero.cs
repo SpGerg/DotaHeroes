@@ -1,5 +1,6 @@
 ﻿using CommandSystem;
 using DotaHeroes.API.Extensions;
+using DotaHeroes.API.Features;
 using Exiled.API.Features;
 using NorthwoodLib.Pools;
 using System;
@@ -28,14 +29,14 @@ namespace DotaHeroes.Commands.Admin
 
                 foreach (var hero in API.API.GetRegisteredHeroes())
                 {
-                    stringBuilder.AppendLine(hero.Key);
+                    stringBuilder.AppendLine(hero.Value.Slug);
                 }
 
                 response = StringBuilderPool.Shared.ToStringReturn(stringBuilder);
                 return false;
             }
 
-            var registeredHero = API.API.GetRegisteredHeroOrDefault(arguments.Array[2]);
+            var registeredHero = API.API.GetRegisteredHeroOrDefaultBySlug(arguments.Array[2]);
 
             if (registeredHero == default)
             {

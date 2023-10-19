@@ -36,14 +36,22 @@ namespace DotaHeroes.Events.Internal
             {
                 var _hero = player.SetHero(hero);
 
-                Log.Info($"Player {player.Nickname} hero is {hero.HeroName}");
+                if (_hero == default)
+                {
+                    return;
+                }
+
+                _hero.SideType = API.Features.Utils.GetRandomSide();
+
+                Log.Info($"Player {player.Nickname} hero is {hero.HeroName}, side is {_hero.SideType}");
 
                 Hud.Update(_hero);
             }
-            else if (!hero.ChangeRoles.Contains(ev.NewRole) && hero != default)
-            {
-                player.RemoveHero();
-            }
+        }
+
+        internal static void RemoveHero(LeftEventArgs ev)
+        {
+            ev.Player.RemoveHero();
         }
     }
 }
