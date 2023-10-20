@@ -1,11 +1,5 @@
-﻿using DotaHeroes.API.Events.EventArgs;
-using DotaHeroes.API.Events.EventArgs.Hero;
+﻿using DotaHeroes.API.Events.EventArgs.Hero;
 using Exiled.Events.Features;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DotaHeroes.API.Events.Handlers
 {

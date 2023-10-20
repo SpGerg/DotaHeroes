@@ -1,11 +1,6 @@
 ﻿using DotaHeroes.API.Features;
 using Exiled.API.Features;
-using NorthwoodLib.Pools;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DotaHeroes.Commands.Admin
 {

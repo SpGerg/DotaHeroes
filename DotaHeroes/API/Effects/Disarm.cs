@@ -1,14 +1,10 @@
 ﻿using DotaHeroes.API.Enums;
 using DotaHeroes.API.Features;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using DotaHeroes.API.Interfaces;
 
 namespace DotaHeroes.API.Effects
 {
-    public class Disarm : Effect
+    public class Disarm : Effect, IEffectDuration
     {
         public override string Name => "Disarm";
 

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DotaHeroes.API.Enums
+﻿namespace DotaHeroes.API.Enums
 {
     ///<summary>Target type</summary>
     public enum TargetType

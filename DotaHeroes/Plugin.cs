@@ -1,12 +1,5 @@
-﻿using DotaHeroes.API;
-using DotaHeroes.API.Features;
-using DotaHeroes.Events.Internal;
+﻿using DotaHeroes.Events.Internal;
 using Exiled.API.Features;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Player = Exiled.Events.Handlers.Player;
 using Hero = DotaHeroes.API.Events.Handlers.Hero;
 using DotaHeroes.API.Heroes;

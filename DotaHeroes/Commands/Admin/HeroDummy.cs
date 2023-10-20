@@ -1,13 +1,7 @@
-﻿using CommandSystem;
-using DotaHeroes.API.Extensions;
-using DotaHeroes.API.Features.Components;
+﻿using DotaHeroes.API.Extensions;
 using Exiled.API.Extensions;
 using Exiled.API.Features;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DotaHeroes.Commands.Admin
 {
