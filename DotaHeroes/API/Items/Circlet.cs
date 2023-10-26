@@ -14,13 +14,13 @@ namespace DotaHeroes.API.Items
 
         public override string Lore => "circlet is circlet";
 
-        public override Ability MainAbility { get; } = API.GetAbilityOrDefaultBySlug("circlet");
+        public override Ability MainAbility { get; } = DTAPI.GetAbilityOrDefaultBySlug(Plugin.Instance.Config.Items["circlet"].Ability);
 
         public override List<Ability> Passives { get; } = Ability.ToAbilitiesFromStringList(Plugin.Instance.Config.Items["circlet"].Passives);
 
-        public override IReadOnlyList<Item> Ingredients => GetItemsFromStringList(Plugin.Instance.Config.Items["circlet"].Ingredients);
+        public override IReadOnlyList<Item> Ingredients { get; } = GetItemsFromStringList(Plugin.Instance.Config.Items["circlet"].Ingredients);
 
-        public override IReadOnlyList<Item> ItemsFromThisItem => GetItemsFromStringList(Plugin.Instance.Config.Items["circlet"].ItemsFromThisItems);
+        public override IReadOnlyList<Item> ItemsFromThisItem { get; } = GetItemsFromStringList(Plugin.Instance.Config.Items["circlet"].ItemsFromThisItems);
 
         public override IReadOnlyDictionary<StatisticsType, Value> Statistics { get; } = Plugin.Instance.Config.Items["circlet"].Statistics;
 

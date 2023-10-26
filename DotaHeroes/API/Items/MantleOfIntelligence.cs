@@ -14,7 +14,7 @@ namespace DotaHeroes.API.Items
 
         public override string Lore => "mantle_of_intelligence is mantle_of_intelligence";
 
-        public override Ability MainAbility { get; } = API.GetAbilityOrDefaultBySlug("mantle_of_intelligence");
+        public override Ability MainAbility { get; } = DTAPI.GetAbilityOrDefaultBySlug(Plugin.Instance.Config.Items["mantle_of_intelligence"].Ability);
 
         public override List<Ability> Passives { get; } = Ability.ToAbilitiesFromStringList(Plugin.Instance.Config.Items["mantle_of_intelligence"].Passives);
 

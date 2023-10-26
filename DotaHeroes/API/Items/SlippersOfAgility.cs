@@ -14,13 +14,13 @@ namespace DotaHeroes.API.Items
 
         public override string Lore => "slippers_of_agility is slippers_of_agility";
 
-        public override Ability MainAbility { get; } = API.GetAbilityOrDefaultBySlug("slippers_of_agility");
+        public override Ability MainAbility { get; } = DTAPI.GetAbilityOrDefaultBySlug(Plugin.Instance.Config.Items["slippers_of_agility"].Ability);
 
         public override List<Ability> Passives { get; } = Ability.ToAbilitiesFromStringList(Plugin.Instance.Config.Items["slippers_of_agility"].Passives);
 
-        public override IReadOnlyList<Item> Ingredients => GetItemsFromStringList(Plugin.Instance.Config.Items["slippers_of_agility"].Ingredients);
+        public override IReadOnlyList<Item> Ingredients { get; } = GetItemsFromStringList(Plugin.Instance.Config.Items["slippers_of_agility"].Ingredients);
 
-        public override IReadOnlyList<Item> ItemsFromThisItem => GetItemsFromStringList(Plugin.Instance.Config.Items["slippers_of_agility"].ItemsFromThisItems);
+        public override IReadOnlyList<Item> ItemsFromThisItem { get; } = GetItemsFromStringList(Plugin.Instance.Config.Items["slippers_of_agility"].ItemsFromThisItems);
 
         public override IReadOnlyDictionary<StatisticsType, Value> Statistics { get; } = Plugin.Instance.Config.Items["slippers_of_agility"].Statistics;
 

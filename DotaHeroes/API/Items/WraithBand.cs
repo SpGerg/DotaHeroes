@@ -14,7 +14,7 @@ namespace DotaHeroes.API.Items
 
         public override string Lore => "Pelmeni";
 
-        public override Ability MainAbility { get; } = API.GetAbilityOrDefaultBySlug("wraith_band");
+        public override Ability MainAbility { get; } = DTAPI.GetAbilityOrDefaultBySlug(Plugin.Instance.Config.Items["wraith_band"].Ability);
 
         public override List<Ability> Passives { get; } = Ability.ToAbilitiesFromStringList(Plugin.Instance.Config.Items["wraith_band"].Passives);
 

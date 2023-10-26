@@ -1,11 +1,14 @@
-﻿namespace DotaHeroes.API.Enums
+﻿using System;
+
+namespace DotaHeroes.API.Enums
 {
     ///<summary>Ability type</summary>
+    [Flags]
     public enum AbilityType
     {
-        None = 0,
-        Active = 1,
-        Passive = 2,
-        Toggle = 3
+        None = 1,
+        Active = 2,
+        Passive = 4,
+        Toggle = 8
     }
 }

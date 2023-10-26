@@ -14,7 +14,7 @@ namespace DotaHeroes.API.Items
 
         public override string Lore => "Bracer";
 
-        public override Ability MainAbility { get; } = API.GetAbilityOrDefaultBySlug("bracer");
+        public override Ability MainAbility { get; } = DTAPI.GetAbilityOrDefaultBySlug(Plugin.Instance.Config.Items["bracer"].Ability);
 
         public override List<Ability> Passives { get; } = Ability.ToAbilitiesFromStringList(Plugin.Instance.Config.Items["bracer"].Passives);
 

@@ -8,6 +8,8 @@ namespace DotaHeroes.API.Effects
     {
         public override string Name => "Silence";
 
+        public override string Slug => "silence";
+
         public override string Description { get; protected set; } = "Silence";
 
         public override EffectClassType EffectClassType => EffectClassType.Negative;

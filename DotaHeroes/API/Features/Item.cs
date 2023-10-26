@@ -1,5 +1,7 @@
 ﻿using DotaHeroes.API.Enums;
+using NorthwoodLib.Pools;
 using System.Collections.Generic;
+using System.Text;
 
 namespace DotaHeroes.API.Features
 {
@@ -72,7 +74,7 @@ namespace DotaHeroes.API.Features
 
             foreach (var item in items)
             {
-                var _item = API.GetItemOrDefaultBySlug(item);
+                var _item = DTAPI.GetItemOrDefaultBySlug(item);
 
                 if (_item == default) continue;
 
@@ -80,6 +82,29 @@ namespace DotaHeroes.API.Features
             }
 
             return result;
+        }
+
+        /// <summary>
+        /// To string hud.
+        /// </summary>
+        public virtual string ToStringHud(Hero hero)
+        {
+            StringBuilder stringBuilder = StringBuilderPool.Shared.Rent();
+            stringBuilder.AppendLine("Name: " + Name);
+
+            var cooldown = Cooldowns.GetCooldown(hero.Player.Id, Slug);
+
+            if (cooldown != default)
+            {
+                stringBuilder.AppendLine("Cooldown: " + cooldown.Cooldown);
+            }
+
+            if (MainAbility != null && MainAbility is ToggleAbility toggleAbility)
+            {
+                stringBuilder.AppendLine("Active: " + toggleAbility.ToStringIsActive());
+            }
+
+            return StringBuilderPool.Shared.ToStringReturn(stringBuilder);
         }
 
         public abstract Item Create(Hero owner);

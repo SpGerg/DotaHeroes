@@ -14,7 +14,7 @@ namespace DotaHeroes.API.Items
 
         public override string Lore => "Helm of iron will";
 
-        public override Ability MainAbility { get; } = API.GetAbilityOrDefaultBySlug("helm_of_iron_will");
+        public override Ability MainAbility { get; } = DTAPI.GetAbilityOrDefaultBySlug(Plugin.Instance.Config.Items["helm_of_iron_will"].Ability);
 
         public override List<Ability> Passives { get; } = Ability.ToAbilitiesFromStringList(Plugin.Instance.Config.Items["helm_of_iron_will"].Passives);
 

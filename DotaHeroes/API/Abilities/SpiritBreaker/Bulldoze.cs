@@ -1,4 +1,5 @@
-﻿using DotaHeroes.API.Enums;
+﻿using DotaHeroes.API.Abilities.Items;
+using DotaHeroes.API.Enums;
 using DotaHeroes.API.Features;
 using DotaHeroes.API.Interfaces;
 using System;
@@ -40,6 +41,11 @@ namespace DotaHeroes.API.Abilities.SpiritBreaker
 
             response = "Bulldoze has been activated.";
             return true;
+        }
+
+        public override Ability Create()
+        {
+            return new Bulldoze();
         }
     }
 }

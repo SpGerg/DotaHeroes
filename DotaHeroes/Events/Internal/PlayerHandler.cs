@@ -24,14 +24,13 @@ namespace DotaHeroes.Events.Internal
         internal static void SetHero(ChangingRoleEventArgs ev)
         {
             var player = ev.Player;
-            var hero = API.API.GetRegisteredHeroes().GetRandomValue().Value;
-
-            if (ev.NewRole is RoleTypeId.Spectator && hero != default)
-            {
-                GameObject.Destroy(hero.HeroController);
-                return;
-            }
+            var hero = DTAPI.GetRegisteredHeroes().GetRandomValue().Value;
             
+            foreach (var role in hero.ChangeRoles)
+            {
+                Log.Info(role);
+            }
+
             if (hero.ChangeRoles.Contains(ev.NewRole))
             {
                 var _hero = player.SetHero(hero);

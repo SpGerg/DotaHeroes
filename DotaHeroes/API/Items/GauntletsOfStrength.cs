@@ -14,7 +14,7 @@ namespace DotaHeroes.API.Items
 
         public override string Lore => "gauntlets_of_strength is gauntlets_of_strength";
 
-        public override Ability MainAbility { get; } = API.GetAbilityOrDefaultBySlug("gauntlets_of_strength");
+        public override Ability MainAbility { get; } = DTAPI.GetAbilityOrDefaultBySlug(Plugin.Instance.Config.Items["gauntlets_of_strength"].Ability);
 
         public override List<Ability> Passives { get; } = Ability.ToAbilitiesFromStringList(Plugin.Instance.Config.Items["gauntlets_of_strength"].Passives);
 

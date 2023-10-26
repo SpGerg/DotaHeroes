@@ -10,7 +10,7 @@ namespace DotaHeroes.API.Features
         /// </summary>
         public static void Update()
         {
-            foreach (var hero in API.GetHeroes().Values)
+            foreach (var hero in DTAPI.GetHeroes().Values)
             {
                 Update(hero);
             }
@@ -21,45 +21,26 @@ namespace DotaHeroes.API.Features
         /// </summary>
         public static void Update(Hero hero)
         {
-            if (hero == null) return;
-            if (hero.IsHeroDead) return;
+            if (hero == null || hero.Player == null || hero.IsHeroDead) return;
 
             var player = hero.Player;
             var abilites = StringBuilderPool.Shared.Rent();
 
             foreach (var ability in hero.Abilities)
             {
-                abilites.AppendLine(ability.Name);
-
-                if (ability is ActiveAbility or PassiveAbility)
-                {
-                    abilites.AppendLine("Cooldown: " + Cooldowns.ToStringIsCooldown(hero.Player.Id, ability.Slug));
-                }
-                else if (ability is ToggleAbility passiveAbility)
-                {
-                    abilites.AppendLine("- " + passiveAbility.ToStringIsActive());
-                }
+                abilites.AppendLine(ability.ToStringHud(hero));
             }
 
             var index = 0;
 
             foreach (var item in hero.Inventory.GetItems())
             {
-                abilites.AppendLine($"{index}: {item.Name}");
-
-                if (item.MainAbility is ActiveAbility or PassiveAbility)
-                {
-                    abilites.AppendLine("Cooldown: " + Cooldowns.ToStringIsCooldown(hero.Player.Id, item.Slug));
-                }
-                else if (item.MainAbility is ToggleAbility passiveAbility)
-                {
-                    abilites.AppendLine("- " + passiveAbility.ToStringIsActive());
-                }
+                abilites.AppendLine($"{index}: {item.ToStringHud(hero)}");
 
                 index++;
             }
 
-            player.ShowHint($"<pos=0%><size=16><align=Left>{hero}</align></size><size=12><align=Right>{StringBuilderPool.Shared.ToStringReturn(abilites)}</align></size>", short.MaxValue);
+            player.ShowHint($"<pos=0><size=16><align=Left>{hero}</align></size></pos><size=12><align=Right>{StringBuilderPool.Shared.ToStringReturn(abilites)}</align></size>", short.MaxValue);
         }
 
         /// <summary>

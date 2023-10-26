@@ -36,9 +36,9 @@ namespace DotaHeroes.API.Extensions
 
         public static bool RemoveHero(this Player player)
         {
-            if (player.IsAudio())
+            if (player == null || player.IsAudio())
             {
-                return default;
+                return false;
             }
 
             HeroController heroController = player.GameObject.GetComponent<HeroController>();
@@ -58,7 +58,7 @@ namespace DotaHeroes.API.Extensions
 
             GameObject.Destroy(heroController);
 
-            API.SetOrAddPlayer(player.Id, default);
+            DTAPI.SetOrAddPlayer(player.Id, default);
 
             Hud.Clear(player);
 

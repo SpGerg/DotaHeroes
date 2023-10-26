@@ -1,4 +1,5 @@
 ﻿using CustomPlayerEffects;
+using DotaHeroes.API.Abilities.Items;
 using DotaHeroes.API.Effects;
 using DotaHeroes.API.Enums;
 using DotaHeroes.API.Features;
@@ -22,7 +23,7 @@ namespace DotaHeroes.API.Abilities.Pudge
 
         public override AbilityType AbilityType => AbilityType.Active;
 
-        public override TargetType TargetType => TargetType.ToFriendAndEnemy;
+        public override TargetType TargetType => TargetType.ToEnemy | TargetType.ToFriend;
 
         public Dictionary<string, List<decimal>> Values { get; } = Plugin.Instance.Config.Abilites["dismember"].Values;
 
@@ -113,6 +114,11 @@ namespace DotaHeroes.API.Abilities.Pudge
 
                 yield return Timing.WaitForSeconds(0.5f);
             }
+        }
+
+        public override Ability Create()
+        {
+            return new Dismember();
         }
     }
 }

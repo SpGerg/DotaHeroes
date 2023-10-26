@@ -1,4 +1,5 @@
-﻿using DotaHeroes.API.Enums;
+﻿using CustomPlayerEffects;
+using DotaHeroes.API.Enums;
 using DotaHeroes.API.Features;
 using DotaHeroes.API.Modifiers;
 using Exiled.API.Features;
@@ -106,7 +107,7 @@ namespace DotaHeroes.API.Statistics
             Speed = new SpeedStatistics();
         }
 
-        public HeroStatistics(Features.Hero hero, AttributeType attribute)
+        public HeroStatistics(Hero hero, AttributeType attribute)
         {
             AttributeType = attribute;
             HealthAndMana = new HealthAndManaStatistics();
@@ -153,70 +154,79 @@ namespace DotaHeroes.API.Statistics
         {
             foreach (var value in statistics)
             {
-                //im dont know how im can make it better
-                switch (value.Key)
-                {
-                    case StatisticsType.Strength:
-                        Strength += GetValue(value.Value.CoolValue, Strength, value.Value.IsPercent, isReduce);
-                        break;
-                    case StatisticsType.Agility:
-                        Agility += GetValue(value.Value.CoolValue, Agility, value.Value.IsPercent, isReduce);
-                        break;
-                    case StatisticsType.Intelligence:
-                        Intelligence += GetValue(value.Value.CoolValue, Intelligence, value.Value.IsPercent, isReduce);
-                        break;
-                    case StatisticsType.AllAttributes:
-                        Strength += GetValue(value.Value.CoolValue, Strength, value.Value.IsPercent, isReduce);
-                        Agility += GetValue(value.Value.CoolValue, Agility, value.Value.IsPercent, isReduce);
-                        Intelligence += GetValue(value.Value.CoolValue, Intelligence, value.Value.IsPercent, isReduce);
-                        break;
-                    case StatisticsType.Health:
-                        HealthAndMana.Health += GetValue(value.Value.CoolValue, HealthAndMana.Health, value.Value.IsPercent, isReduce);
-                        break;
-                    case StatisticsType.Mana:
-                        HealthAndMana.Mana += GetValue(value.Value.CoolValue, HealthAndMana.Mana, value.Value.IsPercent, isReduce);
-                        break;
-                    case StatisticsType.HealthRegeneration:
-                        HealthAndMana.HealthRegeneration += GetValue(value.Value.CoolValue, HealthAndMana.Health, value.Value.IsPercent, isReduce);
-                        break;
-                    case StatisticsType.ManaRegeneration:
-                        HealthAndMana.ManaRegeneration += GetValue(value.Value.CoolValue, HealthAndMana.Mana, value.Value.IsPercent, isReduce);
-                        break;
-                    case StatisticsType.ExtraAttackDamage:
-                        Attack.ExtraAttackDamage += (int)GetValue(value.Value.CoolValue, Attack.ExtraAttackDamage, value.Value.IsPercent, isReduce);
-                        break;
-                    case StatisticsType.BaseAttackDamage:
-                        Attack.AttackDamage += (int)GetValue(value.Value.CoolValue, Attack.AttackDamage, value.Value.IsPercent, isReduce);
-                        break;
-                    case StatisticsType.Accuracy:
-                        if (Evasion.AccuracyModifier.Accuracy > value.Value.CoolValue) return;
-                        Evasion.AccuracyModifier.Accuracy = GetValue(value.Value.CoolValue, Evasion.AccuracyModifier.Accuracy, value.Value.IsPercent, isReduce);
-                        break;
-                    case StatisticsType.Armor:
-                        Armor.ArmorModifiers.Add(new ArmorModifier(
-                            GetValue(value.Value.CoolValue, Armor.GetBaseArmor(Agility), value.Value.IsPercent, isReduce)));
-                        break;
-                    case StatisticsType.Blind:
-                        Evasion.BlindModifiers.Add(new BlindModifier(
-                            GetValue(value.Value.CoolValue, Evasion.GetBlind(), value.Value.IsPercent, isReduce)));
-                        break;
-                    case StatisticsType.Evasion:
-                        Evasion.EvasionModifiers.Add(new EvasionModifier(
-                            GetValue(value.Value.CoolValue, Evasion.GetEvasion(), value.Value.IsPercent, isReduce)));
-                        break;
-                    case StatisticsType.NegativeArmor:
-                        Armor.NegativeArmorModifiers.Add(new NegativeArmorModifier(
-                            GetValue(value.Value.CoolValue, Armor.GetNegativeArmorFromModifiers(), value.Value.IsPercent, isReduce)));
-                        break;
-                    case StatisticsType.MagicResistance:
-                        Resistance.ResistanceModifiers.Add(new ResistanceModifier(
-                            GetValue(value.Value.CoolValue, Resistance.GetMagicResistance(Intelligence), value.Value.IsPercent, isReduce), 0));
-                        break;
-                    case StatisticsType.EffectResistance:
-                        Resistance.ResistanceModifiers.Add(new ResistanceModifier(0,
-                            GetValue(value.Value.CoolValue, Resistance.GetEffectResistance(), value.Value.IsPercent, isReduce)));
-                        break;
-                }
+                AddOrReduceStatistic(value.Key, value.Value, isReduce);
+            }
+        }
+
+        public virtual void AddOrReduceStatistic(StatisticsType statisticsType, Value value, bool isReduce)
+        {
+            //im dont know how im can make it better
+            switch (statisticsType)
+            {
+                case StatisticsType.Strength:
+                    Strength += GetValue(value.CoolValue, Strength, value.IsPercent, isReduce);
+                    break;
+                case StatisticsType.Agility:
+                    Agility += GetValue(value.CoolValue, Agility, value.IsPercent, isReduce);
+                    break;
+                case StatisticsType.Intelligence:
+                    Intelligence += GetValue(value.CoolValue, Intelligence, value.IsPercent, isReduce);
+                    break;
+                case StatisticsType.AllAttributes:
+                    Strength += GetValue(value.CoolValue, Strength, value.IsPercent, isReduce);
+                    Agility += GetValue(value.CoolValue, Agility, value.IsPercent, isReduce);
+                    Intelligence += GetValue(value.CoolValue, Intelligence, value.IsPercent, isReduce);
+                    break;
+                case StatisticsType.Health:
+                    HealthAndMana.MaximumHealth += GetValue(value.CoolValue, HealthAndMana.MaximumHealth, value.IsPercent, isReduce);
+                    break;
+                case StatisticsType.Mana:
+                    HealthAndMana.MaximumMana += GetValue(value.CoolValue, HealthAndMana.MaximumMana, value.IsPercent, isReduce);
+                    break;
+                case StatisticsType.HealthRegeneration:
+                    HealthAndMana.HealthRegeneration += GetValue(value.CoolValue, HealthAndMana.Health, value.IsPercent, isReduce);
+                    break;
+                case StatisticsType.ManaRegeneration:
+                    HealthAndMana.ManaRegeneration += GetValue(value.CoolValue, HealthAndMana.Mana, value.IsPercent, isReduce);
+                    break;
+                case StatisticsType.ExtraAttackDamage:
+                    Attack.ExtraAttackDamage += (int)GetValue(value.CoolValue, Attack.ExtraAttackDamage, value.IsPercent, isReduce);
+                    break;
+                case StatisticsType.BaseAttackDamage:
+                    Attack.AttackDamage += (int)GetValue(value.CoolValue, Attack.AttackDamage, value.IsPercent, isReduce);
+                    break;
+                case StatisticsType.Speed:
+                    Speed.Speed += (sbyte)GetValue(value.CoolValue, Speed.Speed, value.IsPercent, isReduce);
+                    break;
+                case StatisticsType.Accuracy:
+                    if (Evasion.AccuracyModifier.Accuracy > value.CoolValue) return;
+                    Evasion.AccuracyModifier.Accuracy = GetValue(value.CoolValue, Evasion.AccuracyModifier.Accuracy, value.IsPercent, isReduce);
+                    break;
+                case StatisticsType.Armor:
+                    Armor.ArmorModifiers.Add(new ArmorModifier(
+                        GetValue(value.CoolValue, Armor.GetBaseArmor(Agility), value.IsPercent, isReduce)));
+                    break;
+                case StatisticsType.Blind:
+                    Evasion.BlindModifiers.Add(new BlindModifier(
+                        GetValue(value.CoolValue, Evasion.GetBlind(), value.IsPercent, isReduce)));
+                    break;
+                case StatisticsType.Evasion:
+                    Evasion.EvasionModifiers.Add(new EvasionModifier(
+                        GetValue(value.CoolValue, Evasion.GetEvasion(), value.IsPercent, isReduce)));
+                    break;
+                case StatisticsType.NegativeArmor:
+                    Armor.NegativeArmorModifiers.Add(new NegativeArmorModifier(
+                        GetValue(value.CoolValue, Armor.GetNegativeArmorFromModifiers(), value.IsPercent, isReduce)));
+                    break;
+                case StatisticsType.MagicResistance:
+                    Resistance.ResistanceModifiers.Add(new ResistanceModifier(
+                        GetValue(value.CoolValue, Resistance.GetMagicResistance(Intelligence), value.IsPercent, isReduce), 0));
+                    break;
+                case StatisticsType.EffectResistance:
+                    Resistance.ResistanceModifiers.Add(new ResistanceModifier(0,
+                        GetValue(value.CoolValue, Resistance.GetEffectResistance(), value.IsPercent, isReduce)));
+                    break;
+
             }
         }
 
@@ -271,8 +281,6 @@ namespace DotaHeroes.API.Statistics
             {
                 total_value = -total_value;
             }
-
-            Log.Info(total_value);
 
             return total_value;
         }

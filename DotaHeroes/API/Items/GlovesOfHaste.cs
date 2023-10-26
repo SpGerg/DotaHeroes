@@ -14,15 +14,15 @@ namespace DotaHeroes.API.Items
 
         public override string Lore => "Gloves of haste";
 
-        public override Ability MainAbility { get; } = API.GetAbilityOrDefaultBySlug("gloves_of_haste");
+        public override Ability MainAbility { get; } = DTAPI.GetAbilityOrDefaultBySlug(Plugin.Instance.Config.Items["gloves_of_haste"].Ability);
 
         public override List<Ability> Passives { get; } = Ability.ToAbilitiesFromStringList(Plugin.Instance.Config.Items["gloves_of_haste"].Passives);
 
-        public override IReadOnlyList<Item> Ingredients => GetItemsFromStringList(Plugin.Instance.Config.Items["gloves_of_haste"].Ingredients);
+        public override IReadOnlyList<Item> Ingredients { get; } = GetItemsFromStringList(Plugin.Instance.Config.Items["gloves_of_haste"].Ingredients);
 
-        public override IReadOnlyList<Item> ItemsFromThisItem => GetItemsFromStringList(Plugin.Instance.Config.Items["gloves_of_haste"].ItemsFromThisItems);
+        public override IReadOnlyList<Item> ItemsFromThisItem { get; } = GetItemsFromStringList(Plugin.Instance.Config.Items["gloves_of_haste"].ItemsFromThisItems);
 
-        public override IReadOnlyDictionary<StatisticsType, Value> Statistics { get; } = Plugin.Instance.Config.Items["helm_of_iron_will"].Statistics;
+        public override IReadOnlyDictionary<StatisticsType, Value> Statistics { get; } = Plugin.Instance.Config.Items["gloves_of_haste"].Statistics;
 
         public override int Cost { get; } = Plugin.Instance.Config.Items["gloves_of_haste"].Cost;
 

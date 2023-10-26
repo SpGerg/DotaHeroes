@@ -1,4 +1,5 @@
-﻿using DotaHeroes.API.Effects.Pudge;
+﻿using DotaHeroes.API.Abilities.Items;
+using DotaHeroes.API.Effects.Pudge;
 using DotaHeroes.API.Enums;
 using DotaHeroes.API.Features;
 using DotaHeroes.API.Interfaces;
@@ -55,6 +56,11 @@ namespace DotaHeroes.API.Abilities.Pudge
             response = "Flesh heap enabled.";
 
             return true;
+        }
+
+        public override Ability Create()
+        {
+            return new FleshHeap();
         }
     }
 }

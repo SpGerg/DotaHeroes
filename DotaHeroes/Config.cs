@@ -4,12 +4,8 @@ using DotaHeroes.API.Features.Serializables;
 using DotaHeroes.API.Statistics;
 using Exiled.API.Interfaces;
 using PlayerRoles;
-using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DotaHeroes
 {
@@ -43,7 +39,7 @@ namespace DotaHeroes
                 },
                 new List<RoleTypeId>
                 {
-
+                    RoleTypeId.Tutorial
                 },
                 HeroClassType.Melee,
                 new HeroStatisticsSerializable()
@@ -65,7 +61,7 @@ namespace DotaHeroes
                     BaseArmor = -1,
                     BaseMagicResistance = ResistanceStatistics.BaseResistance,
                     BaseEffectResistance = 0,
-                    BaseSpeed = 35
+                    BaseSpeed = 15
                 }
             )
             },
@@ -79,7 +75,7 @@ namespace DotaHeroes
                 },
                 new List<RoleTypeId>
                 {
-
+                    RoleTypeId.Tutorial
                 },
                 HeroClassType.Melee,
                 new HeroStatisticsSerializable()
@@ -102,7 +98,7 @@ namespace DotaHeroes
                     BaseArmor = 1,
                     BaseMagicResistance = ResistanceStatistics.BaseResistance,
                     BaseEffectResistance = 0,
-                    BaseSpeed = 45
+                    BaseSpeed = 30
                 }
             )
             },
@@ -184,7 +180,57 @@ namespace DotaHeroes
                     { "cooldown", new List<decimal> { 90, 70, 50 } },
                 }
             )
-            }
+            },
+            { "unholy_strength", new AbilitySerializable(
+                new Dictionary<string, List<decimal>>()
+                {
+                    { "extra_attack_damage", new List<decimal> { 35 } },
+                    { "strength", new List<decimal> { 25 } },
+                    { "armor", new List<decimal> { 4 } }
+                }
+            )
+            },
+            { "switch_attribute", new AbilitySerializable(
+                new Dictionary<string, List<decimal>>()
+                {
+                    { "given", new List<decimal> { 10 } },
+                }
+            )
+            },
+            { "phase", new AbilitySerializable(
+                new Dictionary<string, List<decimal>>()
+                {
+                    { "extra_speed_melee", new List<decimal> { 25 } },
+                    { "extra_speed_ranged", new List<decimal> { 15 } },
+                    { "duration", new List<decimal> { 3 } },
+                    { "cooldown", new List<decimal> { 8 } },
+                }
+            )
+            },
+            { "vanguard_damage_block", new AbilitySerializable(
+                new Dictionary<string, List<decimal>>()
+                {
+                    { "damage_block_melee", new List<decimal> { 64 } },
+                    { "damage_block_ranged", new List<decimal> { 32 } },
+                    { "chance", new List<decimal> { 60 } }
+                }
+            )
+            },
+            { "crystalys_critical_strike", new AbilitySerializable(
+                new Dictionary<string, List<decimal>>()
+                {
+                    { "critical_damage", new List<decimal> { 160 } },
+                    { "chance", new List<decimal> { 30 } }
+                }
+            )
+            },
+            { "buckler_aura", new AbilitySerializable(
+                new Dictionary<string, List<decimal>>()
+                {
+                    { "extra_armor", new List<decimal> { 2 } },
+                }
+            )
+            },
         };
 
         [Description("Items damage, mana cost, cast range and other")]
@@ -290,10 +336,19 @@ namespace DotaHeroes
                 }
             )
             },
-            { "bracer_recipe", new ItemSerializable(210, 210, string.Empty, new List<string>(), new List<string>(),
+            { "bracer_recipe", new ItemSerializable(250, 250, string.Empty, new List<string>(), new List<string>(),
                 new List<string>()
                 {
                     "bracer",
+                },
+                new Dictionary<StatisticsType, Value>()
+                { }
+            )
+            },
+            { "crystalys_recipe", new ItemSerializable(450, 450, string.Empty, new List<string>(), new List<string>(),
+                new List<string>()
+                {
+                    "crystalys",
                 },
                 new Dictionary<StatisticsType, Value>()
                 { }
@@ -317,7 +372,17 @@ namespace DotaHeroes
                 { }
             )
             },
-            { "armlet_of_mordiggian", new ItemSerializable(2500, 1250, string.Empty, new List<string>(),
+            { "buckler_recipe", new ItemSerializable(1950, 975, string.Empty,
+                new List<string>() { },
+                new List<string>() { },
+                new List<string>() 
+                { 
+                    "buckler"
+                },
+                new Dictionary<StatisticsType, Value>() { }
+            )
+            },
+            { "armlet_of_mordiggian", new ItemSerializable(2500, 1250, "unholy_strength", new List<string>(),
                 new List<string>()
                 {
                     "helm_of_iron_will",
@@ -363,10 +428,26 @@ namespace DotaHeroes
                 }
             )
             },
+            { "belt_of_strength", new ItemSerializable(450, 225, string.Empty, new List<string>(),
+                new List<string>()
+                {
+                    
+                },
+                new List<string>()
+                { },
+                new Dictionary<StatisticsType, Value>()
+                {
+                    { StatisticsType.Strength, new Value(6, false) },
+                }
+            )
+            },
             { "blades_of_attack", new ItemSerializable(450, 225, string.Empty, new List<string>(),
                 new List<string>()
                 {
-                    "armlet_of_mordiggian"
+                    "armlet_of_mordiggian",
+                    "power_treads",
+                    "phase_boots",
+                    "crystalyws"
                 },
                 new List<string>()
                 { },
@@ -386,6 +467,155 @@ namespace DotaHeroes
                 new Dictionary<StatisticsType, Value>()
                 {
                     { StatisticsType.ExtraAttackDamage, new Value(9, false) },
+                }
+            )
+            },
+            { "boots_of_speed", new ItemSerializable(1400, 700, string.Empty, new List<string>(),
+                new List<string>() { },
+                new List<string>()
+                {
+                    "power_treads",
+                    "phase_boots"
+                },
+                new Dictionary<StatisticsType, Value>()
+                {
+                    { StatisticsType.Speed, new Value(15, false) },
+                }
+            )
+            },
+            { "power_treads", new ItemSerializable(1400, 700, "switch_attribute", new List<string>(),
+                new List<string>()
+                {
+                     "boots_of_speed",
+                     "belt_of_strength",
+                     "blades_of_attack"
+                },
+                new List<string>() { },
+                new Dictionary<StatisticsType, Value>()
+                {
+                    { StatisticsType.Speed, new Value(35, false) },
+                    { StatisticsType.AttackSpeed, new Value(25, false) },
+                }
+            )
+            },
+            { "chainmail", new ItemSerializable(550, 275, string.Empty, new List<string>(),
+                new List<string>()
+                {
+                },
+                new List<string>()
+                {
+                    "phase_boots"
+                },
+                new Dictionary<StatisticsType, Value>()
+                {
+                    { StatisticsType.Armor, new Value(4, false) }
+                }
+            )
+            },
+            { "phase_boots", new ItemSerializable(1400, 700, "phase", new List<string>(),
+                new List<string>()
+                {
+                     "boots_of_speed",
+                     "chainmail",
+                     "blades_of_attack"
+                },
+                new List<string>() { },
+                new Dictionary<StatisticsType, Value>()
+                {
+                    { StatisticsType.Speed, new Value(45, false) },
+                    { StatisticsType.ExtraAttackDamage, new Value(15, false) },
+                    { StatisticsType.Armor, new Value(4, false) },
+                }
+            )
+            },
+            { "vanguard", new ItemSerializable(1700, 850, string.Empty,
+                new List<string>()
+                {
+                    "vanguard_block_damage"
+                },
+                new List<string>()
+                {
+                     "ring_of_health",
+                     "vitality_booster"
+                },
+                new List<string>() { },
+                new Dictionary<StatisticsType, Value>()
+                {
+                    { StatisticsType.Health, new Value(250, false) },
+                    { StatisticsType.HealthRegeneration, new Value(7, false) }
+                }
+            )
+            },
+            { "vitality_booster", new ItemSerializable(1000, 500, string.Empty, new List<string>(),
+                new List<string>() { },
+                new List<string>()
+                {
+                    "vanguard"
+                },
+                new Dictionary<StatisticsType, Value>()
+                {
+                    { StatisticsType.Health, new Value(250, false) }
+                }
+            )
+            },
+            { "ring_of_health", new ItemSerializable(700, 350, string.Empty, new List<string>(),
+                new List<string>() { },
+                new List<string>()
+                {
+                    "vanguard"
+                },
+                new Dictionary<StatisticsType, Value>()
+                {
+                    { StatisticsType.HealthRegeneration, new Value(5.25m, false) }
+                }
+            )
+            },
+            { "broadsword", new ItemSerializable(1000, 500, string.Empty, new List<string>(),
+                new List<string>() { },
+                new List<string>()
+                {
+                    "crystalys"
+                },
+                new Dictionary<StatisticsType, Value>() { }
+            )
+            },
+            { "crystalys", new ItemSerializable(1950, 975, string.Empty,
+                new List<string>()
+                {
+                    "crystalys_critical_strike"
+                },
+                new List<string>() { },
+                new List<string>() { },
+                new Dictionary<StatisticsType, Value>()
+                {
+                    { StatisticsType.HealthRegeneration, new Value(5.25m, false) }
+                }
+            )
+            },
+            { "ring_of_protection", new ItemSerializable(175, 87, string.Empty,
+                new List<string>() { },
+                new List<string>() { },
+                new List<string>()
+                { 
+                    "buckler"
+                },
+                new Dictionary<StatisticsType, Value>()
+                {
+                    { StatisticsType.Armor, new Value(2, false) }
+                }
+            )
+            },
+            { "buckler", new ItemSerializable(425, 212, "buckler_aura",
+                new List<string>() { },
+                new List<string>()
+                {
+                    "ring_of_protection",
+                    "buckler_recipe"
+                },
+                new List<string>() { },
+                new Dictionary<StatisticsType, Value>()
+                {
+                    { StatisticsType.Armor, new Value(2, false) }
                 }
             )
             },

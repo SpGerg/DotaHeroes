@@ -6,15 +6,22 @@ using DotaHeroes.API.Heroes;
 using DotaHeroes.API.Abilities.Pudge;
 using DotaHeroes.API.Abilities.SpiritBreaker;
 using DotaHeroes.API.Items;
-using System.IO;
 using DotaHeroes.API.Items.Recipes;
 using DotaHeroes.API.Abilities.Items;
+using DotaHeroes.API;
+using System;
 
 namespace DotaHeroes
 {
     public class Plugin : Plugin<Config>
     {
         public static Plugin Instance { get; private set; }
+
+        public override Version Version => new Version(1, 1, 0);
+
+        public override Version RequiredExiledVersion => new Version(8, 2, 1);
+
+        public override string Author => "SpGerg";
 
         public string SoundsPath { get; private set; } 
 
@@ -23,41 +30,59 @@ namespace DotaHeroes
             Instance = this;
             SoundsPath = Instance.ConfigPath.Replace("\\7777.yml", string.Empty).Replace($"\\{Server.Port}.yml", string.Empty);
 
-            API.API.RegisterAbility(new MeatHook());
-            API.API.RegisterAbility(new Rot());
-            API.API.RegisterAbility(new FleshHeap());
-            API.API.RegisterAbility(new Dismember());
-            API.API.RegisterAbility(new ChargeOfDarkness());
-            API.API.RegisterAbility(new Bulldoze());
-            API.API.RegisterAbility(new GreaterBash());
-            API.API.RegisterAbility(new NetherStrike());
-            API.API.RegisterAbility(new UnholyStrength());
+            DTAPI.RegisterAbility(new MeatHook());
+            DTAPI.RegisterAbility(new Rot());
+            DTAPI.RegisterAbility(new FleshHeap());
+            DTAPI.RegisterAbility(new Dismember());
+            DTAPI.RegisterAbility(new ChargeOfDarkness());
+            DTAPI.RegisterAbility(new Bulldoze());
+            DTAPI.RegisterAbility(new GreaterBash());
+            DTAPI.RegisterAbility(new NetherStrike());
+            DTAPI.RegisterAbility(new UnholyStrength());
+            DTAPI.RegisterAbility(new SwitchAttribute());
+            DTAPI.RegisterAbility(new Phase());
+            DTAPI.RegisterAbility(new CrystalysCriticalStrike());
 
             if (Config.Heroes["pudge"].IsRegistering)
             {
-                API.API.RegisterHero(new Pudge());
+                API.DTAPI.RegisterHero(new Pudge());
             }
 
             if (Config.Heroes["spirit_breaker"].IsRegistering)
             {
-                API.API.RegisterHero(new SpiritBreaker());
+                API.DTAPI.RegisterHero(new SpiritBreaker());
             }
 
-            API.API.RegisterItem(new Bracer());
-            API.API.RegisterItem(new WraithBand());
-            API.API.RegisterItem(new NullTalisman());
-            API.API.RegisterItem(new MantleOfIntelligence());
-            API.API.RegisterItem(new SlippersOfAgility());
-            API.API.RegisterItem(new GauntletsOfStrength());
-            API.API.RegisterItem(new Circlet());
-            API.API.RegisterItem(new BracerRecipe());
-            API.API.RegisterItem(new WraithBandRecipe());
-            API.API.RegisterItem(new NullTalismanRecipe());
-            API.API.RegisterItem(new HelmOfIronWill());
-            API.API.RegisterItem(new BladesOfAttack());
-            API.API.RegisterItem(new GlovesOfHaste());
-            API.API.RegisterItem(new ArmletOfMordiggianRecipe());
-            API.API.RegisterItem(new ArmletOfMordiggian());
+            //Here ingredients
+            DTAPI.RegisterItem(new Circlet());
+            DTAPI.RegisterItem(new Broadsword());
+            DTAPI.RegisterItem(new RingOfHealth());
+            DTAPI.RegisterItem(new VitalityBooster());
+            DTAPI.RegisterItem(new BootsOfSpeed());
+            DTAPI.RegisterItem(new Chainmail());
+            DTAPI.RegisterItem(new MantleOfIntelligence());
+            DTAPI.RegisterItem(new SlippersOfAgility());
+            DTAPI.RegisterItem(new GauntletsOfStrength());
+            DTAPI.RegisterItem(new HelmOfIronWill());
+            DTAPI.RegisterItem(new BladesOfAttack());
+            DTAPI.RegisterItem(new GlovesOfHaste());
+            DTAPI.RegisterItem(new ArmletOfMordiggianRecipe());
+            DTAPI.RegisterItem(new WraithBandRecipe());
+            DTAPI.RegisterItem(new NullTalismanRecipe());
+            DTAPI.RegisterItem(new BracerRecipe());
+            DTAPI.RegisterItem(new CrystalysRecipe());
+            DTAPI.RegisterItem(new BucklerRecipe());
+
+            //Here items from ingredients
+            DTAPI.RegisterItem(new Bracer());
+            DTAPI.RegisterItem(new WraithBand());
+            DTAPI.RegisterItem(new NullTalisman());
+            DTAPI.RegisterItem(new ArmletOfMordiggian());
+            DTAPI.RegisterItem(new PowerTreads());
+            DTAPI.RegisterItem(new PhaseBoots());
+            DTAPI.RegisterItem(new Vanguard());
+            DTAPI.RegisterItem(new Crystalys());
+            DTAPI.RegisterItem(new Buckler());
 
             Player.ChangingRole += PlayerHandler.SetHero;
             Player.Left += PlayerHandler.RemoveHero;

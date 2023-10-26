@@ -14,7 +14,7 @@ namespace DotaHeroes.API.Items.Recipes
 
         public override string Lore => "null_talisman_recipe is null_talisman_recipe";
 
-        public override Ability MainAbility { get; } = API.GetAbilityOrDefaultBySlug("null_talisman_recipe");
+        public override Ability MainAbility { get; } = DTAPI.GetAbilityOrDefaultBySlug("null_talisman_recipe");
 
         public override List<Ability> Passives { get; } = Ability.ToAbilitiesFromStringList(Plugin.Instance.Config.Items["null_talisman_recipe"].Passives);
 

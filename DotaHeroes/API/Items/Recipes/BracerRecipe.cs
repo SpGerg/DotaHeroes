@@ -14,7 +14,7 @@ namespace DotaHeroes.API.Items.Recipes
 
         public override string Lore => "bracer_recipe is bracer_recipe";
 
-        public override Ability MainAbility { get; } = API.GetAbilityOrDefaultBySlug("bracer_recipe");
+        public override Ability MainAbility { get; } = DTAPI.GetAbilityOrDefaultBySlug("bracer_recipe");
 
         public override List<Ability> Passives { get; } = Ability.ToAbilitiesFromStringList(Plugin.Instance.Config.Items["bracer_recipe"].Passives);
 

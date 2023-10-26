@@ -8,6 +8,8 @@ namespace DotaHeroes.API.Effects
     {
         public override string Name => "Break";
 
+        public override string Slug => "break";
+
         public override string Description { get; protected set; } = "Disable passives abilties";
 
         public override EffectClassType EffectClassType => EffectClassType.Negative;

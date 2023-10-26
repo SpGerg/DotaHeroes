@@ -21,7 +21,7 @@ namespace DotaHeroes.Commands.Admin
 
                 stringBuilder.AppendLine("Hero names list: ");
 
-                foreach (var hero in API.API.GetRegisteredHeroes())
+                foreach (var hero in API.DTAPI.GetRegisteredHeroes())
                 {
                     stringBuilder.AppendLine(hero.Value.Slug);
                 }
@@ -30,7 +30,7 @@ namespace DotaHeroes.Commands.Admin
                 return false;
             }
 
-            var registeredHero = API.API.GetRegisteredHeroOrDefaultBySlug(arguments.Array[2]);
+            var registeredHero = API.DTAPI.GetRegisteredHeroOrDefaultBySlug(arguments.Array[2]);
 
             if (registeredHero == default)
             {

@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace DotaHeroes.API
 {
-    public class API
+    public class DTAPI
     {
         private static Dictionary<int, Hero> Players { get; } = new Dictionary<int, Hero>();
 

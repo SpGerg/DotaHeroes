@@ -1,12 +1,17 @@
-﻿using DotaHeroes.API.Enums;
+﻿using DotaHeroes.API.Effects.Items;
+using DotaHeroes.API.Enums;
 using DotaHeroes.API.Features;
+using DotaHeroes.API.Interfaces;
+using Exiled.API.Features;
 using MEC;
+using NorthwoodLib.Pools;
 using System;
 using System.Collections.Generic;
+using System.Text;
 
 namespace DotaHeroes.API.Abilities.Items
 {
-    public class UnholyStrength : ToggleAbility
+    public class UnholyStrength : ToggleAbility, ILevelValues
     {
         public override string Name => "Unholy strength";
 
@@ -20,20 +25,26 @@ namespace DotaHeroes.API.Abilities.Items
 
         public override TargetType TargetType => TargetType.None;
 
-        private static readonly IReadOnlyDictionary<StatisticsType, Value> Values = new Dictionary<StatisticsType, Value>()
-        {
-            { StatisticsType.ExtraAttackDamage, new Value(35, false) },
-            { StatisticsType.Strength, new Value(25, false) },
-            { StatisticsType.Armor, new Value(4, false) }
-        };
+        public Dictionary<string, List<decimal>> Values { get; } = Plugin.Instance.Config.Abilites["unholy_strength"].Values;
+
+        public int MaxLevel { get; set; } = 0;
+
+        public int MinLevel { get; set; } = 0;
+
+        public IReadOnlyList<int> HeroLevelToLevelUp => throw new NotImplementedException();
 
         public UnholyStrength() : base() { }
 
+        public override void LevelUp(Hero hero) { }
+
         public override bool Activate(Hero hero, ArraySegment<string> arguments, out string response)
         {
-            hero.HeroStatistics.AddOrReduceStatistics(Values, false);
+            var unholyStrength = new Effects.Items.UnholyStrength(hero);
+            unholyStrength.ExtraAttackDamage = Values["extra_attack_damage"][Level];
+            unholyStrength.Strength = Values["strength"][Level];
+            unholyStrength.Armor = Values["armor"][Level];
 
-            Timing.RunCoroutine(DamageCoroutine(hero));
+            hero.EnableEffect(unholyStrength);
 
             response = "Armlet is enabled";
             return true;
@@ -41,24 +52,15 @@ namespace DotaHeroes.API.Abilities.Items
 
         public override bool Deactivate(Hero hero, ArraySegment<string> arguments, out string response)
         {
-            hero.HeroStatistics.AddOrReduceStatistics(Values, true);
-
-            Timing.RunCoroutine(DamageCoroutine(hero));
+            hero.DisableEffect<Effects.Items.UnholyStrength>();
 
             response = "Armlet is disabled";
             return true;
         }
 
-        private IEnumerator<float> DamageCoroutine(Hero hero)
+        public override Ability Create()
         {
-            yield return Timing.WaitForSeconds(1);
-
-            while (IsActive)
-            {
-                hero.TakeDamage(hero, 45, DamageType.Pure, false);
-
-                yield return Timing.WaitForSeconds(1);
-            }
+            return new UnholyStrength();
         }
     }
 }

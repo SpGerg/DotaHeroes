@@ -24,11 +24,11 @@ namespace DotaHeroes.API.Features
 
         public abstract HeroClassType HeroClassType { get; set; }
 
-        public virtual List<Ability> Abilities => new List<Ability>();
+        public virtual List<Ability> Abilities { get; }
 
         public virtual RoleTypeId Model => RoleTypeId.Tutorial;
 
-        public virtual List<RoleTypeId> ChangeRoles => new List<RoleTypeId> { RoleTypeId.Tutorial };
+        public virtual List<RoleTypeId> ChangeRoles { get; set; }
 
         public Player Player { get; private set; }
 
@@ -63,6 +63,8 @@ namespace DotaHeroes.API.Features
         public float ProjectileSpeed { get; set; } = 0.6f;
 
         public List<ProjectileObject> ProjectilesFollow { get; }
+
+        public List<Aura> OwnedAuras { get; }
 
         public HeroController HeroController { get; private set; }
 
@@ -132,8 +134,11 @@ namespace DotaHeroes.API.Features
         public Hero()
         {
             Player = null;
+            Abilities = new List<Ability>();
             Effects = new List<Effect>();
+            OwnedAuras = new List<Aura>();
             Values = new Dictionary<string, object>();
+            ChangeRoles = new List<RoleTypeId>();
         }
 
         /// <summary>
@@ -141,19 +146,32 @@ namespace DotaHeroes.API.Features
         /// </summary>
         /// <param name="player"><inheritdoc cref="Player" /></param>
         /// <param name="sideType"><inheritdoc cref="SideType" /></param>
-        protected Hero(Player player, SideType sideType)
+        protected Hero(Player player, SideType sideType) : this()
         {
             Player = player;
             SideType = sideType;
 
-            Money = 1000;
-            Inventory = new Inventory(this);
-            Effects = new List<Effect>();
-            Values = new Dictionary<string, object>();
+            Money = 1200;
+            if (Plugin.Instance.Config.Debug) Money = 999999;
 
             if (Player != null)
             {
-                API.SetOrAddPlayer(player.Id, this);
+                DTAPI.SetOrAddPlayer(player.Id, this);
+            }
+
+            foreach (var ability in Abilities)
+            {
+                if (ability is PassiveAbility passiveAbility)
+                {
+                    passiveAbility.Register(this);
+                }
+
+                if (ability is Aura aura)
+                {
+                    var newAura = aura.Create();
+                    (newAura as PassiveAbility).RegisterOwner(this);
+                }
+
             }
 
             HeroController = Player.GameObject.GetComponent<HeroController>();
@@ -215,7 +233,7 @@ namespace DotaHeroes.API.Features
 
             if (ignoreAvailability)
             {
-                ability = API.GetAbilityOrDefaultBySlug(slug);
+                ability = DTAPI.GetAbilityOrDefaultBySlug(slug);
             }
             else
             {
@@ -479,7 +497,7 @@ namespace DotaHeroes.API.Features
 
             foreach (var effect in dispelling.EffectsToDispel)
             {
-                effect.Dispel();
+                effect.Dispelled();
                 Effects.Remove(effect);
             }
             Hud.Update();
@@ -501,7 +519,7 @@ namespace DotaHeroes.API.Features
         /// </summary>
         public Effect EnableEffect(Effect _effect, float duration = 3f)
         {
-            if (TryGetEffect(_effect, out Effect result))
+            if (!_effect.IsStacking && TryGetEffect(_effect, out Effect result))
             {
                 return result;
             }
@@ -518,7 +536,7 @@ namespace DotaHeroes.API.Features
 
             Utils.AddModifier(this, receivingEffect.Effect as IModifier);
 
-            receivingEffect.Effect.Enable();
+            receivingEffect.Effect.Enabled();
             Effects.Add(receivingEffect.Effect);
 
             Hud.Update(this);
@@ -538,7 +556,7 @@ namespace DotaHeroes.API.Features
 
             Hud.Update();
 
-            result.Execute();
+            result.Executed();
         }
 
         /// <summary>
@@ -553,7 +571,7 @@ namespace DotaHeroes.API.Features
 
             Hud.Update();
 
-            result.Execute();
+            result.Executed();
         }
 
         /// <summary>
@@ -566,7 +584,7 @@ namespace DotaHeroes.API.Features
                 return;
             }
 
-            result.Disable();
+            result.Disabled();
             Effects.Remove(result);
 
             Utils.RemoveModifier(this, result as IModifier);
@@ -586,7 +604,7 @@ namespace DotaHeroes.API.Features
                 return;
             }
 
-            result.Disable();
+            result.Disabled();
             Effects.Remove(result);
 
             Utils.RemoveModifier(this, result as IModifier);
@@ -601,7 +619,7 @@ namespace DotaHeroes.API.Features
         /// </summary>
         public T GetEffectOrDefault<T>() where T : Effect, new()
         {
-            return (T)Effects.FirstOrDefault(_effect => _effect is T);
+            return (T)Effects.Find(_effect => _effect is T);
         }
 
         /// <summary>
@@ -609,7 +627,7 @@ namespace DotaHeroes.API.Features
         /// </summary>
         public Effect GetEffectOrDefault(Effect effect)
         {
-            return Effects.FirstOrDefault(_effect => _effect.Name == effect.Name);
+            return Effects.Find(_effect => _effect.Name == effect.Name);
         }
 
         /// <summary>
@@ -717,7 +735,7 @@ namespace DotaHeroes.API.Features
         {
             while (true)
             {
-                foreach (var hero in API.GetHeroes().Values)
+                foreach (var hero in DTAPI.GetHeroes().Values)
                 {
                     var healthAndMana = hero.HeroStatistics.HealthAndMana;
 

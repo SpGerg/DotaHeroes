@@ -14,7 +14,7 @@ namespace DotaHeroes.API.Items.Recipes
 
         public override string Lore => "Armlet of mordiggian recipe";
 
-        public override Ability MainAbility { get; } = API.GetAbilityOrDefaultBySlug("armlet_of_mordiggian_recipe");
+        public override Ability MainAbility { get; } = DTAPI.GetAbilityOrDefaultBySlug("armlet_of_mordiggian_recipe");
 
         public override List<Ability> Passives { get; } = Ability.ToAbilitiesFromStringList(Plugin.Instance.Config.Items["armlet_of_mordiggian_recipe"].Passives);
 
@@ -22,7 +22,7 @@ namespace DotaHeroes.API.Items.Recipes
 
         public override IReadOnlyList<Item> ItemsFromThisItem => GetItemsFromStringList(Plugin.Instance.Config.Items["armlet_of_mordiggian_recipe"].ItemsFromThisItems);
 
-        public override IReadOnlyDictionary<StatisticsType, Value> Statistics { get; } = Plugin.Instance.Config.Items["helm_of_iron_will"].Statistics;
+        public override IReadOnlyDictionary<StatisticsType, Value> Statistics { get; } = Plugin.Instance.Config.Items["armlet_of_mordiggian_recipe"].Statistics;
 
         public override int Cost { get; } = Plugin.Instance.Config.Items["armlet_of_mordiggian_recipe"].Cost;
 

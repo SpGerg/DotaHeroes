@@ -2,6 +2,7 @@
 using DotaHeroes.API.Features;
 using DotaHeroes.API.Statistics;
 using Exiled.API.Features;
+using PlayerRoles;
 using System.Collections.Generic;
 
 namespace DotaHeroes.API.Heroes
@@ -13,6 +14,8 @@ namespace DotaHeroes.API.Heroes
         public override string Slug => "spirit_breaker";
 
         public override List<Ability> Abilities { get; } = Ability.ToAbilitiesFromStringList(Plugin.Instance.Config.Heroes["spirit_breaker"].Abilties);
+
+        public override List<RoleTypeId> ChangeRoles { get; set; } = Plugin.Instance.Config.Heroes["spirit_breaker"].ChangeRoles;
 
         public override HeroClassType HeroClassType { get; set; } = HeroClassType.Melee;
 

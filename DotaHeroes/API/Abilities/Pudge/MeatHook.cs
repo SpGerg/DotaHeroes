@@ -1,4 +1,5 @@
 ﻿using CustomPlayerEffects;
+using DotaHeroes.API.Abilities.Items;
 using DotaHeroes.API.Enums;
 using DotaHeroes.API.Features;
 using DotaHeroes.API.Features.Objects;
@@ -84,6 +85,11 @@ namespace DotaHeroes.API.Abilities.Pudge
             yield return Timing.WaitForSeconds(0.35f);
 
             primitive.Destroy();
+        }
+
+        public override Ability Create()
+        {
+            return new MeatHook();
         }
     }
 }

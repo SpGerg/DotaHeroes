@@ -1,4 +1,5 @@
 ﻿using CommandSystem;
+using DotaHeroes.API.Abilities.Items;
 using DotaHeroes.API.Effects.SpiritBreaker;
 using DotaHeroes.API.Enums;
 using DotaHeroes.API.Features;
@@ -52,7 +53,7 @@ namespace DotaHeroes.API.Abilities.SpiritBreaker
             
             Timing.RunCoroutine(RunningCoroutine(hero, target));
 
-            foreach (var _hero in API.GetHeroes().Values)
+            foreach (var _hero in DTAPI.GetHeroes().Values)
             {
                 Audio.Play(_hero.Player.Position, SoundsPath + "\\start.ogg", 100f, false, _hero.Player);
             }
@@ -90,6 +91,11 @@ namespace DotaHeroes.API.Abilities.SpiritBreaker
             if (bash == default) yield break;
 
             bash.Bash(target, hero);
+        }
+
+        public override Ability Create()
+        {
+            return new ChargeOfDarkness();
         }
     }
 }

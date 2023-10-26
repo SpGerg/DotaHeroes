@@ -37,24 +37,18 @@ namespace DotaHeroes.API.Features
 
         private bool isStop { get; set; }
 
-        public int Level
-        {
-            get
-            {
-                return level;
-            }
-            set
-            {
-                level = value;
-            }
-        }
-
-        private int level = -1;
+        public int Level { get; set; } = -1;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Ability" /> class.
         /// </summary>
-        public Ability() { }
+        public Ability()
+        {
+            if (this is ILevelValues levelValues)
+            {
+                Level = levelValues.MinLevel - 1;
+            }
+        }
 
         /// <summary>
         /// Level up.
@@ -62,10 +56,8 @@ namespace DotaHeroes.API.Features
         public virtual void LevelUp(Hero hero)
         {
             Level++;
-            if (this is ILevelValues)
+            if (this is ILevelValues levelValues)
             {
-                var levelValues = this as ILevelValues;
-
                 if (levelValues.Values.ContainsKey("cooldown"))
                 {
                     var cooldown = Cooldowns.GetCooldown(hero.Player.Id, Slug);
@@ -145,25 +137,25 @@ namespace DotaHeroes.API.Features
         protected bool CheckCooldown(Hero hero, out string response, out CooldownInfo cooldown)
         {
             var _cooldown = Cooldowns.GetCooldown(hero.Player.Id, Slug);
+            cooldown = _cooldown;
 
-            if (this is ILevelValues levelValues && levelValues.Values.ContainsKey("cooldown"))
+            if (this is ILevelValues levelValues && levelValues.Values.TryGetValue("cooldown", out List<decimal> result))
             {
-                cooldown = _cooldown;
-
-                if (cooldown != default && !cooldown.IsReady)
+                if (cooldown == default)
                 {
-                    response = $"Ability {Name} on cooldown.";
+                    cooldown = Cooldowns.AddCooldown(hero.Player.Id, new CooldownInfo(Slug, (float)result[Level]));
+                }
+
+                if (!cooldown.IsReady)
+                {
+                    response = $"Ability {Name} on cooldown. Cooldown: {cooldown.Cooldown}";
 
                     return false;
                 }
-
-                response = $"Ability {Name} was used.";
-                return true;
             }
 
-            cooldown = null;
             response = $"Ability {Name} was used.";
-            return false;
+            return true;
         }
 
         public static List<Ability> ToAbilitiesFromStringList(List<string> abilties)
@@ -174,11 +166,11 @@ namespace DotaHeroes.API.Features
 
             foreach (var ability in abilties)
             {
-                var _ability = API.GetAbilityOrDefaultBySlug(ability);
+                var _ability = DTAPI.GetAbilityOrDefaultBySlug(ability);
 
                 if (_ability == default) continue;
                 
-                result.Add(_ability);
+                result.Add(_ability.Create());
             }
 
             return result;
@@ -216,5 +208,38 @@ namespace DotaHeroes.API.Features
 
             return StringBuilderPool.Shared.ToStringReturn(stringBuilder);
         }
+
+        /// <summary>
+        /// To string hud.
+        /// </summary>
+        public virtual string ToStringHud(Hero hero)
+        {
+            StringBuilder stringBuilder = StringBuilderPool.Shared.Rent();
+            stringBuilder.AppendLine("Name: " + Name);
+            stringBuilder.AppendLine("Level: " + (Level + 1));
+
+            var cooldown = Cooldowns.GetCooldown(hero.Player.Id, Slug);
+
+            if (cooldown != default)
+            {
+                if (cooldown.Cooldown == 0)
+                {
+                    stringBuilder.AppendLine("Cooldown: <color=Green>Ready</color>");
+                }
+                else
+                {
+                    stringBuilder.AppendLine("Cooldown: " + cooldown.Cooldown);
+                }
+            }
+
+            if (this is ToggleAbility toggleAbility)
+            {
+                stringBuilder.AppendLine("Active: " + toggleAbility.ToStringIsActive());
+            }
+
+            return StringBuilderPool.Shared.ToStringReturn(stringBuilder);
+        }
+
+        public abstract Ability Create();
     }
 }

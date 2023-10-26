@@ -14,7 +14,7 @@ namespace DotaHeroes.API.Items
 
         public override string Lore => "talisman is talisman";
 
-        public override Ability MainAbility { get; } = API.GetAbilityOrDefaultBySlug("null_talisman");
+        public override Ability MainAbility { get; } = DTAPI.GetAbilityOrDefaultBySlug(Plugin.Instance.Config.Items["null_talisman"].Ability);
 
         public override List<Ability> Passives { get; } = Ability.ToAbilitiesFromStringList(Plugin.Instance.Config.Items["null_talisman"].Passives);
 

@@ -14,7 +14,7 @@ namespace DotaHeroes.API.Items.Recipes
 
         public override string Lore => "wraith_band_recipe is wraith_band_recipe";
 
-        public override Ability MainAbility { get; } = API.GetAbilityOrDefaultBySlug("wraith_band_recipe");
+        public override Ability MainAbility { get; } = DTAPI.GetAbilityOrDefaultBySlug("wraith_band_recipe");
 
         public override List<Ability> Passives { get; } = Ability.ToAbilitiesFromStringList(Plugin.Instance.Config.Items["wraith_band_recipe"].Passives);
 

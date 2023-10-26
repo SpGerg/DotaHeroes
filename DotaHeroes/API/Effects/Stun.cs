@@ -9,13 +9,15 @@ namespace DotaHeroes.API.Effects
     {
         public override string Name => "Stun";
 
+        public override string Slug => "stun";
+
         public override string Description { get; protected set; } = "Prevents the owner from moving, attacking and using abilities";
 
         public override DispelType DispelType { get; set; } = DispelType.Strong;
 
-        public float Duration { get; set; } = 5;
-
         public override EffectClassType EffectClassType => EffectClassType.Negative;
+
+        public float Duration { get; set; } = 3;
 
         public bool IsIgnoreSpellImmunity { get; set; }
 
@@ -25,7 +27,7 @@ namespace DotaHeroes.API.Effects
         {
         }
 
-        public override void Enable()
+        public override void Enabled()
         {
             if (Owner.TryGetEffect(out SpellImmunity result) && !IsIgnoreSpellImmunity)
             {
@@ -40,19 +42,19 @@ namespace DotaHeroes.API.Effects
 
             Owner.Player.EnableEffect<Ensnared>();
 
-            base.Enable();
+            base.Enabled();
         }
 
-        public override void Execute()
+        public override void Executed()
         {
-            Enable();
+            Enabled();
         }
 
-        public override void Disable()
+        public override void Disabled()
         {
             Owner.Player.DisableEffect<Ensnared>();
 
-            base.Disable();
+            base.Disabled();
         }
     }
 }

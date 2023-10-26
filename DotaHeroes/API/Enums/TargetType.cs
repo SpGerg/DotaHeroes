@@ -1,15 +1,14 @@
-﻿namespace DotaHeroes.API.Enums
+﻿using System;
+
+namespace DotaHeroes.API.Enums
 {
     ///<summary>Target type</summary>
+    [Flags]
     public enum TargetType
     {
         None = 0,
         ToPoint = 1,
         ToEnemy = 2,
-        ToFriend = 3,
-        ToFriendAndEnemy = 4,
-        ToPointOrEnemy = 5,
-        ToPointOrFriend = 6,
-        ToPointOrFriendAndEnemy = 6,
+        ToFriend = 4,
     }
 }

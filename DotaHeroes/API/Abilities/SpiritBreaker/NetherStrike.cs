@@ -1,4 +1,5 @@
-﻿using DotaHeroes.API.Enums;
+﻿using DotaHeroes.API.Abilities.Items;
+using DotaHeroes.API.Enums;
 using DotaHeroes.API.Features;
 using DotaHeroes.API.Interfaces;
 using MEC;
@@ -71,6 +72,11 @@ namespace DotaHeroes.API.Abilities.SpiritBreaker
             if (bash == default) yield break;
 
             bash.Bash(target, hero);
+        }
+
+        public override Ability Create()
+        {
+            return new NetherStrike();
         }
     }
 }

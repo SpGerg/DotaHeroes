@@ -63,7 +63,7 @@ namespace DotaHeroes.API.Features.Objects
         {
             if (!isMovingToTarget) return;
 
-            foreach (var hero in API.GetHeroes().Values)
+            foreach (var hero in DTAPI.GetHeroes().Values)
             {
                 if (hero == Owner) continue;
 

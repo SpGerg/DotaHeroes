@@ -9,6 +9,8 @@ namespace DotaHeroes.API.Effects.Pudge
     {
         public override string Name => "Rot";
 
+        public override string Slug => "rot";
+
         public override string Description { get; protected set; } = "Rot";
 
         public override EffectClassType EffectClassType => EffectClassType.Negative;
@@ -30,23 +32,22 @@ namespace DotaHeroes.API.Effects.Pudge
             DamageOverTime = new DamageOverTime(owner, 30, DamageType.Magical, -1, 1f, Attacker);
         }
 
-        public override void Enable()
+        public override void Enabled()
         {
-            Hero.HeroStatistics.Speed.Speed -= 10;
+            Hero.HeroStatistics.Speed.Speed -= 35;
             DamageOverTime.Damage = Damage;
-            Log.Info("п");
             DamageOverTime.DamageType = DamageType;
             DamageOverTime.Run();
              
-            base.Enable();
+            base.Enabled();
         }
 
-        public override void Disable()
+        public override void Disabled()
         {
-            Hero.HeroStatistics.Speed.Speed += 10;
+            Hero.HeroStatistics.Speed.Speed += 35;
             DamageOverTime.IsEnabled = false;
 
-            base.Disable();
+            base.Disabled();
         }
     }
 }

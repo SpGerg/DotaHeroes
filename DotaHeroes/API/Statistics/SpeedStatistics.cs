@@ -1,5 +1,7 @@
 ﻿using CustomPlayerEffects;
 using DotaHeroes.API.Features;
+using Exiled.API.Features;
+using MEC;
 using UnityEngine;
 
 namespace DotaHeroes.API.Statistics
@@ -13,26 +15,20 @@ namespace DotaHeroes.API.Statistics
             }
             set
             {
-                speed = (sbyte)Mathf.Clamp(value, sbyte.MinValue, sbyte.MaxValue);
+                speed = value;
 
                 if (Hero != null && Hero.Player != null)
                 {
-                    Hero.Player.DisableEffect<MovementBoost>();
-
                     if (speed < 0)
                     {
                         Hero.Player.EnableEffect<Disabled>();
                     }
-                    else if (speed == 0)
-                    {
-                        Hero.Player.DisableEffect<Disabled>();
-                    }
                     else if (speed > 1)
                     {
-                        Hero.Player.DisableEffect<Disabled>();
-
                         Hero.Player.EnableEffect<MovementBoost>();
                         Hero.Player.ChangeEffectIntensity<MovementBoost>((byte)speed);
+
+                        Hero.Player.DisableEffect<Disabled>();
                     }
                 }
             }
@@ -55,7 +51,13 @@ namespace DotaHeroes.API.Statistics
         public SpeedStatistics(Hero hero, sbyte speed)
         {
             Hero = hero;
-            Speed = speed;
+
+            Timing.CallDelayed(0.5f, () => //For some reason when player spawn, effects not enabling. Im sorry for this shit lol
+            {
+                Speed = speed;
+
+                Hud.Update();
+            });
         }
 
         public void SetHeroIfNull(Hero hero)

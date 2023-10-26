@@ -7,6 +7,8 @@ namespace DotaHeroes.API.Effects.SpiritBreaker
     {
         public override string Name => "Charge of darkness";
 
+        public override string Slug => "charge_of_darkness";
+
         public override string Description { get; protected set; } = "Charge of darkness";
 
         public override EffectClassType EffectClassType => EffectClassType.Positive;
@@ -19,18 +21,18 @@ namespace DotaHeroes.API.Effects.SpiritBreaker
 
         public ChargeOfDarknessSpeed(Hero owner) : base(owner) { }
 
-        public override void Enable()
+        public override void Enabled()
         {
             Owner.HeroStatistics.Speed.Speed += ExtraSpeed;
 
-            base.Enable();
+            base.Enabled();
         }
 
-        public override void Disable()
+        public override void Disabled()
         {
             Owner.HeroStatistics.Speed.Speed -= ExtraSpeed;
             
-            base.Disable();
+            base.Disabled();
         }
     }
 }

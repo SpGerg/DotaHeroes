@@ -8,6 +8,8 @@ namespace DotaHeroes.API.Effects
     {
         public override string Name => "Spell immunity";
 
+        public override string Slug => "spell_immunity";
+
         public override string Description { get; protected set; } = "Spell immunity";
 
         public override EffectClassType EffectClassType => EffectClassType.Positive;

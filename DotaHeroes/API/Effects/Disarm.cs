@@ -8,6 +8,8 @@ namespace DotaHeroes.API.Effects
     {
         public override string Name => "Disarm";
 
+        public override string Slug => "disarm";
+
         public override string Description { get; protected set; } = "Disarm";
 
         public override EffectClassType EffectClassType => EffectClassType.Negative;

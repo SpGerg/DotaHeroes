@@ -32,6 +32,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="API\Abilities\Items\CrystalysCriticalStrike.cs" />
+    <Compile Include="API\Abilities\Items\DamageBlock.cs" />
+    <Compile Include="API\Abilities\Items\Phase.cs" />
+    <Compile Include="API\Abilities\Items\SwitchAttribute.cs" />
     <Compile Include="API\Abilities\Items\UnholyStrength.cs" />
     <Compile Include="API\Abilities\Pudge\Dismember.cs" />
     <Compile Include="API\Abilities\Pudge\FleshHeap.cs" />
@@ -41,8 +45,11 @@
     <Compile Include="API\Abilities\SpiritBreaker\ChargeOfDarkness.cs" />
     <Compile Include="API\Abilities\SpiritBreaker\GreaterBash.cs" />
     <Compile Include="API\Abilities\SpiritBreaker\NetherStrike.cs" />
+    <Compile Include="API\Auras\Items\BucklerAura.cs" />
     <Compile Include="API\Effects\Break.cs" />
     <Compile Include="API\Effects\Disarm.cs" />
+    <Compile Include="API\Effects\Items\PhaseSpeed.cs" />
+    <Compile Include="API\Effects\Items\UnholyStrength.cs" />
     <Compile Include="API\Effects\Pudge\FleshHeap.cs" />
     <Compile Include="API\Effects\Pudge\FleshHeapShield.cs" />
     <Compile Include="API\Effects\Silence.cs" />
@@ -68,8 +75,9 @@
     <Compile Include="API\Events\EventArgs\Interfaces\IHeroEvent.cs" />
     <Compile Include="API\Extensions\PlayerExtension.cs" />
     <Compile Include="API\Features\Ability.cs" />
-    <Compile Include="API\API.cs" />
+    <Compile Include="API\DTAPI.cs" />
     <Compile Include="API\Features\Audio.cs" />
+    <Compile Include="API\Features\Aura.cs" />
     <Compile Include="API\Features\Constants.cs" />
     <Compile Include="API\Features\CooldownInfo.cs" />
     <Compile Include="API\Features\DamageOverTime.cs" />
@@ -125,19 +133,32 @@
     <Compile Include="API\Interfaces\ISpeedModifier.cs" />
     <Compile Include="API\Items\ArmletOfMordiggian.cs" />
     <Compile Include="API\Items\BladesOfAttack.cs" />
+    <Compile Include="API\Items\BootsOfSpeed.cs" />
     <Compile Include="API\Items\Bracer.cs" />
     <Compile Include="API\Features\Value.cs" />
+    <Compile Include="API\Items\Broadsword.cs" />
+    <Compile Include="API\Items\Buckler.cs" />
+    <Compile Include="API\Items\Chainmail.cs" />
     <Compile Include="API\Items\Circlet.cs" />
+    <Compile Include="API\Items\Crystalys.cs" />
     <Compile Include="API\Items\GauntletsOfStrength.cs" />
     <Compile Include="API\Items\GlovesOfHaste.cs" />
     <Compile Include="API\Items\HelmOfIronWill.cs" />
     <Compile Include="API\Items\MantleOfIntelligence.cs" />
     <Compile Include="API\Items\NullTalisman.cs" />
+    <Compile Include="API\Items\PhaseBoots.cs" />
+    <Compile Include="API\Items\PowerTreads.cs" />
     <Compile Include="API\Items\Recipes\ArmletOfMordiggianRecipe.cs" />
     <Compile Include="API\Items\Recipes\BracerRecipe.cs" />
+    <Compile Include="API\Items\Recipes\BucklerRecipe.cs" />
+    <Compile Include="API\Items\Recipes\CrystalysRecipe.cs" />
     <Compile Include="API\Items\Recipes\NullTalismanRecipe.cs" />
     <Compile Include="API\Items\Recipes\WraithBandRecipe.cs" />
+    <Compile Include="API\Items\RingOfHealth.cs" />
+    <Compile Include="API\Items\RingOfProtection.cs" />
     <Compile Include="API\Items\SlippersOfAgility.cs" />
+    <Compile Include="API\Items\Vanguard.cs" />
+    <Compile Include="API\Items\VitalityBooster.cs" />
     <Compile Include="API\Items\WraithBand.cs" />
     <Compile Include="API\Modifiers\AccuracyModifier.cs" />
     <Compile Include="API\Modifiers\ArmorModifier.cs" />

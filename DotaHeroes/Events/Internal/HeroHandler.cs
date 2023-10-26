@@ -41,7 +41,7 @@ namespace DotaHeroes.Events.Internal
 
         internal static void AddFleshHeapStackOnDied(HeroDiedEventArgs ev)
         {
-            foreach (var hero in API.API.GetHeroes().Values)
+            foreach (var hero in API.DTAPI.GetHeroes().Values)
             {
                 if (hero.IsHeroDead) continue;
 
@@ -51,7 +51,7 @@ namespace DotaHeroes.Events.Internal
 
                 if (Vector3.Distance(ev.Hero.Player.Position, hero.Player.Position) < 10)
                 {
-                    effect.Execute();
+                    effect.Executed();
                     return;
                 }
             }

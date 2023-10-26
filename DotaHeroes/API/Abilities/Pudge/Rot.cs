@@ -1,4 +1,5 @@
-﻿using DotaHeroes.API.Enums;
+﻿using DotaHeroes.API.Abilities.Items;
+using DotaHeroes.API.Enums;
 using DotaHeroes.API.Features;
 using DotaHeroes.API.Features.Objects;
 using DotaHeroes.API.Interfaces;
@@ -85,7 +86,7 @@ namespace DotaHeroes.API.Abilities.Pudge
         {
             while ((bool)owner.Values["is_rot"] && !owner.IsHeroDead)
             {
-                foreach (var hero in API.GetHeroes().Values)
+                foreach (var hero in DTAPI.GetHeroes().Values)
                 {
                     if (Vector3.Distance(hero.Player.Position, owner.Player.Position) < 2)
                     {
@@ -104,10 +105,15 @@ namespace DotaHeroes.API.Abilities.Pudge
                 yield return Timing.WaitForSeconds(1);
             }
 
-            foreach (var hero in API.GetHeroes().Values)
+            foreach (var hero in DTAPI.GetHeroes().Values)
             {
                 hero.DisableEffect<Effects.Pudge.Rot>();
             }
+        }
+
+        public override Ability Create()
+        {
+            return new Rot();
         }
     }
 }

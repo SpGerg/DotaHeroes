@@ -1,4 +1,5 @@
 ﻿using DotaHeroes.API.Interfaces;
+using Exiled.API.Features;
 using System.Collections.Generic;
 using System.Linq;
 using Utils.NonAllocLINQ;
@@ -48,16 +49,15 @@ namespace DotaHeroes.API.Features
                 {
                     passiveAbility.Register(Owner);
                 }
+
+                if (passive is Aura aura)
+                {
+                    aura.RegisterOwner(Owner); 
+                }
             }
 
             if (!isJustAdd)
             {
-                if (!item.Ingredients.IsEmpty())
-                {
-                    AddItems(item.Ingredients);
-                    return;
-                }
-
                 Create(item);
             }
             else
@@ -65,6 +65,8 @@ namespace DotaHeroes.API.Features
                 item.Added();
                 Items.Add(item);
             }
+
+            Hud.Update(item.Owner);
         }
 
         /// <summary>
@@ -176,10 +178,15 @@ namespace DotaHeroes.API.Features
         //very not optimized
         private void Create(Item item)
         {
-            item.Added();
-            Items.Add(item);
+            if (item.ItemsFromThisItem.IsEmpty())
+            {
+                AddItem(item);
 
-            if (item.ItemsFromThisItem.IsEmpty()) return;
+                item.Added();
+                Items.Add(item);
+
+                return;
+            }
 
             foreach (var _item in item.ItemsFromThisItem)
             {
@@ -193,7 +200,7 @@ namespace DotaHeroes.API.Features
                         }
                     }
 
-                    AddItem(_item, true);
+                    Create(_item);
                     break;
                 }
             }

@@ -42,6 +42,26 @@ namespace DotaHeroes.API.Features
         }
 
         /// <summary>
+        /// Attribute type to statistics type
+        /// </summary>
+        public static StatisticsType ToStatisticsType(AttributeType attribute)
+        {
+            switch (attribute)
+            {
+                case AttributeType.Strength:
+                    return StatisticsType.Strength;
+                case AttributeType.Agility:
+                    return StatisticsType.Agility;
+                case AttributeType.Intelligence:
+                    return StatisticsType.Intelligence;
+                case AttributeType.Universal:
+                    return StatisticsType.AllAttributes;
+            }
+
+            return StatisticsType.None;
+        }
+
+        /// <summary>
         /// Get player from eye direction
         /// </summary>
         public static bool GetPlayerFromEyeDirection(Player player, float range, out string response, out Player target)
@@ -80,7 +100,7 @@ namespace DotaHeroes.API.Features
                 return false;
             }
 
-            var _hero = API.GetHeroOrDefault(target.Id);
+            var _hero = DTAPI.GetHeroOrDefault(target.Id);
 
             if (_hero == default)
             {

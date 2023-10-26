@@ -14,15 +14,15 @@ namespace DotaHeroes.API.Items
 
         public override string Lore => "Blades of attack";
 
-        public override Ability MainAbility { get; } = API.GetAbilityOrDefaultBySlug("blades_of_attack");
+        public override Ability MainAbility { get; } = DTAPI.GetAbilityOrDefaultBySlug("blades_of_attack");
 
         public override List<Ability> Passives { get; } = Ability.ToAbilitiesFromStringList(Plugin.Instance.Config.Items["blades_of_attack"].Passives);
 
-        public override IReadOnlyList<Item> Ingredients => GetItemsFromStringList(Plugin.Instance.Config.Items["blades_of_attack"].Ingredients);
+        public override IReadOnlyList<Item> Ingredients { get; } = GetItemsFromStringList(Plugin.Instance.Config.Items["blades_of_attack"].Ingredients);
 
-        public override IReadOnlyList<Item> ItemsFromThisItem => GetItemsFromStringList(Plugin.Instance.Config.Items["blades_of_attack"].ItemsFromThisItems);
+        public override IReadOnlyList<Item> ItemsFromThisItem { get; } = GetItemsFromStringList(Plugin.Instance.Config.Items["blades_of_attack"].ItemsFromThisItems);
 
-        public override IReadOnlyDictionary<StatisticsType, Value> Statistics { get; } = Plugin.Instance.Config.Items["helm_of_iron_will"].Statistics;
+        public override IReadOnlyDictionary<StatisticsType, Value> Statistics { get; } = Plugin.Instance.Config.Items["blades_of_attack"].Statistics;
 
         public override int Cost { get; } = Plugin.Instance.Config.Items["blades_of_attack"].Cost;
 

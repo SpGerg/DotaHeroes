@@ -1,12 +1,17 @@
 ﻿using DotaHeroes.API.Enums;
 using DotaHeroes.API.Interfaces;
 using MEC;
+using NorthwoodLib.Pools;
+using System;
+using System.Text;
 
 namespace DotaHeroes.API.Features
 {
     public abstract class Effect
     {
         public abstract string Name { get; }
+
+        public abstract string Slug { get; }
 
         public abstract string Description { get; protected set; }
 
@@ -16,6 +21,8 @@ namespace DotaHeroes.API.Features
 
         public virtual int Stack { get; set; } = -1;
 
+        public virtual bool IsStacking { get; set; }
+
         public Hero Owner { get; }
 
         public Hero Hero { get; }
@@ -23,6 +30,21 @@ namespace DotaHeroes.API.Features
         public bool IsVisible { get; set; } = true;
 
         public bool IsActive { get; set; }
+
+        public float EffectDuration
+        {
+            get
+            {
+                if (enabledTime == null || this is not ILevelValues)
+                {
+                    return -1;
+                }
+
+                return (float)(DateTime.Now - enabledTime).TotalSeconds;
+            }
+        }
+
+        private DateTime enabledTime;
 
         public Effect() { }
 
@@ -33,13 +55,13 @@ namespace DotaHeroes.API.Features
         public Effect(Hero owner)
         {
             Owner = owner;
-            Hero = API.GetHeroOrDefault(owner.Player.Id);
+            Hero = DTAPI.GetHeroOrDefault(owner.Player.Id);
         }
 
         /// <summary>
         /// Enable effect.
         /// </summary>
-        public virtual void Enable()
+        public virtual void Enabled()
         {
             if (this is IEffectDuration effectDuration)
             {
@@ -52,23 +74,24 @@ namespace DotaHeroes.API.Features
                 }
             }
 
+            enabledTime = DateTime.Now;
             IsActive = true;
         }
 
         /// <summary>
         /// Execute effect.
         /// </summary>
-        public virtual void Execute() { }
+        public virtual void Executed() { }
 
         /// <summary>
         /// Dispel effect.
         /// </summary>
-        public virtual void Dispel() { }
+        public virtual void Dispelled() { }
 
         /// <summary>
         /// Disable effect.
         /// </summary>
-        public virtual void Disable()
+        public virtual void Disabled()
         {
             IsActive = false;
         }
@@ -90,6 +113,25 @@ namespace DotaHeroes.API.Features
             {
                 return Name;
             }
+        }
+
+        /// <summary>
+        /// To string hud.
+        /// </summary>
+        public virtual string ToStringHud(Hero hero)
+        {
+            StringBuilder stringBuilder = StringBuilderPool.Shared.Rent();
+            stringBuilder.AppendLine("Name: " + Name);
+
+            var duration = EffectDuration;
+
+            if (duration != -1)
+            {
+                stringBuilder.AppendLine("Duration: " + duration);
+            }
+            
+
+            return StringBuilderPool.Shared.ToStringReturn(stringBuilder);
         }
     }
 }

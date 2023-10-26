@@ -27,7 +27,7 @@ namespace DotaHeroes.Commands
             }
 
             var player = Player.Get(sender);
-            Hero hero = API.API.GetHeroOrDefault(player.Id);
+            Hero hero = API.DTAPI.GetHeroOrDefault(player.Id);
 
             if (hero == default)
             {

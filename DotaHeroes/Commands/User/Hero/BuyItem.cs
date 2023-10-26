@@ -1,4 +1,6 @@
 ﻿using DotaHeroes.API.Enums;
+using DotaHeroes.API.Features;
+using Exiled.API.Features;
 using NorthwoodLib.Pools;
 using System;
 using System.Collections.Generic;
@@ -24,7 +26,7 @@ namespace DotaHeroes.Commands.User.Hero
 
                 stringBuilder.AppendLine("Item list: ");
 
-                foreach (var item in API.API.GetRegisteredItems())
+                foreach (var item in API.DTAPI.GetRegisteredItems())
                 {
                     stringBuilder.AppendLine(item.Value.Slug);
                 }
@@ -33,7 +35,7 @@ namespace DotaHeroes.Commands.User.Hero
                 return true;
             }
 
-            var _item = API.API.GetItemOrDefaultBySlug(arguments.Array[2]);
+            var _item = API.DTAPI.GetItemOrDefaultBySlug(arguments.Array[2]);
 
             if (_item == default)
             {
@@ -41,7 +43,7 @@ namespace DotaHeroes.Commands.User.Hero
 
                 stringBuilder.AppendLine("Item list: ");
 
-                foreach (var item in API.API.GetRegisteredItems())
+                foreach (var item in API.DTAPI.GetRegisteredItems())
                 {
                     stringBuilder.AppendLine(item.Value.Slug);
                 }

@@ -8,6 +8,8 @@ namespace DotaHeroes.API.Effects.SpiritBreaker
     {
         public override string Name => "Bulldoze";
 
+        public override string Slug => "bulldoze";
+
         public override string Description { get; protected set; } = "Bulldoze";
 
         public override EffectClassType EffectClassType => EffectClassType.Positive;

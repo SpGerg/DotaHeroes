@@ -2,6 +2,6 @@
 {
     public interface IEffectDuration
     {
-        float Duration { get; set; }
+        public float Duration { get; set; }
     }
 }

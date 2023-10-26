@@ -1,4 +1,5 @@
-﻿using DotaHeroes.API.Effects;
+﻿using DotaHeroes.API.Abilities.Items;
+using DotaHeroes.API.Effects;
 using DotaHeroes.API.Enums;
 using DotaHeroes.API.Events.EventArgs.Hero;
 using DotaHeroes.API.Features;
@@ -36,7 +37,7 @@ namespace DotaHeroes.API.Abilities.SpiritBreaker
         {
             Events.Handlers.Hero.Attacking += OnAttack;
 
-            base.RegisterOwner(owner);
+            RegisterOwner(owner);
         }
 
         public override void Unregister(Hero owner)
@@ -75,6 +76,11 @@ namespace DotaHeroes.API.Abilities.SpiritBreaker
             target.TakeDamage(attacker, total_damage, DamageType.Magical);
 
             Audio.Play(Owner.Player.Position, SoundsPath + "\\bash.ogg", 75f, false, Owner.Player);
+        }
+
+        public override Ability Create()
+        {
+            return new GreaterBash();
         }
     }
 }

@@ -9,6 +9,8 @@ namespace DotaHeroes.API.Effects.Pudge
     {
         public override string Name => "Flesh heap shield";
 
+        public override string Slug => "flesh_heap_shield";
+
         public override string Description { get; protected set; } = "Your blocking damage";
 
         public override EffectClassType EffectClassType => EffectClassType.Positive;
