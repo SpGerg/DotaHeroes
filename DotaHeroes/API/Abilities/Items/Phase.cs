@@ -34,23 +34,25 @@ namespace DotaHeroes.API.Abilities.Items
 
         public Phase() : base() { }
 
-        public override void LevelUp(Hero hero) { }
+        public Phase(Hero owner) : base(owner) { }
 
-        protected override bool Execute(Hero hero, ArraySegment<string> arguments, out string response)
+        public override void LevelUp() { }
+
+        protected override bool Execute(ArraySegment<string> arguments, out string response)
         {
-            var phase = new PhaseSpeed(hero);
+            var phase = new PhaseSpeed(Owner);
             //lol
-            phase.ExtraSpeed = (sbyte)Values["extra_speed_" + hero.HeroClassType.ToString().ToLower()][Level];
+            phase.ExtraSpeed = (sbyte)Values["extra_speed_" + Owner.HeroClassType.ToString().ToLower()][Level];
 
-            hero.EnableEffect(phase, (float)Values["duration"][Level]);
+            Owner.EnableEffect(phase, (float)Values["duration"][Level]);
 
             response = "Phase boots was used";
             return true;
         }
 
-        public override Ability Create()
+        public override Ability Create(Hero hero)
         {
-            return new Phase();
+            return new Phase(hero);
         }
     }
 }

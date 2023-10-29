@@ -34,7 +34,7 @@ namespace DotaHeroes.API
         /// </summary>
         public static void RegisterHero(Hero hero)
         {
-            RegisteredHeroes[hero.HeroName] = hero;
+            RegisteredHeroes[hero.Slug] = hero;
 
             Log.Info($"Hero with name {hero.HeroName} has been registered.");
         }
@@ -44,7 +44,7 @@ namespace DotaHeroes.API
         /// </summary>
         public static void RegisterAbility(Ability ability)
         {
-            RegisteredAbilties[ability.Name] = ability;
+            RegisteredAbilties[ability.Slug] = ability;
 
             Log.Info($"Ability with name {ability.Name} has been registered.");
         }
@@ -54,7 +54,7 @@ namespace DotaHeroes.API
         /// </summary>
         public static void RegisterItem(Item item)
         {
-            RegisteredItems[item.Name] = item;
+            RegisteredItems[item.Slug] = item;
 
             Log.Info($"Item with name {item.Name} has been registered.");
         }
@@ -104,7 +104,7 @@ namespace DotaHeroes.API
         /// </summary>
         public static Hero GetRegisteredHeroOrDefault(string name)
         {
-            return RegisteredHeroes.FirstOrDefault(_player => _player.Key == name).Value;
+            return RegisteredHeroes.FirstOrDefault(_player => _player.Value.HeroName == name).Value;
         }
 
         /// <summary>
@@ -112,7 +112,7 @@ namespace DotaHeroes.API
         /// </summary>
         public static Ability GetAbilityOrDefault(string name)
         {
-            return RegisteredAbilties.FirstOrDefault(ability => ability.Key == name).Value;
+            return RegisteredAbilties.FirstOrDefault(ability => ability.Value.Name == name).Value;
         }
 
         /// <summary>
@@ -120,7 +120,7 @@ namespace DotaHeroes.API
         /// </summary>
         public static Item GetItemOrDefault(string name)
         {
-            return RegisteredItems.FirstOrDefault(item => item.Key == name).Value;
+            return RegisteredItems.FirstOrDefault(item => item.Value.Name == name).Value;
         }
 
         /// <summary>
@@ -128,7 +128,7 @@ namespace DotaHeroes.API
         /// </summary>
         public static Hero GetRegisteredHeroOrDefaultBySlug(string slug)
         {
-            return RegisteredHeroes.FirstOrDefault(player => player.Value.Slug == slug).Value;
+            return RegisteredHeroes.FirstOrDefault(player => player.Key == slug).Value;
         }
 
         /// <summary>
@@ -136,7 +136,7 @@ namespace DotaHeroes.API
         /// </summary>
         public static Ability GetAbilityOrDefaultBySlug(string slug)
         {
-            return RegisteredAbilties.FirstOrDefault(ability => ability.Value.Slug == slug).Value;
+            return RegisteredAbilties.FirstOrDefault(ability => ability.Key == slug).Value;
         }
 
         /// <summary>
@@ -144,7 +144,7 @@ namespace DotaHeroes.API
         /// </summary>
         public static Item GetItemOrDefaultBySlug(string slug)
         {
-            return RegisteredItems.FirstOrDefault(item => item.Value.Slug == slug).Value;
+            return RegisteredItems.FirstOrDefault(item => item.Key == slug).Value;
         }
     }
 }

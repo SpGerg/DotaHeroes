@@ -14,21 +14,29 @@ namespace DotaHeroes.API.Features
         public ToggleAbility() : base() { }
 
         /// <summary>
+        ///     Initializes a new instance of the <see cref="ToggleAbility" /> class.
+        /// </summary>
+        /// <param name="hero"><inheritdoc cref="Hero" /></param>
+        public ToggleAbility(Hero hero) : base(hero)
+        {
+        }
+
+        /// <summary>
         /// Activate
         /// </summary>
-        public abstract bool Activate(Hero hero, ArraySegment<string> arguments, out string response);
+        public abstract bool Activate(ArraySegment<string> arguments, out string response);
 
         /// <summary>
         /// Deactivate
         /// </summary>
-        public abstract bool Deactivate(Hero hero, ArraySegment<string> arguments, out string response);
+        public abstract bool Deactivate(ArraySegment<string> arguments, out string response);
 
         /// <summary>
         /// Base ability execute
         /// </summary>
-        public virtual bool CheckAndExecute(Hero hero, ArraySegment<string> arguments, out string response)
+        public virtual bool CheckAndExecute(ArraySegment<string> arguments, out string response)
         {
-            if (!base.Execute(hero, out response, true))
+            if (!base.Execute(out response, true))
             {
                 return false;
             }
@@ -42,20 +50,20 @@ namespace DotaHeroes.API.Features
 
             if (IsActive)
             {
-                if (!Activate(hero, arguments, out response))
+                if (!Activate(arguments, out response))
                 {
                     return false;
                 }
             }
             else
             {
-                if (!Deactivate(hero, arguments, out response))
+                if (!Deactivate(arguments, out response))
                 {
                     return false;
                 }
             }
 
-            RunCooldown(hero, default);
+            RunCooldown(default);
             return true;
         }
 

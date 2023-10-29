@@ -35,24 +35,28 @@ namespace DotaHeroes.API.Features
         /// <summary>
         /// Add item.
         /// </summary>
-        public void AddItem(Item item, bool isJustAdd = false)
+        public bool AddItem(Item item, bool isJustAdd = false)
         {
-            if (Items.Count >= MaxItems) return;
+            if (Items.Count >= MaxItems) return false;
 
             Owner.HeroStatistics.AddOrReduceStatistics(item.Statistics, false);
 
             Utils.AddModifier(Owner, item as IModifier);
 
-            foreach (var passive in item.Passives)
+            foreach (var passive in item.Passives.ToList())
             {
-                if (passive is PassiveAbility passiveAbility)
+                var _passive = passive.Create(Owner);
+                item.Passives.Remove(passive);
+                item.Passives.Add(_passive);
+
+                if (_passive is PassiveAbility passiveAbility)
                 {
-                    passiveAbility.Register(Owner);
+                    passiveAbility.Register();
                 }
 
-                if (passive is Aura aura)
+                if (_passive is Aura aura)
                 {
-                    aura.RegisterOwner(Owner); 
+                    aura.IsActive = true;
                 }
             }
 
@@ -67,14 +71,16 @@ namespace DotaHeroes.API.Features
             }
 
             Hud.Update(item.Owner);
+
+            return true;
         }
 
         /// <summary>
         /// Add item.
         /// </summary>
-        public void AddItem<T>(bool isJustAdd = false) where T : Item, new()
+        public bool AddItem<T>(bool isJustAdd = false) where T : Item, new()
         {
-            AddItem(new T(), isJustAdd);
+            return AddItem(new T(), isJustAdd);
         }
 
         /// <summary>
@@ -133,7 +139,12 @@ namespace DotaHeroes.API.Features
             {
                 if (passive is PassiveAbility passiveAbility)
                 {
-                    passiveAbility.Unregister(Owner);
+                    passiveAbility.Unregister();
+                }
+
+                if (passive is Aura aura)
+                {
+                    aura.IsActive = false;
                 }
             }
 
@@ -147,6 +158,8 @@ namespace DotaHeroes.API.Features
             }
 
             Items.Remove(item);
+
+            Hud.Update(Owner);
         }
 
         /// <summary>
@@ -178,13 +191,11 @@ namespace DotaHeroes.API.Features
         //very not optimized
         private void Create(Item item)
         {
+            item.Added();
+            Items.Add(item);
+
             if (item.ItemsFromThisItem.IsEmpty())
             {
-                AddItem(item);
-
-                item.Added();
-                Items.Add(item);
-
                 return;
             }
 
@@ -200,8 +211,8 @@ namespace DotaHeroes.API.Features
                         }
                     }
 
-                    Create(_item);
-                    break;
+                    AddItem(_item);
+                    return;
                 }
             }
         }

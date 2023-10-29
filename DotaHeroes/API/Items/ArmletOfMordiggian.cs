@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace DotaHeroes.API.Items
 {
-    public class ArmletOfMordiggian : Item
+    public class ArmletOfMordiggian : AutoItem
     {
         public override string Name => "Armlet of Mordiggian";
 
@@ -14,21 +14,11 @@ namespace DotaHeroes.API.Items
 
         public override string Lore => "Armlet of Mordiggian";
 
-        public override Ability MainAbility { get; } = DTAPI.GetAbilityOrDefaultBySlug(Plugin.Instance.Config.Items["armlet_of_mordiggian"].Ability);
+        public ArmletOfMordiggian() : base() { }
 
-        public override IReadOnlyDictionary<StatisticsType, Value> Statistics { get; } = Plugin.Instance.Config.Items["armlet_of_mordiggian"].Statistics;
-
-        public override IReadOnlyList<Item> Ingredients { get; } = GetItemsFromStringList(Plugin.Instance.Config.Items["armlet_of_mordiggian"].Ingredients);
-
-        public override IReadOnlyList<Item> ItemsFromThisItem { get; } = GetItemsFromStringList(Plugin.Instance.Config.Items["armlet_of_mordiggian"].ItemsFromThisItems);
-
-        public override int Cost { get; } = Plugin.Instance.Config.Items["armlet_of_mordiggian"].Cost;
-
-        public override int SellCost { get; } = Plugin.Instance.Config.Items["armlet_of_mordiggian"].SellCost;
-
-        public ArmletOfMordiggian() { }
-
-        protected ArmletOfMordiggian(Hero owner) : base(owner) { }
+        protected ArmletOfMordiggian(Hero owner) : base(owner)
+        {
+        }
 
         public override Item Create(Hero owner)
         {

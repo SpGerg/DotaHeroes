@@ -32,51 +32,55 @@ namespace DotaHeroes.API.Abilities.SpiritBreaker
 
         public static string SoundsPath = Plugin.Instance.SoundsPath + "\\spirit_breaker\\nether_strike";
 
-        protected override bool Execute(Hero hero, ArraySegment<string> arguments, out string response)
+        public NetherStrike() : base() { }
+
+        public NetherStrike(Hero hero) : base(hero) { }
+
+        protected override bool Execute(ArraySegment<string> arguments, out string response)
         {
-            if (!Features.Utils.GetHeroFromPlayerEyeDirection(hero, 8, out response, out Hero target))
+            if (!Features.Utils.GetHeroFromPlayerEyeDirection(Owner, 8, out response, out Hero target))
             {
                 return false;
             }
 
-            Timing.RunCoroutine(NetherStrikeCoroutine(hero, target));
+            Timing.RunCoroutine(NetherStrikeCoroutine(target));
 
-            hero.HeroStateType = HeroStateType.Casting;
+            Owner.HeroStateType = HeroStateType.Casting;
 
-            Audio.Play(hero.Player.Position, SoundsPath + "\\precast.ogg", 75f, false, hero.Player);
+            Audio.Play(Owner.Player.Position, SoundsPath + "\\precast.ogg", 75f, false, Owner.Player);
 
             response = "Your target is " + target.HeroName;
             return true;
         }
 
-        private IEnumerator<float> NetherStrikeCoroutine(Hero hero, Hero target)
+        private IEnumerator<float> NetherStrikeCoroutine(Hero target)
         {
             yield return Timing.WaitForSeconds(1);
 
             if (IsStop) yield break;
 
-            hero.HeroStateType = HeroStateType.None;
+            Owner.HeroStateType = HeroStateType.None;
 
-            Audio.Play(hero.Player.Position, SoundsPath + "\\cast.ogg", 75f, false, hero.Player);
+            Audio.Play(Owner.Player.Position, SoundsPath + "\\cast.ogg", 75f, false, Owner.Player);
 
-            hero.Player.Position = target.Player.Position;
-            hero.Player.Rotation = target.Player.Rotation;
-            hero.Player.CameraTransform.rotation = target.Player.CameraTransform.rotation;
+            Owner.Player.Position = target.Player.Position;
+            Owner.Player.Rotation = target.Player.Rotation;
+            Owner.Player.CameraTransform.rotation = target.Player.CameraTransform.rotation;
 
             //target.Player.Position = -Vector3.MoveTowards(target.Player.Position, hero.Player.Position, 2 * Time.deltaTime);
 
-            target.TakeDamage(hero, Values["damage"][Level], DamageType.Magical);
+            target.TakeDamage(Owner, Values["damage"][Level], DamageType.Magical);
 
-            var bash = hero.Abilities.FirstOrDefault(ability => ability is GreaterBash) as GreaterBash;
+            var bash = Owner.Abilities.FirstOrDefault(ability => ability is GreaterBash) as GreaterBash;
 
             if (bash == default) yield break;
 
-            bash.Bash(target, hero);
+            bash.Bash(target, Owner);
         }
 
-        public override Ability Create()
+        public override Ability Create(Hero hero)
         {
-            return new NetherStrike();
+            return new NetherStrike(hero);
         }
     }
 }

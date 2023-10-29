@@ -11,7 +11,7 @@ using UnityEngine;
 
 namespace DotaHeroes.API.Features
 {
-    public abstract class Aura : PassiveAbility
+    public abstract class Aura : Ability
     {
         public abstract float Radius { get; set; }
 
@@ -36,7 +36,7 @@ namespace DotaHeroes.API.Features
             {
                 isActive = value;
 
-                if (isActive)
+                if (isActive && Owner != null)
                 {
                     Timing.RunCoroutine(AuraCoroutine());
                 }
@@ -45,15 +45,14 @@ namespace DotaHeroes.API.Features
 
         private bool isActive;
 
-        public Aura()
-        {
-
-        }
-
-        public Aura(Hero owner)
+        protected Aura() : base()
         {
             Heroes = new List<Hero>();
-            RegisterOwner(owner);
+        }
+
+        public Aura(Hero owner) : base(owner)
+        {
+            Heroes = new List<Hero>();
 
             IsActive = true;
         }
@@ -61,10 +60,6 @@ namespace DotaHeroes.API.Features
         public virtual void Added(Hero hero) { }
 
         public virtual void Removed(Hero hero) { }
-
-        public override void Register(Hero owner) { }
-
-        public override void Unregister(Hero owner) { }
 
         public bool IsInsideAura(Hero hero)
         {
@@ -76,7 +71,7 @@ namespace DotaHeroes.API.Features
             return false;
         }
 
-        public override void Stop(Hero hero) { }
+        public override void Stop() { }
 
         private IEnumerator<float> AuraCoroutine()
         {
@@ -89,7 +84,16 @@ namespace DotaHeroes.API.Features
 
                 foreach (var hero in DTAPI.GetHeroes().Values)
                 {
-                    if (Plugin.Instance.Config.Debug) Log.Info(hero);
+                    if (Plugin.Instance.Config.Debug) Log.Info(hero.Player.Nickname);
+
+                    if (TargetType.HasFlag(TargetType.ToEnemy))
+                    {
+                        if (hero.SideType == Owner.SideType && !TargetType.HasFlag(TargetType.ToFriend)) continue;
+                    }
+                    else if (TargetType.HasFlag(TargetType.ToFriend))
+                    {
+                        if (hero.SideType != Owner.SideType && !TargetType.HasFlag(TargetType.ToEnemy)) continue;
+                    }
 
                     if (IsInsideAura(hero) && !Heroes.Contains(hero))
                     {
@@ -114,6 +118,16 @@ namespace DotaHeroes.API.Features
                 }
 
                 yield return Timing.WaitForSeconds(UpdateTime);
+            }
+
+            foreach (var hero in Heroes)
+            {
+                if (LingerDuration != 0)
+                {
+                    Timing.RunCoroutine(LingerDurationCoroutine(hero));
+
+                    continue;
+                }
             }
         }
 

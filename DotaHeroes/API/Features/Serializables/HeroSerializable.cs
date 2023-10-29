@@ -17,9 +17,6 @@ namespace DotaHeroes.API.Features.Serializables
 
         public bool IsRegistering { get; set; } = true;
 
-        [YamlIgnore]
-        private Hero hero { get; set; }
-
         public HeroSerializable()
         {
             ChangeRoles = new List<RoleTypeId>();

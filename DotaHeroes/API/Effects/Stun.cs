@@ -37,7 +37,7 @@ namespace DotaHeroes.API.Effects
 
             foreach (var ability in Owner.Abilities)
             {
-                ability.Stop(Owner);
+                ability.Stop();
             }
 
             Owner.Player.EnableEffect<Ensnared>();

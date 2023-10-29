@@ -45,9 +45,14 @@ namespace DotaHeroes.API.Abilities.Pudge
             ManaCost = (int)Values["mana_cost"][0];
         }
 
-        protected override bool Execute(Hero hero, ArraySegment<string> arguments, out string response)
+        public MeatHook(Hero hero) : base(hero)
         {
-            var player = hero.Player;
+            ManaCost = (int)Values["mana_cost"][0];
+        }
+
+        protected override bool Execute(ArraySegment<string> arguments, out string response)
+        {
+            var player = Owner.Player;
 
             var sound = Audio.Play(player.Position, $"{SoundsPath}\\moving_to_target.ogg");
 
@@ -57,7 +62,7 @@ namespace DotaHeroes.API.Abilities.Pudge
             primitive.Collidable = false;
             var meatHookObject = primitive.AdminToyBase.gameObject.AddComponent<MeatHookObject>();
             meatHookObject.Initialize(
-                hero,
+                Owner,
                 Features.Utils.GetTargetPositionFromMouse(player.Transform.position, player.CameraTransform.forward, (int)Values["cast_range"][Level]),
                 (int)Values["cast_range"][Level],
                 25,
@@ -87,9 +92,9 @@ namespace DotaHeroes.API.Abilities.Pudge
             primitive.Destroy();
         }
 
-        public override Ability Create()
+        public override Ability Create(Hero hero)
         {
-            return new MeatHook();
+            return new MeatHook(hero);
         }
     }
 }

@@ -22,7 +22,7 @@ namespace DotaHeroes.API.Extensions
                 return default;
             }
 
-            //RemoveHero(player);
+            RemoveHero(player);
 
             var createdHero = hero.Create(player, SideType.Dire);
 
@@ -30,6 +30,8 @@ namespace DotaHeroes.API.Extensions
             heroController.Hero = createdHero;
             createdHero.Respawn();
             player.IsGodModeEnabled = true;
+
+            Hud.Update(createdHero);
 
             return createdHero;
         }
@@ -52,7 +54,12 @@ namespace DotaHeroes.API.Extensions
             {
                 if (ability is PassiveAbility passiveAbility)
                 {
-                    passiveAbility.Unregister(heroController.Hero);
+                    passiveAbility.Unregister();
+                }
+
+                if (ability is Aura aura)
+                {
+                    aura.IsActive = false;
                 }
             }
 

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace DotaHeroes.API.Items
 {
-    public class BootsOfSpeed : Item
+    public class BootsOfSpeed : AutoItem
     {
         public override string Name => "Boots of speed";
 
@@ -18,21 +18,11 @@ namespace DotaHeroes.API.Items
 
         public override string Lore => "Boots of speed";
 
-        public override Ability MainAbility { get; } = DTAPI.GetAbilityOrDefaultBySlug(Plugin.Instance.Config.Items["boots_of_speed"].Ability);
+        public BootsOfSpeed() : base() { }
 
-        public override IReadOnlyList<Item> Ingredients { get; } = GetItemsFromStringList(Plugin.Instance.Config.Items["boots_of_speed"].Ingredients);
-
-        public override IReadOnlyList<Item> ItemsFromThisItem { get; } = GetItemsFromStringList(Plugin.Instance.Config.Items["boots_of_speed"].ItemsFromThisItems);
-
-        public override IReadOnlyDictionary<StatisticsType, Value> Statistics { get; } = Plugin.Instance.Config.Items["boots_of_speed"].Statistics;
-
-        public override int Cost { get; } = Plugin.Instance.Config.Items["boots_of_speed"].Cost;
-
-        public override int SellCost { get; } = Plugin.Instance.Config.Items["boots_of_speed"].SellCost;
-
-        public BootsOfSpeed() { }
-
-        protected BootsOfSpeed(Hero owner) : base(owner) { }
+        protected BootsOfSpeed(Hero owner) : base(owner)
+        {
+        }
 
         public override Item Create(Hero owner)
         {

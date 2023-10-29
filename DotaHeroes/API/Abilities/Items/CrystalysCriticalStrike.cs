@@ -35,16 +35,16 @@ namespace DotaHeroes.API.Abilities.Items
 
         public CrystalysCriticalStrike() : base() { }
 
-        public override void LevelUp(Hero hero) { }
+        public CrystalysCriticalStrike(Hero hero) : base(hero) { }
 
-        public override void Register(Hero owner)
+        public override void LevelUp() { }
+
+        public override void Register()
         {
             Events.Handlers.Hero.Attacking += OnAttack;
-
-            RegisterOwner(owner);
         }
 
-        public override void Unregister(Hero owner)
+        public override void Unregister()
         {
             Events.Handlers.Hero.Attacking -= OnAttack;
         }
@@ -59,9 +59,9 @@ namespace DotaHeroes.API.Abilities.Items
             ev.Hero.Player.SendConsoleMessage("Critical damage: " + ev.Damage, "default");
         }
 
-        public override Ability Create()
+        public override Ability Create(Hero hero)
         {
-            return new CrystalysCriticalStrike();
+            return new CrystalysCriticalStrike(hero);
         }
     }
 }

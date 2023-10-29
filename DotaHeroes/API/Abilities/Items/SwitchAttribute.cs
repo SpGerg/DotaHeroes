@@ -37,7 +37,9 @@ namespace DotaHeroes.API.Abilities.Items
 
         public SwitchAttribute() : base() { }
 
-        public override void LevelUp(Hero hero) { }
+        public SwitchAttribute(Hero hero) : base(hero) { }
+
+        public override void LevelUp() { }
 
         public void UpdateAttribute(Hero hero, AttributeType attribute)
         {
@@ -61,20 +63,20 @@ namespace DotaHeroes.API.Abilities.Items
             Hud.Update(hero);
         }
 
-        protected override bool Execute(Hero hero, ArraySegment<string> arguments, out string response)
+        protected override bool Execute(ArraySegment<string> arguments, out string response)
         {
             //Strength -> Intelligence -> Agility -> Strength
             switch (CurrentAttribute)
             {
                 case AttributeType.Strength:
                     response = $"Added {Values["given"][Level]} strength";
-                    UpdateAttribute(hero, AttributeType.Intelligence); break;
+                    UpdateAttribute(Owner, AttributeType.Intelligence); break;
                 case AttributeType.Agility:
                     response = $"Added {Values["given"][Level]} agility";
-                    UpdateAttribute(hero, AttributeType.Strength); break;
+                    UpdateAttribute(Owner, AttributeType.Strength); break;
                 case AttributeType.Intelligence:
                     response = $"Added {Values["given"][Level]} intelligence";
-                    UpdateAttribute(hero, AttributeType.Agility); break;
+                    UpdateAttribute(Owner, AttributeType.Agility); break;
                 default:
                     response = "What";
                     break;
@@ -92,9 +94,9 @@ namespace DotaHeroes.API.Abilities.Items
             return StringBuilderPool.Shared.ToStringReturn(stringBuilder);
         }
 
-        public override Ability Create()
+        public override Ability Create(Hero hero)
         {
-            return new SwitchAttribute();
+            return new SwitchAttribute(hero);
         }
     }
 }

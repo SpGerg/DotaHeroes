@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace DotaHeroes.API.Items
 {
-    public class PowerTreads : Item
+    public class PowerTreads : AutoItem
     {
         public override string Name => "Powet treads";
 
@@ -20,15 +20,13 @@ namespace DotaHeroes.API.Items
 
         public override string Lore => "Powet treads";
 
-        public override Ability MainAbility { get; } = DTAPI.GetAbilityOrDefaultBySlug(Plugin.Instance.Config.Items["power_treads"].Ability);
+        public PowerTreads() : base()
+        {
+        }
 
-        public override int Cost { get; } = Plugin.Instance.Config.Items["power_treads"].Cost;
-
-        public override int SellCost { get; } = Plugin.Instance.Config.Items["power_treads"].SellCost;
-
-        public PowerTreads() : base() { }
-
-        protected PowerTreads(Hero owner) : base(owner) { }
+        protected PowerTreads(Hero owner) : base(owner)
+        {
+        }
 
         public override void Added()
         {

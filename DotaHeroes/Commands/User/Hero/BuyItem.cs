@@ -61,7 +61,11 @@ namespace DotaHeroes.Commands.User.Hero
             hero.Money -= _item.Cost;
             var buyedItem = _item.Create(hero);
 
-            hero.Inventory.AddItem(buyedItem);
+            if (!hero.Inventory.AddItem(buyedItem))
+            {
+                response = "Your inventory is full";
+                return false;
+            }
 
             response = $"Item {buyedItem.Name} was buyed";
             return true;

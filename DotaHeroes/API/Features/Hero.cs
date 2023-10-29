@@ -24,7 +24,22 @@ namespace DotaHeroes.API.Features
 
         public abstract HeroClassType HeroClassType { get; set; }
 
-        public virtual List<Ability> Abilities { get; }
+        public virtual List<Ability> Abilities 
+        {
+            get
+            {
+                return abilities;
+            }
+            set
+            {
+                abilities = value;
+
+                if (abilities == null)
+                {
+                    abilities = new List<Ability>();
+                }
+            }
+        }
 
         public virtual RoleTypeId Model => RoleTypeId.Tutorial;
 
@@ -115,6 +130,8 @@ namespace DotaHeroes.API.Features
 
         protected List<Effect> Effects { get; set; }
 
+        private List<Ability> abilities;
+
         private Ability lastAbilityLevelUpped;
 
         private HeroStateType heroStateType;
@@ -138,7 +155,12 @@ namespace DotaHeroes.API.Features
             Effects = new List<Effect>();
             OwnedAuras = new List<Aura>();
             Values = new Dictionary<string, object>();
-            ChangeRoles = new List<RoleTypeId>();
+            Inventory = new Inventory(this);
+
+            if (ChangeRoles == null)
+            {
+                ChangeRoles = new List<RoleTypeId>();
+            }
         }
 
         /// <summary>
@@ -157,21 +179,6 @@ namespace DotaHeroes.API.Features
             if (Player != null)
             {
                 DTAPI.SetOrAddPlayer(player.Id, this);
-            }
-
-            foreach (var ability in Abilities)
-            {
-                if (ability is PassiveAbility passiveAbility)
-                {
-                    passiveAbility.Register(this);
-                }
-
-                if (ability is Aura aura)
-                {
-                    var newAura = aura.Create();
-                    (newAura as PassiveAbility).RegisterOwner(this);
-                }
-
             }
 
             HeroController = Player.GameObject.GetComponent<HeroController>();
@@ -204,7 +211,7 @@ namespace DotaHeroes.API.Features
 
             if (ability == default) return false;
 
-            ability.LevelUp(this);
+            ability.LevelUp();
 
             lastAbilityLevelUpped = ability;
             PointsToLevelUp--;
@@ -258,12 +265,12 @@ namespace DotaHeroes.API.Features
 
                 if (ability is ActiveAbility activeAbility)
                 {
-                    activeAbility.CheckAndExecute(this, Utils.EmptyArraySegment, out response);
+                    activeAbility.CheckAndExecute(Utils.EmptyArraySegment, out response);
                 }
 
                 if (ability is ToggleAbility toggleAbility)
                 {
-                    toggleAbility.CheckAndExecute(this, Utils.EmptyArraySegment, out response);
+                    toggleAbility.CheckAndExecute(Utils.EmptyArraySegment, out response);
                 }
 
                 var executedAbility = new HeroExecutedAbilityEventArgs(this, ability);
@@ -412,7 +419,7 @@ namespace DotaHeroes.API.Features
                 if (ability is ToggleAbility toggleAbility)
                 {
                     toggleAbility.IsActive = false;
-                    toggleAbility.Deactivate(this, new ArraySegment<string>(), out string response);
+                    toggleAbility.Deactivate(new ArraySegment<string>(), out string response);
                 }
             }
 
@@ -754,7 +761,7 @@ namespace DotaHeroes.API.Features
 
                     Hud.Update(hero);
                 }
-                
+
                 yield return Timing.WaitForSeconds(1);
             }
         }

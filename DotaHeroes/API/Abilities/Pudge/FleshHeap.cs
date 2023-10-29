@@ -35,9 +35,11 @@ namespace DotaHeroes.API.Abilities.Pudge
 
         public FleshHeap() : base() { }
 
-        public override void LevelUp(Hero hero)
+        public FleshHeap(Hero hero) : base(hero) { }
+
+        public override void LevelUp()
         {
-            var effect = hero.GetEffects().FirstOrDefault(_effect => _effect is Effects.Pudge.FleshHeap) as Effects.Pudge.FleshHeap;
+            var effect = Owner.GetEffects().FirstOrDefault(_effect => _effect is Effects.Pudge.FleshHeap) as Effects.Pudge.FleshHeap;
 
             if (effect != default)
             {
@@ -45,12 +47,12 @@ namespace DotaHeroes.API.Abilities.Pudge
                 effect.Stack++;
             }
 
-            base.LevelUp(hero);
+            base.LevelUp();
         }
 
-        protected override bool Execute(Hero hero, ArraySegment<string> arguments, out string response)
+        protected override bool Execute(ArraySegment<string> arguments, out string response)
         {
-            var blockDamage = hero.EnableEffect(new FleshHeapShield(hero)) as FleshHeapShield;
+            var blockDamage = Owner.EnableEffect(new FleshHeapShield(Owner)) as FleshHeapShield;
             blockDamage.DamageBlock = (int)Values["damage_block"][Level];
 
             response = "Flesh heap enabled.";
@@ -58,9 +60,9 @@ namespace DotaHeroes.API.Abilities.Pudge
             return true;
         }
 
-        public override Ability Create()
+        public override Ability Create(Hero hero)
         {
-            return new FleshHeap();
+            return new FleshHeap(hero);
         }
     }
 }

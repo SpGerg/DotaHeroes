@@ -2,15 +2,23 @@
 {
     public abstract class PassiveAbility : Ability
     {
-        public Hero Owner { get; private set; }
-
-        public void RegisterOwner(Hero owner)
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="PassiveAbility" /> class.
+        /// </summary>
+        public PassiveAbility() : base()
         {
-            Owner = owner;
         }
 
-        public abstract void Register(Hero owner);
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="PassiveAbility" /> class.
+        /// </summary>
+        /// <param name="hero"><inheritdoc cref="Hero" /></param>
+        public PassiveAbility(Hero hero) : base(hero)
+        {
+        }
 
-        public abstract void Unregister(Hero owner);
+        public abstract void Register();
+
+        public abstract void Unregister();
     }
 }

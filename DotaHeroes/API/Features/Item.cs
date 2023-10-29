@@ -1,4 +1,5 @@
 ﻿using DotaHeroes.API.Enums;
+using Exiled.API.Features;
 using NorthwoodLib.Pools;
 using System.Collections.Generic;
 using System.Text;
@@ -15,19 +16,19 @@ namespace DotaHeroes.API.Features
 
         public abstract string Lore { get; }
 
-        public abstract int Cost { get; }
+        public abstract int Cost { get; protected set; }
 
-        public abstract int SellCost { get; }
+        public abstract int SellCost { get; protected set; }
 
-        public virtual Ability MainAbility { get; }
+        public virtual Ability MainAbility { get; set; }
 
-        public virtual List<Ability> Passives { get; }
+        public virtual List<Ability> Passives { get; protected set; }
 
-        public virtual IReadOnlyDictionary<StatisticsType, Value> Statistics { get; }
+        public virtual IReadOnlyDictionary<StatisticsType, Value> Statistics { get; protected set; }
 
-        public virtual IReadOnlyList<Item> Ingredients { get; }
+        public virtual IReadOnlyList<Item> Ingredients { get; protected set; }
 
-        public virtual IReadOnlyList<Item> ItemsFromThisItem { get; }
+        public virtual IReadOnlyList<Item> ItemsFromThisItem { get; protected set; }
 
         public Hero Owner { get; }
 
@@ -51,8 +52,6 @@ namespace DotaHeroes.API.Features
         /// </summary>
         public Item()
         {
-            Owner = null;
-            MainAbility = null;
             Passives = new List<Ability>();
             Ingredients = new List<Item>();
             Statistics = new Dictionary<StatisticsType, Value>();
@@ -68,7 +67,7 @@ namespace DotaHeroes.API.Features
             Owner = owner;
         }
 
-        public static List<Item> GetItemsFromStringList(List<string> items)
+        public static List<Item> GetItemsFromStringList(Hero hero, List<string> items, bool isCreate = false)
         {
             var result = new List<Item>();
 
@@ -78,7 +77,7 @@ namespace DotaHeroes.API.Features
 
                 if (_item == default) continue;
 
-                result.Add(_item);
+                result.Add(isCreate ? _item.Create(hero) : _item);
             }
 
             return result;

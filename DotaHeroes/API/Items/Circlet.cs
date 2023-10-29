@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace DotaHeroes.API.Items
 {
-    public class Circlet : Item
+    public class Circlet : AutoItem
     {
         public override string Name => "Circlet";
 
@@ -14,23 +14,11 @@ namespace DotaHeroes.API.Items
 
         public override string Lore => "circlet is circlet";
 
-        public override Ability MainAbility { get; } = DTAPI.GetAbilityOrDefaultBySlug(Plugin.Instance.Config.Items["circlet"].Ability);
+        public Circlet() : base() { }
 
-        public override List<Ability> Passives { get; } = Ability.ToAbilitiesFromStringList(Plugin.Instance.Config.Items["circlet"].Passives);
-
-        public override IReadOnlyList<Item> Ingredients { get; } = GetItemsFromStringList(Plugin.Instance.Config.Items["circlet"].Ingredients);
-
-        public override IReadOnlyList<Item> ItemsFromThisItem { get; } = GetItemsFromStringList(Plugin.Instance.Config.Items["circlet"].ItemsFromThisItems);
-
-        public override IReadOnlyDictionary<StatisticsType, Value> Statistics { get; } = Plugin.Instance.Config.Items["circlet"].Statistics;
-
-        public override int Cost { get; } = Plugin.Instance.Config.Items["circlet"].Cost;
-
-        public override int SellCost { get; } = Plugin.Instance.Config.Items["circlet"].SellCost;
-
-        public Circlet() { }
-
-        protected Circlet(Hero owner) : base(owner) { }
+        protected Circlet(Hero owner) : base(owner) 
+        {
+        }
 
         public override Item Create(Hero owner)
         {

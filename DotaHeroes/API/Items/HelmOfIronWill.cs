@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace DotaHeroes.API.Items
 {
-    public class HelmOfIronWill : Item
+    public class HelmOfIronWill : AutoItem
     {
         public override string Name => "Helm of iron will";
 
@@ -13,20 +13,6 @@ namespace DotaHeroes.API.Items
         public override string Description => "Helm of iron will";
 
         public override string Lore => "Helm of iron will";
-
-        public override Ability MainAbility { get; } = DTAPI.GetAbilityOrDefaultBySlug(Plugin.Instance.Config.Items["helm_of_iron_will"].Ability);
-
-        public override List<Ability> Passives { get; } = Ability.ToAbilitiesFromStringList(Plugin.Instance.Config.Items["helm_of_iron_will"].Passives);
-
-        public override IReadOnlyList<Item> Ingredients => GetItemsFromStringList(Plugin.Instance.Config.Items["helm_of_iron_will"].Ingredients);
-
-        public override IReadOnlyList<Item> ItemsFromThisItem => GetItemsFromStringList(Plugin.Instance.Config.Items["helm_of_iron_will"].ItemsFromThisItems);
-
-        public override IReadOnlyDictionary<StatisticsType, Value> Statistics { get; } = Plugin.Instance.Config.Items["helm_of_iron_will"].Statistics;
-
-        public override int Cost { get; } = Plugin.Instance.Config.Items["helm_of_iron_will"].Cost;
-
-        public override int SellCost { get; } = Plugin.Instance.Config.Items["helm_of_iron_will"].SellCost;
 
         public HelmOfIronWill() : base()
         {

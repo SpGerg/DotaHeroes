@@ -48,6 +48,7 @@
     <Compile Include="API\Auras\Items\BucklerAura.cs" />
     <Compile Include="API\Effects\Break.cs" />
     <Compile Include="API\Effects\Disarm.cs" />
+    <Compile Include="API\Effects\Items\Buckler.cs" />
     <Compile Include="API\Effects\Items\PhaseSpeed.cs" />
     <Compile Include="API\Effects\Items\UnholyStrength.cs" />
     <Compile Include="API\Effects\Pudge\FleshHeap.cs" />
@@ -78,6 +79,7 @@
     <Compile Include="API\DTAPI.cs" />
     <Compile Include="API\Features\Audio.cs" />
     <Compile Include="API\Features\Aura.cs" />
+    <Compile Include="API\Features\AutoItem.cs" />
     <Compile Include="API\Features\Constants.cs" />
     <Compile Include="API\Features\CooldownInfo.cs" />
     <Compile Include="API\Features\DamageOverTime.cs" />
@@ -96,7 +98,6 @@
     <Compile Include="API\Extensions\EnumExtension.cs" />
     <Compile Include="API\Features\Components\HeroController.cs" />
     <Compile Include="API\Features\Cooldowns.cs" />
-    <Compile Include="API\Features\Effects.cs" />
     <Compile Include="API\Features\Inventory.cs" />
     <Compile Include="API\Features\Objects\MeatHookObject.cs" />
     <Compile Include="API\Features\Objects\ProjectileObject.cs" />

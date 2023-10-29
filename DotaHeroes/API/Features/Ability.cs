@@ -1,5 +1,6 @@
 ﻿using DotaHeroes.API.Enums;
 using DotaHeroes.API.Interfaces;
+using Exiled.API.Features;
 using NorthwoodLib.Pools;
 using System.Collections.Generic;
 using System.Text;
@@ -19,6 +20,8 @@ namespace DotaHeroes.API.Features
         public abstract AbilityType AbilityType { get; }
 
         public abstract TargetType TargetType { get; }
+
+        public Hero Owner { get; }
 
         public bool IsEnabled { get; set; } = true;
 
@@ -51,23 +54,37 @@ namespace DotaHeroes.API.Features
         }
 
         /// <summary>
+        ///     Initializes a new instance of the <see cref="Ability" /> class.
+        /// </summary>
+        /// <param name="hero"><inheritdoc cref="Hero" /></param>
+        public Ability(Hero hero)
+        {
+            if (this is ILevelValues levelValues)
+            {
+                Level = levelValues.MinLevel - 1;
+            }
+
+            Owner = hero;
+        }
+
+        /// <summary>
         /// Level up.
         /// </summary>
-        public virtual void LevelUp(Hero hero)
+        public virtual void LevelUp()
         {
             Level++;
             if (this is ILevelValues levelValues)
             {
                 if (levelValues.Values.ContainsKey("cooldown"))
                 {
-                    var cooldown = Cooldowns.GetCooldown(hero.Player.Id, Slug);
+                    var cooldown = Cooldowns.GetCooldown(Owner.Player.Id, Slug);
 
                     if (cooldown != default)
                     {
                         cooldown.Duration = (float)levelValues.Values["cooldown"][Level];
                     }
 
-                    Cooldowns.AddCooldown(hero.Player.Id, new CooldownInfo(Slug, (float)levelValues.Values["cooldown"][Level]));
+                    Cooldowns.AddCooldown(Owner.Player.Id, new CooldownInfo(Slug, (float)levelValues.Values["cooldown"][Level]));
                 }
 
                 if (levelValues.Values.ContainsKey("damage") && this is IDamage)
@@ -90,7 +107,7 @@ namespace DotaHeroes.API.Features
         /// <summary>
         /// Protected execute.
         /// </summary>
-        protected virtual bool Execute(Hero executor, out string response, bool isCooldown = false)
+        protected virtual bool Execute(out string response, bool isCooldown = false)
         {
             if (!IsEnabled)
             {
@@ -113,7 +130,7 @@ namespace DotaHeroes.API.Features
         /// <summary>
         /// Stop. sToP.
         /// </summary>
-        public virtual void Stop(Hero hero)
+        public virtual void Stop()
         {
             IsStop = true;
         }
@@ -121,7 +138,7 @@ namespace DotaHeroes.API.Features
         /// <summary>
         /// Check and run cooldown.
         /// </summary>
-        protected void RunCooldown(Hero hero, CooldownInfo cooldown)
+        protected void RunCooldown(CooldownInfo cooldown)
         {
             if (cooldown == default)
             {
@@ -134,16 +151,23 @@ namespace DotaHeroes.API.Features
         /// <summary>
         /// Check and run cooldown.
         /// </summary>
-        protected bool CheckCooldown(Hero hero, out string response, out CooldownInfo cooldown)
+        protected bool CheckCooldown(out string response, out CooldownInfo cooldown)
         {
-            var _cooldown = Cooldowns.GetCooldown(hero.Player.Id, Slug);
+            if (Owner == null)
+            {
+                cooldown = null;
+                response = "Owner is null";
+                return false;
+            }
+
+            var _cooldown = Cooldowns.GetCooldown(Owner.Player.Id, Slug);
             cooldown = _cooldown;
 
             if (this is ILevelValues levelValues && levelValues.Values.TryGetValue("cooldown", out List<decimal> result))
             {
                 if (cooldown == default)
                 {
-                    cooldown = Cooldowns.AddCooldown(hero.Player.Id, new CooldownInfo(Slug, (float)result[Level]));
+                    cooldown = Cooldowns.AddCooldown(Owner.Player.Id, new CooldownInfo(Slug, (float)result[Level]));
                 }
 
                 if (!cooldown.IsReady)
@@ -158,7 +182,7 @@ namespace DotaHeroes.API.Features
             return true;
         }
 
-        public static List<Ability> ToAbilitiesFromStringList(List<string> abilties)
+        public static List<Ability> ToAbilitiesFromStringList(Hero hero, List<string> abilties, bool isCreate = false)
         {
             List<Ability> result = new List<Ability>();
 
@@ -170,7 +194,7 @@ namespace DotaHeroes.API.Features
 
                 if (_ability == default) continue;
                 
-                result.Add(_ability.Create());
+                result.Add(isCreate ? _ability.Create(hero) : _ability);
             }
 
             return result;
@@ -240,6 +264,6 @@ namespace DotaHeroes.API.Features
             return StringBuilderPool.Shared.ToStringReturn(stringBuilder);
         }
 
-        public abstract Ability Create();
+        public abstract Ability Create(Hero hero);
     }
 }

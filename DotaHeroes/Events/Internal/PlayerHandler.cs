@@ -25,11 +25,6 @@ namespace DotaHeroes.Events.Internal
         {
             var player = ev.Player;
             var hero = DTAPI.GetRegisteredHeroes().GetRandomValue().Value;
-            
-            foreach (var role in hero.ChangeRoles)
-            {
-                Log.Info(role);
-            }
 
             if (hero.ChangeRoles.Contains(ev.NewRole))
             {

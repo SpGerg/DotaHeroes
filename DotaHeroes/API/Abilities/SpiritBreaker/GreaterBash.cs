@@ -33,14 +33,16 @@ namespace DotaHeroes.API.Abilities.SpiritBreaker
 
         public static string SoundsPath = Plugin.Instance.SoundsPath + "\\spirit_breaker\\greater_bash";
 
-        public override void Register(Hero owner)
+        public GreaterBash() : base() { }
+
+        public GreaterBash(Hero hero) : base(hero) { }
+
+        public override void Register()
         {
             Events.Handlers.Hero.Attacking += OnAttack;
-
-            RegisterOwner(owner);
         }
 
-        public override void Unregister(Hero owner)
+        public override void Unregister()
         {
             Events.Handlers.Hero.Attacking -= OnAttack;
         }
@@ -71,16 +73,17 @@ namespace DotaHeroes.API.Abilities.SpiritBreaker
 
             var effect = new Stun(target);
 
-            target.EnableEffect(effect, (float)Values["stun"][Level]);
+            target.EnableEffect(effect, (float)target.HeroStatistics.Resistance.GetEffectDuration(Values["stun"][Level]));
 
             target.TakeDamage(attacker, total_damage, DamageType.Magical);
 
             Audio.Play(Owner.Player.Position, SoundsPath + "\\bash.ogg", 75f, false, Owner.Player);
         }
 
-        public override Ability Create()
+        public override Ability Create(Hero hero)
         {
-            return new GreaterBash();
+            return new GreaterBash(hero);
         }
     }
 }
+  

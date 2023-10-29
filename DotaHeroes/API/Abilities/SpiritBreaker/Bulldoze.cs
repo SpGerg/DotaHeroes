@@ -30,22 +30,26 @@ namespace DotaHeroes.API.Abilities.SpiritBreaker
 
         public static string SoundsPath = Plugin.Instance.SoundsPath + "\\spirit_breaker\\bulldoze";
 
-        protected override bool Execute(Hero hero, ArraySegment<string> arguments, out string response)
+        public Bulldoze() : base() { }
+
+        public Bulldoze(Hero hero) : base(hero) { }
+
+        protected override bool Execute(ArraySegment<string> arguments, out string response)
         {
-            var effect = new Effects.SpiritBreaker.Bulldoze(hero);
+            var effect = new Effects.SpiritBreaker.Bulldoze(Owner);
             effect.EffectResistance = Values["extra_effect_resistance"][Level];
 
-            hero.EnableEffect(effect, (float)Values["duration"][Level]);
+            Owner.EnableEffect(effect, (float)Values["duration"][Level]);
 
-            Audio.Play(hero.Player.Position, SoundsPath + "\\activate.ogg", 75f, false, hero.Player);
+            Audio.Play(Owner.Player.Position, SoundsPath + "\\activate.ogg", 75f, false, Owner.Player);
 
             response = "Bulldoze has been activated.";
             return true;
         }
 
-        public override Ability Create()
+        public override Ability Create(Hero hero)
         {
-            return new Bulldoze();
+            return new Bulldoze(hero);
         }
     }
 }

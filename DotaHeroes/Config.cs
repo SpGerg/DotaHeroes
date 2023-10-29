@@ -372,7 +372,7 @@ namespace DotaHeroes
                 { }
             )
             },
-            { "buckler_recipe", new ItemSerializable(1950, 975, string.Empty,
+            { "buckler_recipe", new ItemSerializable(250, 250, string.Empty,
                 new List<string>() { },
                 new List<string>() { },
                 new List<string>() 
@@ -605,8 +605,11 @@ namespace DotaHeroes
                 }
             )
             },
-            { "buckler", new ItemSerializable(425, 212, "buckler_aura",
-                new List<string>() { },
+            { "buckler", new ItemSerializable(425, 212, string.Empty,
+                new List<string>()
+                {
+                    "buckler_aura"
+                },
                 new List<string>()
                 {
                     "ring_of_protection",
@@ -615,7 +618,7 @@ namespace DotaHeroes
                 new List<string>() { },
                 new Dictionary<StatisticsType, Value>()
                 {
-                    { StatisticsType.Armor, new Value(2, false) }
+                    { StatisticsType.Armor, new Value(1, false) }
                 }
             )
             },

@@ -10,6 +10,7 @@ using DotaHeroes.API.Items.Recipes;
 using DotaHeroes.API.Abilities.Items;
 using DotaHeroes.API;
 using System;
+using DotaHeroes.API.Auras.Items;
 
 namespace DotaHeroes
 {
@@ -42,15 +43,16 @@ namespace DotaHeroes
             DTAPI.RegisterAbility(new SwitchAttribute());
             DTAPI.RegisterAbility(new Phase());
             DTAPI.RegisterAbility(new CrystalysCriticalStrike());
+            DTAPI.RegisterAbility(new BucklerAura());
 
             if (Config.Heroes["pudge"].IsRegistering)
             {
-                API.DTAPI.RegisterHero(new Pudge());
+                DTAPI.RegisterHero(new Pudge());
             }
 
             if (Config.Heroes["spirit_breaker"].IsRegistering)
             {
-                API.DTAPI.RegisterHero(new SpiritBreaker());
+                DTAPI.RegisterHero(new SpiritBreaker());
             }
 
             //Here ingredients
@@ -66,6 +68,7 @@ namespace DotaHeroes
             DTAPI.RegisterItem(new HelmOfIronWill());
             DTAPI.RegisterItem(new BladesOfAttack());
             DTAPI.RegisterItem(new GlovesOfHaste());
+            DTAPI.RegisterItem(new RingOfProtection());
             DTAPI.RegisterItem(new ArmletOfMordiggianRecipe());
             DTAPI.RegisterItem(new WraithBandRecipe());
             DTAPI.RegisterItem(new NullTalismanRecipe());

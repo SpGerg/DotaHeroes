@@ -34,16 +34,16 @@ namespace DotaHeroes.API.Abilities.Items
 
         public DamageBlock() : base() { }
 
-        public override void LevelUp(Hero hero) { }
+        public DamageBlock(Hero hero) : base(hero) { }
 
-        public override void Register(Hero owner)
+        public override void LevelUp() { }
+
+        public override void Register()
         {
             Events.Handlers.Hero.Attacking += OnAttack;
-
-            RegisterOwner(owner);
         }
 
-        public override void Unregister(Hero owner)
+        public override void Unregister()
         {
             Events.Handlers.Hero.Attacking -= OnAttack;
         }
@@ -55,9 +55,9 @@ namespace DotaHeroes.API.Abilities.Items
             ev.Damage -= Values[$"damage_block_{Owner.HeroClassType.ToString().ToLower()}"][Level];
         }
 
-        public override Ability Create()
+        public override Ability Create(Hero hero)
         {
-            return new DamageBlock();
+            return new DamageBlock(hero);
         }
     }
 }

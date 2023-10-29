@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace DotaHeroes.API.Items.Recipes
 {
-    public class CrystalysRecipe : Item
+    public class CrystalysRecipe : AutoItem
     {
         public override string Name => "Crystalys recipe";
 
@@ -17,20 +17,6 @@ namespace DotaHeroes.API.Items.Recipes
         public override string Description => "Crystalys recipe";
 
         public override string Lore => "Crystalys recipe";
-
-        public override Ability MainAbility { get; } = DTAPI.GetAbilityOrDefaultBySlug("crystalys_recipe");
-
-        public override List<Ability> Passives { get; } = Ability.ToAbilitiesFromStringList(Plugin.Instance.Config.Items["crystalys_recipe"].Passives);
-
-        public override IReadOnlyList<Item> Ingredients { get; } = GetItemsFromStringList(Plugin.Instance.Config.Items["crystalys_recipe"].Ingredients);
-
-        public override IReadOnlyList<Item> ItemsFromThisItem { get; } = GetItemsFromStringList(Plugin.Instance.Config.Items["crystalys_recipe"].ItemsFromThisItems);
-
-        public override IReadOnlyDictionary<StatisticsType, Value> Statistics { get; } = Plugin.Instance.Config.Items["crystalys_recipe"].Statistics;
-
-        public override int Cost { get; } = Plugin.Instance.Config.Items["crystalys_recipe"].Cost;
-
-        public override int SellCost { get; } = Plugin.Instance.Config.Items["crystalys_recipe"].SellCost;
 
         public CrystalysRecipe() : base()
         {

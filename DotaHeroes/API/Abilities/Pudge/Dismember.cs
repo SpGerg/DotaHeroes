@@ -39,20 +39,20 @@ namespace DotaHeroes.API.Abilities.Pudge
 
         public Dismember() : base() { }
 
-        protected override bool Execute(Hero hero, ArraySegment<string> arguments, out string response)
-        {
-            var player = hero.Player;
+        public Dismember(Hero hero) : base(hero) { }
 
-            if (!Features.Utils.GetHeroFromPlayerEyeDirection(hero, 5, out response, out Hero target))
+        protected override bool Execute(ArraySegment<string> arguments, out string response)
+        {
+            if (!Features.Utils.GetHeroFromPlayerEyeDirection(Owner, 5, out response, out Hero target))
             {
                 return false;
             }
 
             var duration = target.HeroStatistics.Resistance.GetEffectDuration(Duration);
 
-            hero.HeroStateType = HeroStateType.Casting;
+            Owner.HeroStateType = HeroStateType.Casting;
 
-            player.EnableEffect<Ensnared>((float)Duration);
+            Owner.Player.EnableEffect<Ensnared>((float)Duration);
             target.EnableEffect(new Stun(target)
             {
                 Duration = (float)duration
@@ -61,23 +61,23 @@ namespace DotaHeroes.API.Abilities.Pudge
 
             response = "You eating " + target.Player.Nickname;
 
-            Timing.RunCoroutine(DamageCoroutine(hero, target, Values["damage"][Level], DamageType.Magical, (float)duration));
-            Timing.RunCoroutine(SoundCoroutine(hero));
+            Timing.RunCoroutine(DamageCoroutine(target, Values["damage"][Level], DamageType.Magical, (float)duration));
+            Timing.RunCoroutine(SoundCoroutine(Owner));
 
             return true;
         }
 
-        private IEnumerator<float> DamageCoroutine(Hero hero, Hero target, decimal damage, DamageType damageType, float duration)
+        private IEnumerator<float> DamageCoroutine(Hero target, decimal damage, DamageType damageType, float duration)
         {
             decimal times = (decimal)(duration / 0.1f);
-            var damageOverTime = new DamageOverTime(target, Math.Round((damage / times) * 2), damageType, (int)times, 0.1f, hero);
+            var damageOverTime = new DamageOverTime(target, Math.Round((damage / times) * 2), damageType, (int)times, 0.1f, Owner);
             damageOverTime.Run();
 
             for (int i = 0; i < times; i++)
             {
                 if (IsStop)
                 {
-                    hero.Player.DisableEffect<Ensnared>();
+                    Owner.Player.DisableEffect<Ensnared>();
                     target.DisableEffect<Stun>();
 
                     damageOverTime.IsEnabled = false;
@@ -85,22 +85,22 @@ namespace DotaHeroes.API.Abilities.Pudge
                     yield break;
                 }
 
-                target.Player.Position = Vector3.MoveTowards(target.Player.Position, hero.Player.Position, 2 * Time.deltaTime);
+                target.Player.Position = Vector3.MoveTowards(target.Player.Position, Owner.Player.Position, 2 * Time.deltaTime);
 
                 yield return Timing.WaitForSeconds(0.1f);
             }
 
-            hero.Player.DisableEffect<Ensnared>();
+            Owner.Player.DisableEffect<Ensnared>();
             target.DisableEffect<Stun>();
-            hero.HeroStateType = HeroStateType.None;
+            Owner.HeroStateType = HeroStateType.None;
         }
 
         private IEnumerator<float> SoundCoroutine(Hero hero)
         {
             for (int i = 0;i < 3;i++)
             {
-                Audio.Play(hero.Player.Position, SoundsPath + $"\\blood{i}.ogg");
-                Audio.Play(hero.Player.Position, SoundsPath + $"\\swing{i}.ogg");
+                Audio.Play(Owner.Player.Position, SoundsPath + $"\\blood{i}.ogg");
+                Audio.Play(Owner.Player.Position, SoundsPath + $"\\swing{i}.ogg");
 
                 yield return Timing.WaitForSeconds(0.5f);
             }
@@ -109,16 +109,16 @@ namespace DotaHeroes.API.Abilities.Pudge
 
             for (int i = 0; i < 2; i++)
             {
-                Audio.Play(hero.Player.Position, SoundsPath + $"\\blood{i}.ogg");
-                Audio.Play(hero.Player.Position, SoundsPath + $"\\swing{i}.ogg");
+                Audio.Play(Owner.Player.Position, SoundsPath + $"\\blood{i}.ogg");
+                Audio.Play(Owner.Player.Position, SoundsPath + $"\\swing{i}.ogg");
 
                 yield return Timing.WaitForSeconds(0.5f);
             }
         }
 
-        public override Ability Create()
+        public override Ability Create(Hero hero)
         {
-            return new Dismember();
+            return new Dismember(hero);
         }
     }
 }

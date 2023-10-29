@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace DotaHeroes.API.Items
 {
-    public class Broadsword : Item
+    public class Broadsword : AutoItem
     {
         public override string Name => "Broadsword";
 
@@ -18,17 +18,11 @@ namespace DotaHeroes.API.Items
 
         public override string Lore => "Broadsword";
 
-        public override Ability MainAbility { get; } = DTAPI.GetAbilityOrDefaultBySlug(Plugin.Instance.Config.Items["broadsword"].Ability);
+        public Broadsword() : base() { }
 
-        public override IReadOnlyDictionary<StatisticsType, Value> Statistics { get; } = Plugin.Instance.Config.Items["broadsword"].Statistics;
-
-        public override int Cost { get; } = Plugin.Instance.Config.Items["broadsword"].Cost;
-
-        public override int SellCost { get; } = Plugin.Instance.Config.Items["broadsword"].SellCost;
-
-        public Broadsword() { }
-
-        protected Broadsword(Hero owner) : base(owner) { }
+        protected Broadsword(Hero owner) : base(owner)
+        {
+        }
 
         public override Item Create(Hero owner)
         {

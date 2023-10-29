@@ -35,32 +35,34 @@ namespace DotaHeroes.API.Abilities.Items
 
         public UnholyStrength() : base() { }
 
-        public override void LevelUp(Hero hero) { }
+        public UnholyStrength(Hero hero) : base(hero) { }
 
-        public override bool Activate(Hero hero, ArraySegment<string> arguments, out string response)
+        public override void LevelUp() { }
+
+        public override bool Activate(ArraySegment<string> arguments, out string response)
         {
-            var unholyStrength = new Effects.Items.UnholyStrength(hero);
+            var unholyStrength = new Effects.Items.UnholyStrength(Owner);
             unholyStrength.ExtraAttackDamage = Values["extra_attack_damage"][Level];
             unholyStrength.Strength = Values["strength"][Level];
             unholyStrength.Armor = Values["armor"][Level];
 
-            hero.EnableEffect(unholyStrength);
+            Owner.EnableEffect(unholyStrength);
 
             response = "Armlet is enabled";
             return true;
         }
 
-        public override bool Deactivate(Hero hero, ArraySegment<string> arguments, out string response)
+        public override bool Deactivate(ArraySegment<string> arguments, out string response)
         {
-            hero.DisableEffect<Effects.Items.UnholyStrength>();
+            Owner.DisableEffect<Effects.Items.UnholyStrength>();
 
             response = "Armlet is disabled";
             return true;
         }
 
-        public override Ability Create()
+        public override Ability Create(Hero hero)
         {
-            return new UnholyStrength();
+            return new UnholyStrength(hero);
         }
     }
 }

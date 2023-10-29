@@ -13,8 +13,6 @@ namespace DotaHeroes.API.Heroes
 
         public override string Slug => "spirit_breaker";
 
-        public override List<Ability> Abilities { get; } = Ability.ToAbilitiesFromStringList(Plugin.Instance.Config.Heroes["spirit_breaker"].Abilties);
-
         public override List<RoleTypeId> ChangeRoles { get; set; } = Plugin.Instance.Config.Heroes["spirit_breaker"].ChangeRoles;
 
         public override HeroClassType HeroClassType { get; set; } = HeroClassType.Melee;
@@ -23,12 +21,16 @@ namespace DotaHeroes.API.Heroes
         {
             SideType = SideType.Dire;
 
+            Abilities = Ability.ToAbilitiesFromStringList(this, Plugin.Instance.Config.Heroes[Slug].Abilties);
+
             HeroStatistics = new HeroStatistics(Plugin.Instance.Config.Heroes[Slug].DefaultHeroStatistics.ToHeroStatistics(this), this);
         }
 
         protected SpiritBreaker(Player player, SideType sideType) : base(player, sideType)
         {
             SideType = sideType;
+
+            Abilities = Ability.ToAbilitiesFromStringList(this, Plugin.Instance.Config.Heroes[Slug].Abilties);
 
             HeroStatistics = new HeroStatistics(Plugin.Instance.Config.Heroes[Slug].DefaultHeroStatistics.ToHeroStatistics(this), this);
         }

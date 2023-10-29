@@ -38,20 +38,24 @@ namespace DotaHeroes.API.Abilities.SpiritBreaker
 
         public static string SoundsPath = Plugin.Instance.SoundsPath + "\\spirit_breaker\\charge_of_darkness";
 
-        protected override bool Execute(Hero hero, ArraySegment<string> arguments, out string response)
+        public ChargeOfDarkness() : base() { }
+
+        public ChargeOfDarkness(Hero hero) : base(hero) { }
+
+        protected override bool Execute(ArraySegment<string> arguments, out string response)
         {
-            if (!Features.Utils.GetHeroFromPlayerEyeDirection(hero, Mathf.Infinity, out response, out Hero target))
+            if (!Features.Utils.GetHeroFromPlayerEyeDirection(Owner, Mathf.Infinity, out response, out Hero target))
             {
                 return false;
             }
 
-            var effect = new ChargeOfDarknessSpeed(hero);
+            var effect = new ChargeOfDarknessSpeed(Owner);
             effect.ExtraSpeed = (sbyte)Values["extra_speed"][Level];
 
-            hero.EnableEffect(effect);
-            hero.HeroStateType = HeroStateType.Casting;
+            Owner.EnableEffect(effect);
+            Owner.HeroStateType = HeroStateType.Casting;
             
-            Timing.RunCoroutine(RunningCoroutine(hero, target));
+            Timing.RunCoroutine(RunningCoroutine(target));
 
             foreach (var _hero in DTAPI.GetHeroes().Values)
             {
@@ -62,19 +66,19 @@ namespace DotaHeroes.API.Abilities.SpiritBreaker
             return true;
         }
 
-        public override void Stop(Hero hero)
+        public override void Stop()
         {
-            hero.DisableEffect<ChargeOfDarknessSpeed>();
-            hero.HeroStateType = HeroStateType.None;
+            Owner.DisableEffect<ChargeOfDarknessSpeed>();
+            Owner.HeroStateType = HeroStateType.None;
 
-            base.Stop(hero);
+            base.Stop();
         }
 
-        private IEnumerator<float> RunningCoroutine(Hero hero, Hero target)
+        private IEnumerator<float> RunningCoroutine(Hero target)
         {
-            while (Vector3.Distance(hero.Player.Position, target.Player.Position) > 0.5f)
+            while (Vector3.Distance(Owner.Player.Position, target.Player.Position) > 0.5f)
             {
-                hero.Player.Position = Vector3.MoveTowards(hero.Player.Position, target.Player.Position, hero.HeroStatistics.Speed.Speed * Time.deltaTime);
+                Owner.Player.Position = Vector3.MoveTowards(Owner.Player.Position, target.Player.Position, Owner.HeroStatistics.Speed.Speed * Time.deltaTime);
 
                 yield return Timing.WaitForOneFrame;
 
@@ -84,18 +88,18 @@ namespace DotaHeroes.API.Abilities.SpiritBreaker
                 }
             }
 
-            Stop(hero);
+            Stop();
 
-            var bash = hero.Abilities.FirstOrDefault(ability => ability is GreaterBash) as GreaterBash;
+            var bash = Owner.Abilities.FirstOrDefault(ability => ability is GreaterBash) as GreaterBash;
 
             if (bash == default) yield break;
 
-            bash.Bash(target, hero);
+            bash.Bash(target, Owner);
         }
 
-        public override Ability Create()
+        public override Ability Create(Hero hero)
         {
-            return new ChargeOfDarkness();
+            return new ChargeOfDarkness(hero);
         }
     }
 }

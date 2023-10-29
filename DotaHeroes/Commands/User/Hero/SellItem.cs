@@ -1,4 +1,5 @@
-﻿using NorthwoodLib.Pools;
+﻿using DotaHeroes.API.Features;
+using NorthwoodLib.Pools;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -43,7 +44,7 @@ namespace DotaHeroes.Commands.User.Hero
 
             hero.Money += item.SellCost;
 
-            hero.Inventory.RemoveItem(item);
+            hero.Inventory.RemoveItem(item, true);
 
             response = item.Name + " was selled";
             return true;

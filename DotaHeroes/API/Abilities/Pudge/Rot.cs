@@ -37,44 +37,48 @@ namespace DotaHeroes.API.Abilities.Pudge
 
         public static string SoundsPath = Plugin.Instance.SoundsPath + "\\pudge\\rot";
 
-        public override bool Activate(Hero hero, ArraySegment<string> arguments, out string response)
+        public Rot() : base() { }
+
+        public Rot(Hero hero) : base(hero) { }
+
+        public override bool Activate(ArraySegment<string> arguments, out string response)
         {
-            if (!hero.Values.ContainsKey("is_rot"))
+            if (!Owner.Values.ContainsKey("is_rot"))
             {
-                hero.Values.Add("is_rot", true);
+                Owner.Values.Add("is_rot", true);
             }
             else
             {
-                hero.Values["is_rot"] = true;
+                Owner.Values["is_rot"] = true;
             }
 
-            var decorateRot = Primitive.Create(hero.Player.Position, Quaternion.identity.eulerAngles, -Vector3.one, true);
+            var decorateRot = Primitive.Create(Owner.Player.Position, Quaternion.identity.eulerAngles, -Vector3.one, true);
             decorateRot.Type = PrimitiveType.Cube;
             decorateRot.MovementSmoothing = 60;
             decorateRot.Color = Color.yellow;
-            decorateRot.AdminToyBase.gameObject.AddComponent<RotDecorateObject>().Initialize(hero);
+            decorateRot.AdminToyBase.gameObject.AddComponent<RotDecorateObject>().Initialize(Owner);
 
-            hero.Values["decorate_rot"] = decorateRot;
-            hero.Values["audio_rot"] = Audio.Play(hero.Player.Position, SoundsPath + "\\rot.ogg", 100f, true, hero.Player);
+            Owner.Values["decorate_rot"] = decorateRot;
+            Owner.Values["audio_rot"] = Audio.Play(Owner.Player.Position, SoundsPath + "\\rot.ogg", 100f, true, Owner.Player);
 
-            Timing.RunCoroutine(RotCoroutine(hero));
+            Timing.RunCoroutine(RotCoroutine());
 
             response = "Rot is enabled";
             return true;
         }
 
-        public override bool Deactivate(Hero hero, ArraySegment<string> arguments, out string response)
+        public override bool Deactivate(ArraySegment<string> arguments, out string response)
         {
-            hero.Values["is_rot"] = false;
+            Owner.Values["is_rot"] = false;
             try
             {
-                NetworkServer.Destroy((hero.Values["decorate_rot"] as Primitive).AdminToyBase.gameObject);
+                NetworkServer.Destroy((Owner.Values["decorate_rot"] as Primitive).AdminToyBase.gameObject);
             }
             catch { }
 
             try
             {
-                Audio.StopLoop(hero.Values["audio_rot"] as Player);
+                Audio.StopLoop(Owner.Values["audio_rot"] as Player);
             }
             catch { }
 
@@ -82,18 +86,18 @@ namespace DotaHeroes.API.Abilities.Pudge
             return true;
         }
 
-        private IEnumerator<float> RotCoroutine(Hero owner)
+        private IEnumerator<float> RotCoroutine()
         {
-            while ((bool)owner.Values["is_rot"] && !owner.IsHeroDead)
+            while ((bool)Owner.Values["is_rot"] && !Owner.IsHeroDead)
             {
                 foreach (var hero in DTAPI.GetHeroes().Values)
                 {
-                    if (Vector3.Distance(hero.Player.Position, owner.Player.Position) < 2)
+                    if (Vector3.Distance(Owner.Player.Position, Owner.Player.Position) < 2)
                     {
                         var rot = new Effects.Pudge.Rot(hero);
                         rot.Damage = (int)Values["damage"][Level];
                         rot.DamageType = DamageType.Magical;
-                        rot.Attacker = owner;
+                        rot.Attacker = Owner;
                         hero.EnableEffect(rot);
                     }
                     else
@@ -111,9 +115,9 @@ namespace DotaHeroes.API.Abilities.Pudge
             }
         }
 
-        public override Ability Create()
+        public override Ability Create(Hero hero)
         {
-            return new Rot();
+            return new Rot(hero);
         }
     }
 }

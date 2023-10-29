@@ -21,11 +21,13 @@ namespace DotaHeroes.API.Auras.Items
 
         public override TargetType TargetType => TargetType.ToFriend;
 
+        public override AbilityType AbilityType => AbilityType.None;
+
         public override float Radius { get; set; } = 5;
 
-        public decimal Armor { get; set; }
+        public decimal Armor { get; set; } = Plugin.Instance.Config.Abilites["buckler_aura"].Values["extra_armor"][0];
 
-        private BucklerAura() { }
+        public BucklerAura() : base() { }
 
         public BucklerAura(Hero owner) : base(owner)
         {
@@ -34,21 +36,24 @@ namespace DotaHeroes.API.Auras.Items
 
         public override void Added(Hero hero)
         {
-            hero.HeroStatistics.AddOrReduceStatistic(StatisticsType.Armor, new Value(Armor, false), false); //Im recomended using effect, this is shit method.
+            var buckler = new Effects.Items.Buckler(hero);
+            buckler.Armor = Armor;
+
+            hero.EnableEffect(buckler);
 
             base.Added(hero);
         }
 
         public override void Removed(Hero hero)
         {
-            hero.HeroStatistics.AddOrReduceStatistic(StatisticsType.Armor, new Value(Armor, false), true);
+            hero.DisableEffect<Effects.Items.Buckler>();
 
             base.Removed(hero);
         }
 
-        public override Ability Create()
+        public override Ability Create(Hero hero)
         {
-            return new BucklerAura();
+            return new BucklerAura(hero);
         }
     }
 }
