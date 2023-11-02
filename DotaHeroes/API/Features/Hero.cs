@@ -263,14 +263,22 @@ namespace DotaHeroes.API.Features
 
                 ability = executingAbility.Ability;
 
+                var result = false;
+
                 if (ability is ActiveAbility activeAbility)
                 {
-                    activeAbility.CheckAndExecute(Utils.EmptyArraySegment, out response);
+                    result = activeAbility.CheckAndExecute(Utils.EmptyArraySegment, out response);
                 }
 
                 if (ability is ToggleAbility toggleAbility)
                 {
-                    toggleAbility.CheckAndExecute(Utils.EmptyArraySegment, out response);
+                    result = toggleAbility.CheckAndExecute(Utils.EmptyArraySegment, out response);
+                }
+
+                if (result && abilities is ICost cost)
+                {
+                    HeroStatistics.HealthAndMana.Health -= cost.HealthCost;
+                    HeroStatistics.HealthAndMana.Mana -= cost.ManaCost;
                 }
 
                 var executedAbility = new HeroExecutedAbilityEventArgs(this, ability);
