@@ -20,7 +20,7 @@ namespace DotaHeroes.Commands.User.Hero
 
         protected override bool Execute(API.Features.Hero hero, ArraySegment<string> arguments, out string response)
         {
-            if (arguments.Count == 0)
+            if (arguments.Count < 2)
             {
                 StringBuilder stringBuilder = StringBuilderPool.Shared.Rent();
 
@@ -66,7 +66,7 @@ namespace DotaHeroes.Commands.User.Hero
 
             if (_result)
             {
-                if (result > hero.Inventory.GetItems().Count)
+                if (result > hero.Inventory.GetItems().Count - 1)
                 {
                     response = $"{result} ability, yes?.. ";
                     return false;
@@ -76,7 +76,7 @@ namespace DotaHeroes.Commands.User.Hero
             }
             else
             {
-                if (result > hero.Abilities.Count)
+                if (result > hero.Abilities.Count - 1)
                 {
                     response = $"{result} ability, yes?.. ";
                     return false;

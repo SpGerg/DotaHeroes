@@ -21,14 +21,14 @@ namespace DotaHeroes.API.Heroes
         {
             SideType = SideType.Dire;
 
-            Abilities = Ability.ToAbilitiesFromStringList(this, Plugin.Instance.Config.Heroes[Slug].Abilties);
+            Abilities = Ability.ToAbilitiesFromStringList(this, Plugin.Instance.Config.Heroes[Slug].Abilties, true);
 
             HeroStatistics = new HeroStatistics(Plugin.Instance.Config.Heroes[Slug].DefaultHeroStatistics.ToHeroStatistics(this), this);
         }
 
         protected Pudge(Player player, SideType sideType) : base(player, sideType)
         {
-            Abilities = Ability.ToAbilitiesFromStringList(this, Plugin.Instance.Config.Heroes[Slug].Abilties);
+            Abilities = Ability.ToAbilitiesFromStringList(this, Plugin.Instance.Config.Heroes[Slug].Abilties, true);
 
             HeroStatistics = new HeroStatistics(Plugin.Instance.Config.Heroes[Slug].DefaultHeroStatistics.ToHeroStatistics(this), this);
         }
