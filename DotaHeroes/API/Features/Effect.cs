@@ -25,8 +25,6 @@ namespace DotaHeroes.API.Features
 
         public Hero Owner { get; }
 
-        public Hero Hero { get; }
-
         public bool IsVisible { get; set; } = true;
 
         public bool IsActive { get; set; }
@@ -55,7 +53,6 @@ namespace DotaHeroes.API.Features
         public Effect(Hero owner)
         {
             Owner = owner;
-            Hero = DTAPI.GetHeroOrDefault(owner.Player.Id);
         }
 
         /// <summary>
@@ -69,7 +66,7 @@ namespace DotaHeroes.API.Features
                 {
                     Timing.CallDelayed(effectDuration.Duration, () =>
                     {
-                        Hero.DisableEffect(this);
+                        Owner.DisableEffect(this);
                     });
                 }
             }

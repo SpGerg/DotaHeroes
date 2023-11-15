@@ -34,7 +34,7 @@ namespace DotaHeroes.API.Effects.Pudge
 
         public override void Enabled()
         {
-            Hero.HeroStatistics.Speed.Speed -= 35;
+            Owner.HeroStatistics.Speed.Speed -= 35;
             DamageOverTime.Damage = Damage;
             DamageOverTime.DamageType = DamageType;
             DamageOverTime.Run();
@@ -44,7 +44,7 @@ namespace DotaHeroes.API.Effects.Pudge
 
         public override void Disabled()
         {
-            Hero.HeroStatistics.Speed.Speed += 35;
+            Owner.HeroStatistics.Speed.Speed += 35;
             DamageOverTime.IsEnabled = false;
 
             base.Disabled();

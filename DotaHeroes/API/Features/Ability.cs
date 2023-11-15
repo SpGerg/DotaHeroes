@@ -38,9 +38,9 @@ namespace DotaHeroes.API.Features
             }
         }
 
-        private bool isStop { get; set; }
-
         public int Level { get; set; } = -1;
+
+        private bool isStop;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Ability" /> class.
@@ -57,13 +57,8 @@ namespace DotaHeroes.API.Features
         ///     Initializes a new instance of the <see cref="Ability" /> class.
         /// </summary>
         /// <param name="hero"><inheritdoc cref="Hero" /></param>
-        public Ability(Hero hero)
+        public Ability(Hero hero) : this() 
         {
-            if (this is ILevelValues levelValues)
-            {
-                Level = levelValues.MinLevel - 1;
-            }
-
             Owner = hero;
         }
 
@@ -92,15 +87,18 @@ namespace DotaHeroes.API.Features
                     (this as IDamage).Damage = levelValues.Values["damage"][Level];
                 }
 
-                if (levelValues.Values.ContainsKey("mana_cost") && this is ICost)
+                if (this is ICost cost)
                 {
-                    (this as ICost).ManaCost = (int)levelValues.Values["mana_cost"][Level];
-                }
+                    if (levelValues.Values.ContainsKey("mana_cost"))
+                    {
+                        cost.ManaCost = (int)levelValues.Values["mana_cost"][Level];
+                    }
 
-                if (levelValues.Values.ContainsKey("health_cost") && this is ICost)
-                {
-                    (this as ICost).HealthCost = (int)levelValues.Values["health_cost"][Level];
-                } //thats sucks im know
+                    if (levelValues.Values.ContainsKey("health_cost"))
+                    {
+                        cost.HealthCost = (int)levelValues.Values["health_cost"][Level];
+                    } //thats sucks im know
+                }
             }
         }
 

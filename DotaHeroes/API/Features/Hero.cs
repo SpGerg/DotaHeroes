@@ -174,7 +174,12 @@ namespace DotaHeroes.API.Features
             SideType = sideType;
 
             Money = 1200;
-            if (Plugin.Instance.Config.Debug) Money = 999999;
+
+            if (Plugin.Instance.Config.Debug)
+            {
+                Money = short.MaxValue;
+                PointsToLevelUp = short.MaxValue;
+            }
 
             if (Player != null)
             {
@@ -232,19 +237,13 @@ namespace DotaHeroes.API.Features
         /// <summary>
         /// Execute ability by name.
         /// </summary>
-        public bool ExecuteAbility(string slug, ref string response, bool ignoreAvailability = false)
+        public bool ExecuteAbility(Ability ability, ref string response, bool ignoreAvailability = false)
         {
             if (HeroStateType != HeroStateType.None) return false;
 
-            Ability ability = default;
-
-            if (ignoreAvailability)
+            if (!ignoreAvailability)
             {
-                ability = DTAPI.GetAbilityOrDefaultBySlug(slug);
-            }
-            else
-            {
-                ability = Abilities.First(ability => ability.Slug == slug);
+                ability = Abilities.First(_ability => _ability.Slug == ability.Slug);
             }
 
             if (ability == default)
@@ -291,19 +290,9 @@ namespace DotaHeroes.API.Features
         /// <summary>
         /// Execute ability by type.
         /// </summary>
-        public bool ExecuteAbility(Ability ability, ref string response)
-        {
-            ExecuteAbility(ability.Slug, ref response);
-
-            return true;
-        }
-
-        /// <summary>
-        /// Execute ability by type.
-        /// </summary>
         public bool ExecuteAbility<T>(ref string response) where T : Ability, new()
         {
-            ExecuteAbility(new T().Slug, ref response);
+            ExecuteAbility(new T().Create(this), ref response);
 
             return true;
         }

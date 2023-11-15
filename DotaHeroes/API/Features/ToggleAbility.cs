@@ -1,11 +1,10 @@
-﻿using System;
+﻿using Exiled.API.Features;
+using System;
 
 namespace DotaHeroes.API.Features
 {
     public abstract class ToggleAbility : Ability
     {
-        public virtual string Desciption { get; }
-
         public bool IsActive { get; set; }
 
         /// <summary>

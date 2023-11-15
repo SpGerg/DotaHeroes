@@ -27,9 +27,9 @@ namespace DotaHeroes.API.Abilities.Items
 
         public Dictionary<string, List<decimal>> Values { get; } = Plugin.Instance.Config.Abilites["unholy_strength"].Values;
 
-        public int MaxLevel { get; set; } = 0;
+        public int MaxLevel { get; set; } = 1;
 
-        public int MinLevel { get; set; } = 0;
+        public int MinLevel { get; set; } = 1;
 
         public IReadOnlyList<int> HeroLevelToLevelUp => throw new NotImplementedException();
 

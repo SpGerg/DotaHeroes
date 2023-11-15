@@ -20,7 +20,6 @@ namespace DotaHeroes.API.Features
             if (!Plugin.Instance.Config.IsUsingSounds) return default;
 
             var npc = Npc.Spawn(SoundBotName + AudioPlayerBase.AudioPlayers.Count, RoleTypeId.Tutorial, AudioPlayerBase.AudioPlayers.Count + Player.List.Count, string.Empty, position);
-            npc.IsGodModeEnabled = true;
             noclipCommand.Execute(Features.Utils.EmptyArraySegment, npc.Sender, out string _);
             npc.Scale = Vector3.zero;
 

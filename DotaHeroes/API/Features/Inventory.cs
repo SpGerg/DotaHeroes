@@ -39,15 +39,17 @@ namespace DotaHeroes.API.Features
         {
             if (Items.Count >= MaxItems) return false;
 
-            Owner.HeroStatistics.AddOrReduceStatistics(item.Statistics, false);
+            var createdItem = item.Create(Owner);
 
-            Utils.AddModifier(Owner, item as IModifier);
+            Owner.HeroStatistics.AddOrReduceStatistics(createdItem.Statistics, false);
 
-            foreach (var passive in item.Passives.ToList())
+            Utils.AddModifier(Owner, createdItem as IModifier);
+
+            foreach (var passive in createdItem.Passives.ToList())
             {
                 var _passive = passive.Create(Owner);
-                item.Passives.Remove(passive);
-                item.Passives.Add(_passive);
+                createdItem.Passives.Remove(passive);
+                createdItem.Passives.Add(_passive);
 
                 if (_passive is PassiveAbility passiveAbility)
                 {
@@ -62,15 +64,15 @@ namespace DotaHeroes.API.Features
 
             if (!isJustAdd)
             {
-                Create(item);
+                Create(createdItem);
             }
             else
             {
-                item.Added();
-                Items.Add(item);
+                createdItem.Added();
+                Items.Add(createdItem);
             }
 
-            Hud.Update(item.Owner);
+            Hud.Update(createdItem.Owner);
 
             return true;
         }
@@ -99,7 +101,7 @@ namespace DotaHeroes.API.Features
 
             string response = string.Empty;
 
-            Owner.ExecuteAbility(item.MainAbility.Slug, ref response, true);
+            Owner.ExecuteAbility(item.MainAbility, ref response, true);
 
             Owner.Player.SendConsoleMessage(response, "default");
 

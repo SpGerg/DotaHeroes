@@ -71,7 +71,10 @@ namespace DotaHeroes.API.Features
             return false;
         }
 
-        public override void Stop() { }
+        public override void Stop()
+        {
+            IsActive = false;
+        }
 
         private IEnumerator<float> AuraCoroutine()
         {
@@ -110,10 +113,6 @@ namespace DotaHeroes.API.Features
 
                             continue;
                         }
-
-                        Removed(hero);
-
-                        Heroes.Remove(hero);
                     }
                 }
 
@@ -128,6 +127,10 @@ namespace DotaHeroes.API.Features
 
                     continue;
                 }
+
+                Removed(hero);
+
+                Heroes.Remove(hero);
             }
         }
 

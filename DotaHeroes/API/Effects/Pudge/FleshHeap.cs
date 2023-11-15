@@ -23,8 +23,8 @@ namespace DotaHeroes.API.Effects.Pudge
             {
                 count = value;
 
-                Hero.HeroStatistics.Strength -= GivenStrength;
-                Hero.HeroStatistics.Strength += StrengthToGive * count;
+                Owner.HeroStatistics.Strength -= GivenStrength;
+                Owner.HeroStatistics.Strength += StrengthToGive * count;
                 GivenStrength += StrengthToGive;
             }
         }
@@ -54,7 +54,7 @@ namespace DotaHeroes.API.Effects.Pudge
 
         public override void Enabled()
         {
-            var fleshHeap = Hero.Abilities.FirstOrDefault(ability => ability.Name == "Flesh heap");
+            var fleshHeap = Owner.Abilities.FirstOrDefault(ability => ability.Name == "Flesh heap");
 
             if (fleshHeap == default)
             {
