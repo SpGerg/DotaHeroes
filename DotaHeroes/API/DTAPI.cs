@@ -34,6 +34,8 @@ namespace DotaHeroes.API
         /// </summary>
         public static void RegisterHero(Hero hero)
         {
+            if (!Plugin.Instance.Config.Heroes[hero.Slug].IsRegistering) return;
+
             RegisteredHeroes[hero.Slug] = hero;
 
             Log.Info($"Hero with name {hero.HeroName} has been registered.");

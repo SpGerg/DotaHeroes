@@ -2,6 +2,6 @@
 {
     public interface INegativeArmorModifier : IModifier
     {
-        decimal NegativeArmor { get; set; }
+        double NegativeArmor { get; set; }
     }
 }

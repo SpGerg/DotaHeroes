@@ -4,14 +4,14 @@ namespace DotaHeroes.API.Features.Serializables
 {
     public class AbilitySerializable
     {
-        public Dictionary<string, List<decimal>> Values { get; set; }
+        public Dictionary<string, List<double>> Values { get; set; }
 
         public AbilitySerializable()
         { 
             Values = new();
         }
 
-        public AbilitySerializable(Dictionary<string, List<decimal>> values)
+        public AbilitySerializable(Dictionary<string, List<double>> values)
         {
             Values = values;
         }

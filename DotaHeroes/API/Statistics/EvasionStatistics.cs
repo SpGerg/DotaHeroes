@@ -39,9 +39,9 @@ namespace DotaHeroes.API.Statistics
             AccuracyModifier = accuracyModifier;
         }
 
-        public decimal GetEvasion()
+        public double GetEvasion()
         {
-            decimal result = 1;
+            double result = 1;
 
             foreach (var modifier in EvasionModifiers)
             {
@@ -57,9 +57,9 @@ namespace DotaHeroes.API.Statistics
             return result * 100;
         }
 
-        public decimal GetBlind()
+        public double GetBlind()
         {
-            decimal result = 1;
+            double result = 1;
 
             foreach (var modifier in BlindModifiers)
             {
@@ -75,16 +75,16 @@ namespace DotaHeroes.API.Statistics
             return 1 - result * 100;
         }
 
-        public decimal GetEffectiveEvadeChance()
+        public double GetEffectiveEvadeChance()
         {
             return (1 - (1 - GetEvasion()) * (1 - GetBlind())) * 100;
         }
 
         public bool IsCanHit(IAccuracyModifier accuracyModifier)
         {
-            decimal accuracy = 0;
+            double accuracy = 0;
 
-            decimal percentChance = 100;
+            double percentChance = 100;
 
             if (AccuracyModifier != null)
             {

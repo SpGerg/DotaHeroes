@@ -5,39 +5,39 @@ namespace DotaHeroes.API.Features.Serializables
 {
     public class HeroStatisticsSerializable
     {
-        public decimal Strength { get; set; }
+        public double Strength { get; set; }
 
-        public decimal StrengthFromLevel { get; set; }
+        public double StrengthFromLevel { get; set; }
 
-        public decimal Agility { get; set; }
+        public double Agility { get; set; }
 
-        public decimal AgilityFromLevel { get; set; }
+        public double AgilityFromLevel { get; set; }
 
-        public decimal Intelligence { get; set; }
+        public double Intelligence { get; set; }
 
-        public decimal IntelligenceFromLevel { get; set; }
+        public double IntelligenceFromLevel { get; set; }
 
-        public decimal BaseHealth { get; set; }
+        public double BaseHealth { get; set; }
 
-        public decimal BaseHealthRegeneration { get; set; }
+        public double BaseHealthRegeneration { get; set; }
 
-        public decimal BaseMana { get; set; }
+        public double BaseMana { get; set; }
 
-        public decimal BaseManaRegeneration { get; set; }
+        public double BaseManaRegeneration { get; set; }
 
         public int BaseAttackDamage { get; set; }
 
         public int BaseAttackSpeed { get; set; }
 
-        public decimal BaseAttackRange { get; set; }
+        public double BaseAttackRange { get; set; }
 
-        public decimal BaseAttackProjectileSpeed { get; set; }
+        public double BaseAttackProjectileSpeed { get; set; }
 
-        public decimal BaseArmor { get; set; }
+        public double BaseArmor { get; set; }
 
-        public decimal BaseMagicResistance { get; set; }
+        public double BaseMagicResistance { get; set; }
 
-        public decimal BaseEffectResistance { get; set; }
+        public double BaseEffectResistance { get; set; }
 
         public sbyte BaseSpeed { get; set; }
 

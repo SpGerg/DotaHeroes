@@ -21,11 +21,11 @@ namespace DotaHeroes.API.Effects.Items
 
         public override EffectClassType EffectClassType => EffectClassType.Negative;
 
-        public decimal ExtraAttackDamage { get; set; }
+        public double ExtraAttackDamage { get; set; }
 
-        public decimal Strength { get; set; }
+        public double Strength { get; set; }
 
-        public decimal Armor { get; set; }
+        public double Armor { get; set; }
 
         private IReadOnlyDictionary<StatisticsType, Value> Stats => new Dictionary<StatisticsType, Value>()
         {

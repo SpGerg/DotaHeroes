@@ -2,6 +2,6 @@
 {
     public interface IBlindModifier : IModifier
     {
-        decimal Blind { get; set; }
+        double Blind { get; set; }
     }
 }

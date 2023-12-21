@@ -12,7 +12,7 @@ namespace DotaHeroes.API.Events.EventArgs.Hero
 
         public Features.Hero Healer { get; }
 
-        public decimal Heal { get; set; }
+        public double Heal { get; set; }
 
         public bool IsAllowed { get; set; }
 
@@ -23,7 +23,7 @@ namespace DotaHeroes.API.Events.EventArgs.Hero
         /// <param name="healer"><inheritdoc cref="Healer" /></param>
         /// <param name="heal"><inheritdoc cref="Heal" /></param>
         /// <param name="isAllowed"><inheritdoc cref="IsAllowed" /></param>
-        public HeroHealingEventArgs(Features.Hero hero, Features.Hero healer, decimal heal, bool isAllowed)
+        public HeroHealingEventArgs(Features.Hero hero, Features.Hero healer, double heal, bool isAllowed)
         {
             Hero = hero;
             Healer = healer;

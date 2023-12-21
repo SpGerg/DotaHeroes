@@ -27,7 +27,7 @@ namespace DotaHeroes.API.Abilities.Pudge
 
         public override TargetType TargetType => TargetType.None;
 
-        public Dictionary<string, List<decimal>> Values { get; } = Plugin.Instance.Config.Abilites["rot"].Values;
+        public Dictionary<string, List<double>> Values { get; } = Plugin.Instance.Config.Abilites["rot"].Values;
 
         public int MaxLevel { get; set; } = 4;
 
@@ -36,8 +36,6 @@ namespace DotaHeroes.API.Abilities.Pudge
         public IReadOnlyList<int> HeroLevelToLevelUp { get; set; } = Features.Utils.EmptyLevelsList;
 
         public static string SoundsPath = Plugin.Instance.SoundsPath + "\\pudge\\rot";
-
-        public Rot() : base() { }
 
         public Rot(Hero hero) : base(hero) { }
 

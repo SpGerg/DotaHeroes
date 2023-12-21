@@ -27,15 +27,13 @@ namespace DotaHeroes.API.Abilities.Items
 
         public AttributeType CurrentAttribute { get; private set; } = AttributeType.None;
 
-        public Dictionary<string, List<decimal>> Values { get; } = Plugin.Instance.Config.Abilites["switch_attribute"].Values;
+        public Dictionary<string, List<double>> Values { get; } = Plugin.Instance.Config.Abilites["switch_attribute"].Values;
 
         public int MaxLevel { get; set; } = 1;
 
         public int MinLevel { get; set; } = 1;
 
         public IReadOnlyList<int> HeroLevelToLevelUp => throw new NotImplementedException();
-
-        public SwitchAttribute() : base() { }
 
         public SwitchAttribute(Hero hero) : base(hero) { }
 

@@ -23,7 +23,7 @@ namespace DotaHeroes.API.Abilities.SpiritBreaker
 
         public override TargetType TargetType => TargetType.ToEnemy;
 
-        public Dictionary<string, List<decimal>> Values { get; } = Plugin.Instance.Config.Abilites["nether_strike"].Values;
+        public Dictionary<string, List<double>> Values { get; } = Plugin.Instance.Config.Abilites["nether_strike"].Values;
 
         public int MaxLevel { get; set; } = 3;
         public int MinLevel { get; set; } = 0;
@@ -31,8 +31,6 @@ namespace DotaHeroes.API.Abilities.SpiritBreaker
         public IReadOnlyList<int> HeroLevelToLevelUp { get; } = Features.Utils.DefaultLevelsUltimateList;
 
         public static string SoundsPath = Plugin.Instance.SoundsPath + "\\spirit_breaker\\nether_strike";
-
-        public NetherStrike() : base() { }
 
         public NetherStrike(Hero hero) : base(hero) { }
 

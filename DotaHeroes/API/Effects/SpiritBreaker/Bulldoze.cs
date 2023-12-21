@@ -16,9 +16,9 @@ namespace DotaHeroes.API.Effects.SpiritBreaker
 
         public override DispelType DispelType { get; set; } = DispelType.Basic;
 
-        public decimal MagicResistance { get; set; } = 0;
+        public double MagicResistance { get; set; } = 0;
 
-        public decimal EffectResistance { get; set; } = 35;
+        public double EffectResistance { get; set; } = 35;
 
         public float Duration { get; set; } = 3;
 

@@ -11,7 +11,7 @@ namespace DotaHeroes.API.Features
 
         public Hero Attacker { get; }
 
-        public decimal Damage { get; set; }
+        public double Damage { get; set; }
 
         public DamageType DamageType { get; set; }
 
@@ -29,7 +29,7 @@ namespace DotaHeroes.API.Features
         /// <param name="damageType"><inheritdoc cref="DamageType" /></param>
         /// <param name="timesDamage"><inheritdoc cref="TimesDamage" /></param>
         /// <param name="interval"><inheritdoc cref="Interval" /></param>
-        public DamageOverTime(Hero hero, decimal damage, DamageType damageType, int timesDamage, float interval, Hero attacker = null)
+        public DamageOverTime(Hero hero, double damage, DamageType damageType, int timesDamage, float interval, Hero attacker = null)
         {
             Hero = hero;
             Damage = damage;

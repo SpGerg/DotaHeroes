@@ -4,19 +4,19 @@ namespace DotaHeroes.API.Features
 {
     public static class Constants
     {
-        public const decimal HealthRegenerationFromStrength = 0.1m;
+        public const double HealthRegenerationFromStrength = 0.1;
         public const int MaximumHealthFromStrength = 22;
         public const int DamageFromStrength = 1;
 
-        public const decimal ArmorFromAgility = 0.167m;
+        public const double ArmorFromAgility = 0.167;
         public const int AttackSpeedFromAgility = 1;
         public const int DamageFromAgility = 1;
 
-        public const decimal ManaRegenerationFromIntelligence = 0.05m;
+        public const double ManaRegenerationFromIntelligence = 0.05;
         public const float MagicResistanceFromIntelligence = 0.1f;
         public const int MaximumManaFromIntelligence = 12;
 
-        public const decimal UniversalDamage = 0.7m;
+        public const double UniversalDamage = 0.7;
 
         public static IReadOnlyDictionary<int, int> ExperienceToLevelUp => new Dictionary<int, int>()
         {

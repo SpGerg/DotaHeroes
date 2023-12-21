@@ -37,6 +37,7 @@
     <Compile Include="API\Abilities\Items\Phase.cs" />
     <Compile Include="API\Abilities\Items\SwitchAttribute.cs" />
     <Compile Include="API\Abilities\Items\UnholyStrength.cs" />
+    <Compile Include="API\Abilities\Morphling\Waveform.cs" />
     <Compile Include="API\Abilities\Pudge\Dismember.cs" />
     <Compile Include="API\Abilities\Pudge\FleshHeap.cs" />
     <Compile Include="API\Abilities\Pudge\MeatHook.cs" />
@@ -107,6 +108,7 @@
     <Compile Include="API\Features\Serializables\HeroSerializable.cs" />
     <Compile Include="API\Features\Serializables\HeroStatisticsSerializable.cs" />
     <Compile Include="API\Features\Serializables\ItemSerializable.cs" />
+    <Compile Include="API\Heroes\Morphling.cs" />
     <Compile Include="API\Heroes\Pudge.cs" />
     <Compile Include="API\Enums\DispelType.cs" />
     <Compile Include="API\Features\Hud.cs" />

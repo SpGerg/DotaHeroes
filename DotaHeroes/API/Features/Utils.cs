@@ -36,7 +36,7 @@ namespace DotaHeroes.API.Features
         /// <summary>
         /// Get position from player eye direction with range
         /// </summary>
-        public static decimal GetPercentOfValue(decimal value, decimal percent)
+        public static double GetPercentOfValue(double value, double percent)
         {
             return (value / 100) * percent;
         }
@@ -147,7 +147,7 @@ namespace DotaHeroes.API.Features
         /// <summary>
         /// Block damage
         /// </summary>
-        public static decimal BlockDamage(decimal damage, DamageType damageType, IDamageBlock damageBlock)
+        public static double BlockDamage(double damage, DamageType damageType, IDamageBlock damageBlock)
         {
             if (damageBlock.DamageTypesToBlock.Contains(DamageType.None))
             {

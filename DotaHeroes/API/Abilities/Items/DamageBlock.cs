@@ -20,7 +20,7 @@ namespace DotaHeroes.API.Abilities.Items
 
         public override string Lore => "Damage block";
 
-        public Dictionary<string, List<decimal>> Values { get; } = Plugin.Instance.Config.Abilites["phase"].Values;
+        public Dictionary<string, List<double>> Values { get; } = Plugin.Instance.Config.Abilites["phase"].Values;
 
         public int MaxLevel { get; set; } = 1;
 
@@ -31,8 +31,6 @@ namespace DotaHeroes.API.Abilities.Items
         public override AbilityType AbilityType => AbilityType.Passive;
 
         public override TargetType TargetType => TargetType.None;
-
-        public DamageBlock() : base() { }
 
         public DamageBlock(Hero hero) : base(hero) { }
 

@@ -24,7 +24,7 @@ namespace DotaHeroes.API.Features.Objects
 
         public float Speed { get; private set; }
 
-        public decimal Damage { get; set; }
+        public double Damage { get; set; }
 
         public DamageType DamageType { get; set; }
 

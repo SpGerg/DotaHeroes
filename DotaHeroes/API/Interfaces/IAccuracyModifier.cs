@@ -2,6 +2,6 @@
 {
     public interface IAccuracyModifier : IModifier
     {
-        decimal Accuracy { get; set; }
+        double Accuracy { get; set; }
     }
 }

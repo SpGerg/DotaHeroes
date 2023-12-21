@@ -4,9 +4,9 @@ namespace DotaHeroes.API.Modifiers
 {
     public class BlindModifier : IBlindModifier
     {
-        public decimal Blind { get; set; }
+        public double Blind { get; set; }
 
-        public BlindModifier(decimal blind)
+        public BlindModifier(double blind)
         {
             Blind = blind;
         }

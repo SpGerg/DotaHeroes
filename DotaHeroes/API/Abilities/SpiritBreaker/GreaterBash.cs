@@ -23,7 +23,7 @@ namespace DotaHeroes.API.Abilities.SpiritBreaker
 
         public override TargetType TargetType => TargetType.ToEnemy;
 
-        public Dictionary<string, List<decimal>> Values { get; } = Plugin.Instance.Config.Abilites["greater_bash"].Values;
+        public Dictionary<string, List<double>> Values { get; } = Plugin.Instance.Config.Abilites["greater_bash"].Values;
 
         public int MaxLevel { get; set; } = 4;
 
@@ -32,8 +32,6 @@ namespace DotaHeroes.API.Abilities.SpiritBreaker
         public IReadOnlyList<int> HeroLevelToLevelUp { get; } = Features.Utils.EmptyLevelsList;
 
         public static string SoundsPath = Plugin.Instance.SoundsPath + "\\spirit_breaker\\greater_bash";
-
-        public GreaterBash() : base() { }
 
         public GreaterBash(Hero hero) : base(hero) { }
 
@@ -55,14 +53,14 @@ namespace DotaHeroes.API.Abilities.SpiritBreaker
 
             if (Values["chance"][Level] < chance || !Cooldowns.GetCooldown(ev.Hero.Player.Id, Slug).IsReady || ev.Hero.TryGetEffect(out Break _)) return;
 
-            if (Plugin.Instance.Config.Debug) Log.Info("BSAYUHIBFUI 7QAWEYER");
+            Log.Debug("Bash");
 
             Bash(ev.Target, ev.Hero, ev.Damage);
  
             Cooldowns.AddCooldown(ev.Hero.Player.Id, new CooldownInfo(Slug, (float)Values["cooldown"][Level]));
         }
 
-        public void Bash(Hero target, Hero attacker, decimal damage = -1)
+        public void Bash(Hero target, Hero attacker, double damage = -1)
         {
             var total_damage = damage;
 

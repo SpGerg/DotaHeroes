@@ -26,7 +26,7 @@ namespace DotaHeroes.API.Abilities.Pudge
 
         public override TargetType TargetType => TargetType.ToPoint;
 
-        public Dictionary<string, List<decimal>> Values { get; } = Plugin.Instance.Config.Abilites["meat_hook"].Values;
+        public Dictionary<string, List<double>> Values { get; } = Plugin.Instance.Config.Abilites["meat_hook"].Values;
 
         public int MaxLevel { get; set; } = 4;
 
@@ -39,11 +39,6 @@ namespace DotaHeroes.API.Abilities.Pudge
         public int HealthCost { get; set; } = -1;
 
         public static string SoundsPath = Plugin.Instance.SoundsPath + "\\pudge\\meat_hook";
-
-        public MeatHook() : base()
-        {
-            ManaCost = (int)Values["mana_cost"][0];
-        }
 
         public MeatHook(Hero hero) : base(hero)
         {

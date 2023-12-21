@@ -20,13 +20,13 @@ namespace DotaHeroes.API.Statistics
 
         public int AttackSpeed { get; set; } //In future..
 
-        public decimal AttackRange { get; set; }
+        public double AttackRange { get; set; }
 
-        public decimal ProjectileSpeed { get; set; }
+        public double ProjectileSpeed { get; set; }
 
         public AttackStatistics() { }
 
-        public AttackStatistics(int baseAttackDamage, int extraAttackDamage, int attackSpeed, decimal attackRange, decimal projectileSpeed = 0)
+        public AttackStatistics(int baseAttackDamage, int extraAttackDamage, int attackSpeed, double attackRange, double projectileSpeed = 0)
         {
             BaseAttackDamage = baseAttackDamage;
             ExtraAttackDamage = extraAttackDamage;

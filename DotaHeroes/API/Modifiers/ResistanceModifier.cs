@@ -4,11 +4,11 @@ namespace DotaHeroes.API.Modifiers
 {
     public class ResistanceModifier : IResistanceModifier
     {
-        public decimal MagicResistance { get; set; }
+        public double MagicResistance { get; set; }
 
-        public decimal EffectResistance { get; set; }
+        public double EffectResistance { get; set; }
 
-        public ResistanceModifier(decimal magicResistance, decimal effectResistance)
+        public ResistanceModifier(double magicResistance, double effectResistance)
         {
             MagicResistance = magicResistance;
             EffectResistance = effectResistance;

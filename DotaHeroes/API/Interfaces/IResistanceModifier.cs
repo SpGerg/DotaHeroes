@@ -6,8 +6,8 @@ namespace DotaHeroes.API.Interfaces
     /// </summary>
     public interface IResistanceModifier : IModifier
     {
-        decimal MagicResistance { get; set; }
+        double MagicResistance { get; set; }
 
-        decimal EffectResistance { get; set; }
+        double EffectResistance { get; set; }
     }
 }

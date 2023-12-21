@@ -4,9 +4,9 @@ namespace DotaHeroes.API.Modifiers
 {
     public class AccuracyModifier : IAccuracyModifier
     {
-        public decimal Accuracy { get; set; }
+        public double Accuracy { get; set; }
 
-        public AccuracyModifier(decimal accuracy)
+        public AccuracyModifier(double accuracy)
         {
             Accuracy = accuracy;
         }

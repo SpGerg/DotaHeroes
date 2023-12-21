@@ -10,7 +10,7 @@ namespace DotaHeroes.API.Statistics
 {
     public class HeroStatistics
     {
-        public decimal Strength
+        public double Strength
         {
             get
             {
@@ -30,7 +30,7 @@ namespace DotaHeroes.API.Statistics
             }
         }
 
-        public decimal Agility
+        public double Agility
         {
             get
             {
@@ -48,7 +48,7 @@ namespace DotaHeroes.API.Statistics
             }
         }
 
-        public decimal Intelligence
+        public double Intelligence
         {
             get
             {
@@ -68,11 +68,11 @@ namespace DotaHeroes.API.Statistics
             }
         }
 
-        public decimal StrengthFromLevel { get; }
+        public double StrengthFromLevel { get; }
 
-        public decimal AgilityFromLevel { get; }
+        public double AgilityFromLevel { get; }
 
-        public decimal IntelligenceFromLevel { get; }
+        public double IntelligenceFromLevel { get; }
 
         public HealthAndManaStatistics HealthAndMana { get; }
 
@@ -91,11 +91,11 @@ namespace DotaHeroes.API.Statistics
 
         public Features.Hero Hero { get; }
 
-        private decimal strength;
+        private double strength;
 
-        private decimal agility;
+        private double agility;
 
-        private decimal intelligence;
+        private double intelligence;
 
         public HeroStatistics()
         {
@@ -117,7 +117,7 @@ namespace DotaHeroes.API.Statistics
             Speed = new SpeedStatistics(hero, hero.HeroStatistics.Speed.Speed);
         }
 
-        public HeroStatistics(AttributeType attribute, decimal strength, decimal strengthFromLevel, decimal agility, decimal agilityFromLevel, decimal intelligence, decimal intelligenceFromLevel, HealthAndManaStatistics healthAndManaStatistics, AttackStatistics attackStatistics, ArmorStatistics armorStatistics, ResistanceStatistics resistanceStatistics, SpeedStatistics speedStatistics)
+        public HeroStatistics(AttributeType attribute, double strength, double strengthFromLevel, double agility, double agilityFromLevel, double intelligence, double intelligenceFromLevel, HealthAndManaStatistics healthAndManaStatistics, AttackStatistics attackStatistics, ArmorStatistics armorStatistics, ResistanceStatistics resistanceStatistics, SpeedStatistics speedStatistics)
         {
             AttributeType = attribute;
             HealthAndMana = healthAndManaStatistics;
@@ -251,7 +251,7 @@ namespace DotaHeroes.API.Statistics
             return StringBuilderPool.Shared.ToStringReturn(stringBuilder);
         }
 
-        private void UpdateAttackDamage(decimal value, AttributeType attributeType)
+        private void UpdateAttackDamage(double value, AttributeType attributeType)
         {
             if (AttributeType == attributeType)
             {
@@ -264,7 +264,7 @@ namespace DotaHeroes.API.Statistics
             }
         }
 
-        private decimal GetValue(decimal value, decimal fullValue, bool isPercent, bool isReduce)
+        private double GetValue(double value, double fullValue, bool isPercent, bool isReduce)
         {
             var total_value = value;
 

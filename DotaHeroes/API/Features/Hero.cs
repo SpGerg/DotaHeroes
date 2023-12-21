@@ -300,18 +300,18 @@ namespace DotaHeroes.API.Features
         /// <summary>
         /// Take damage
         /// </summary>
-        public virtual decimal TakeDamage(Hero attacker, decimal damage, DamageType damageType, bool isCheckDead = true)
+        public virtual double TakeDamage(Hero attacker, double damage, DamageType damageType, bool isCheckDead = true)
         {
-            if (Plugin.Instance.Config.Debug) Log.Info("First damage " + damage + " by " + (attacker == null ? "attacker is null lol" : attacker.Player.Nickname));
+            Log.Debug("First damage " + damage + " by " + (attacker == null ? "attacker is null lol" : attacker.Player.Nickname));
 
             var takingDamage = new HeroTakingDamageEventArgs(this, attacker, damage, damageType, true);
             Events.Handlers.Hero.OnHeroTakingDamage(takingDamage);
 
             if (!takingDamage.IsAllowed) return -1;
 
-            decimal _damage = takingDamage.Damage;
-            if (Plugin.Instance.Config.Debug) Log.Info("Second Damage " + _damage + " by " + (attacker == null ? "attacker is null lol" : attacker.Player.Nickname));
-            decimal total_damage = 0;
+            double _damage = takingDamage.Damage;
+            Log.Debug("Second Damage " + _damage + " by " + (attacker == null ? "attacker is null lol" : attacker.Player.Nickname));
+            double total_damage = 0;
 
             switch (damageType)
             {
@@ -331,7 +331,7 @@ namespace DotaHeroes.API.Features
                     break;
             }
 
-            if (Plugin.Instance.Config.Debug) Log.Info("Third Damage " + total_damage + " by " + (attacker == null ? "attacker is null lol" : attacker.Player.Nickname));
+            Log.Debug("Third Damage " + total_damage + " by " + (attacker == null ? "attacker is null lol" : attacker.Player.Nickname));
 
             ReduceHealthAndCheckForDead(attacker, total_damage, isCheckDead);
 
@@ -344,7 +344,7 @@ namespace DotaHeroes.API.Features
         /// <summary>
         /// Take damage without attacker
         /// </summary>
-        public virtual decimal TakeDamage(decimal damage, DamageType damageType, bool isCheckDead = true)
+        public virtual double TakeDamage(double damage, DamageType damageType, bool isCheckDead = true)
         {
             var result = TakeDamage(null, damage, damageType, isCheckDead);
 
@@ -354,14 +354,14 @@ namespace DotaHeroes.API.Features
         /// <summary>
         /// Heal
         /// </summary>
-        public virtual void Heal(decimal heal, Hero hero)
+        public virtual void Heal(double heal, Hero hero)
         {
             var healing = new HeroHealingEventArgs(this, hero, heal, true);
             Events.Handlers.Hero.OnHeroHealing(healing);
 
             if (!healing.IsAllowed) return;
 
-            if (Plugin.Instance.Config.Debug) Log.Info("Healed " + heal);
+            Log.Debug("Healed " + heal);
 
             HeroStatistics.HealthAndMana.Health += healing.Heal;
 
@@ -753,8 +753,8 @@ namespace DotaHeroes.API.Features
                         healthAndMana.Mana += healthAndMana.ManaRegeneration;
                     }
 
-                    healthAndMana.Health = (decimal)Mathf.Clamp((float)healthAndMana.Health, 0, (float)healthAndMana.MaximumHealth);
-                    healthAndMana.Mana = (decimal)Mathf.Clamp((float)healthAndMana.Mana, 0, (float)healthAndMana.MaximumMana);
+                    healthAndMana.Health = (double)Mathf.Clamp((float)healthAndMana.Health, 0, (float)healthAndMana.MaximumHealth);
+                    healthAndMana.Mana = (double)Mathf.Clamp((float)healthAndMana.Mana, 0, (float)healthAndMana.MaximumMana);
 
                     Hud.Update(hero);
                 }
@@ -763,7 +763,7 @@ namespace DotaHeroes.API.Features
             }
         }
 
-        private void ReduceHealthAndCheckForDead(Hero killer, decimal damage, bool isCheck = true)
+        private void ReduceHealthAndCheckForDead(Hero killer, double damage, bool isCheck = true)
         {
             HeroStatistics.HealthAndMana.Health -= damage;
 

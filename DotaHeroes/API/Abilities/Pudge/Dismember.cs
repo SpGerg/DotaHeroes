@@ -25,19 +25,17 @@ namespace DotaHeroes.API.Abilities.Pudge
 
         public override TargetType TargetType => TargetType.ToEnemy | TargetType.ToFriend;
 
-        public Dictionary<string, List<decimal>> Values { get; } = Plugin.Instance.Config.Abilites["dismember"].Values;
+        public Dictionary<string, List<double>> Values { get; } = Plugin.Instance.Config.Abilites["dismember"].Values;
 
         public int MaxLevel { get; set; } = 3;
 
         public int MinLevel { get; set; } = 0;
 
-        public const decimal Duration = 3.5m;
+        public const double Duration = 3.5;
 
         public IReadOnlyList<int> HeroLevelToLevelUp { get; set; } = Features.Utils.DefaultLevelsUltimateList;
 
         public static string SoundsPath = Plugin.Instance.SoundsPath + "\\pudge\\dismember";
-
-        public Dismember() : base() { }
 
         public Dismember(Hero hero) : base(hero) { }
 
@@ -67,9 +65,9 @@ namespace DotaHeroes.API.Abilities.Pudge
             return true;
         }
 
-        private IEnumerator<float> DamageCoroutine(Hero target, decimal damage, DamageType damageType, float duration)
+        private IEnumerator<float> DamageCoroutine(Hero target, double damage, DamageType damageType, float duration)
         {
-            decimal times = (decimal)(duration / 0.1f);
+            double times = (double)(duration / 0.1f);
             var damageOverTime = new DamageOverTime(target, Math.Round((damage / times) * 2), damageType, (int)times, 0.1f, Owner);
             damageOverTime.Run();
 

@@ -23,7 +23,7 @@ namespace DotaHeroes.API.Abilities.Pudge
 
         public override TargetType TargetType => TargetType.None;
 
-        public Dictionary<string, List<decimal>> Values { get; } = Plugin.Instance.Config.Abilites["flesh_heap"].Values;
+        public Dictionary<string, List<double>> Values { get; } = Plugin.Instance.Config.Abilites["flesh_heap"].Values;
 
         public int MaxLevel { get; set; } = 4;
 
@@ -32,8 +32,6 @@ namespace DotaHeroes.API.Abilities.Pudge
         public IReadOnlyList<int> HeroLevelToLevelUp { get; set; } = Features.Utils.EmptyLevelsList;
 
         public static string SoundsPath = Plugin.Instance.SoundsPath + "\\pudge\\flesh_heap";
-
-        public FleshHeap() : base() { }
 
         public FleshHeap(Hero hero) : base(hero) { }
 

@@ -43,22 +43,16 @@ namespace DotaHeroes.API.Features
         private bool isStop;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Ability" /> class.
+        ///     Initializes a new instance of the <see cref="Ability" /> class.
         /// </summary>
-        public Ability()
+        /// <param name="hero"><inheritdoc cref="Hero" /></param>
+        public Ability(Hero hero)
         {
             if (this is ILevelValues levelValues)
             {
                 Level = levelValues.MinLevel - 1;
             }
-        }
 
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="Ability" /> class.
-        /// </summary>
-        /// <param name="hero"><inheritdoc cref="Hero" /></param>
-        public Ability(Hero hero) : this() 
-        {
             Owner = hero;
         }
 
@@ -82,9 +76,9 @@ namespace DotaHeroes.API.Features
                     Cooldowns.AddCooldown(Owner.Player.Id, new CooldownInfo(Slug, (float)levelValues.Values["cooldown"][Level]));
                 }
 
-                if (levelValues.Values.ContainsKey("damage") && this is IDamage)
+                if (levelValues.Values.ContainsKey("damage") && this is IDamage damage)
                 {
-                    (this as IDamage).Damage = levelValues.Values["damage"][Level];
+                    damage.Damage = levelValues.Values["damage"][Level];
                 }
 
                 if (this is ICost cost)
@@ -161,7 +155,7 @@ namespace DotaHeroes.API.Features
             var _cooldown = Cooldowns.GetCooldown(Owner.Player.Id, Slug);
             cooldown = _cooldown;
 
-            if (this is ILevelValues levelValues && levelValues.Values.TryGetValue("cooldown", out List<decimal> result))
+            if (this is ILevelValues levelValues && levelValues.Values.TryGetValue("cooldown", out List<double> result))
             {
                 if (cooldown == default)
                 {

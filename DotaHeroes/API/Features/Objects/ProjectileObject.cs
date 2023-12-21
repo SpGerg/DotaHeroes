@@ -12,7 +12,7 @@ namespace DotaHeroes.API.Features.Objects
 
         public Hero Target { get; set; }
 
-        public decimal Damage { get; set; }
+        public double Damage { get; set; }
 
         public DamageType DamageType { get; set; }
 

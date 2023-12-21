@@ -21,7 +21,7 @@ namespace DotaHeroes.API.Abilities.SpiritBreaker
 
         public override TargetType TargetType => TargetType.None;
 
-        public Dictionary<string, List<decimal>> Values { get; } = Plugin.Instance.Config.Abilites["bulldoze"].Values;
+        public Dictionary<string, List<double>> Values { get; } = Plugin.Instance.Config.Abilites["bulldoze"].Values;
 
         public int MaxLevel { get; set; } = 4;
         public int MinLevel { get; set; } = 0;
@@ -29,8 +29,6 @@ namespace DotaHeroes.API.Abilities.SpiritBreaker
         public IReadOnlyList<int> HeroLevelToLevelUp { get; } = Features.Utils.EmptyLevelsList;
 
         public static string SoundsPath = Plugin.Instance.SoundsPath + "\\spirit_breaker\\bulldoze";
-
-        public Bulldoze() : base() { }
 
         public Bulldoze(Hero hero) : base(hero) { }
 

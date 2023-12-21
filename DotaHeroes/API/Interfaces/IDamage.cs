@@ -7,7 +7,7 @@ namespace DotaHeroes.API.Interfaces
     /// </summary>
     public interface IDamage
     {
-        decimal Damage { get; set; }
+        double Damage { get; set; }
 
         DamageType DamageType { get; set; }
     }

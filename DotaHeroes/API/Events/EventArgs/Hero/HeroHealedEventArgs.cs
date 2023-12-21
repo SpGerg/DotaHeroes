@@ -9,7 +9,7 @@
 
         public Features.Hero Healer { get; }
 
-        public decimal Heal { get; set; }
+        public double Heal { get; set; }
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="HeroHealedEventArgs" /> class.
@@ -17,7 +17,7 @@
         /// <param name="hero"><inheritdoc cref="Hero" /></param>
         /// <param name="healer"><inheritdoc cref="Healer" /></param>
         /// <param name="heal"><inheritdoc cref="Heal" /></param>
-        public HeroHealedEventArgs(Features.Hero hero, Features.Hero healer, decimal heal)
+        public HeroHealedEventArgs(Features.Hero hero, Features.Hero healer, double heal)
         {
             Hero = hero;
             Healer = healer;

@@ -21,7 +21,7 @@ namespace DotaHeroes.API.Abilities.Items
 
         public override string Lore => "Crystalys critical strike";
 
-        public Dictionary<string, List<decimal>> Values { get; } = Plugin.Instance.Config.Abilites["crystalys_critical_strike"].Values;
+        public Dictionary<string, List<double>> Values { get; } = Plugin.Instance.Config.Abilites["crystalys_critical_strike"].Values;
 
         public int MaxLevel { get; set; } = 1;
 
@@ -32,8 +32,6 @@ namespace DotaHeroes.API.Abilities.Items
         public override AbilityType AbilityType => AbilityType.Passive;
 
         public override TargetType TargetType => TargetType.None;
-
-        public CrystalysCriticalStrike() : base() { }
 
         public CrystalysCriticalStrike(Hero hero) : base(hero) { }
 

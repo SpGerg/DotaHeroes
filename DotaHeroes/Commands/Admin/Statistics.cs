@@ -72,7 +72,7 @@ namespace DotaHeroes.Commands.Admin
             }
 
             response = $"Have been added {_value} for {statisticsType}";
-            hero.HeroStatistics.AddOrReduceStatistic(statisticsType, new Value((decimal)_value, false), isReduce);
+            hero.HeroStatistics.AddOrReduceStatistic(statisticsType, new Value((double)_value, false), isReduce);
 
             Log.Info($"Have been added {_value} for {statisticsType} by {player.Nickname}");
             return true;

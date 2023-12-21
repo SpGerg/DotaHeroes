@@ -28,7 +28,7 @@ namespace DotaHeroes.API.Abilities.SpiritBreaker
 
         public override TargetType TargetType => TargetType.ToEnemy;
 
-        public Dictionary<string, List<decimal>> Values { get; } = Plugin.Instance.Config.Abilites["charge_of_darkness"].Values;
+        public Dictionary<string, List<double>> Values { get; } = Plugin.Instance.Config.Abilites["charge_of_darkness"].Values;
 
         public int MaxLevel { get; set; } = 4;
 
@@ -37,8 +37,6 @@ namespace DotaHeroes.API.Abilities.SpiritBreaker
         public IReadOnlyList<int> HeroLevelToLevelUp { get; } = Features.Utils.EmptyLevelsList;
 
         public static string SoundsPath = Plugin.Instance.SoundsPath + "\\spirit_breaker\\charge_of_darkness";
-
-        public ChargeOfDarkness() : base() { }
 
         public ChargeOfDarkness(Hero hero) : base(hero) { }
 

@@ -2,7 +2,7 @@
 {
     public class Value
     {
-        public decimal CoolValue { get; set; }
+        public double CoolValue { get; set; }
 
         public bool IsPercent { get; set; }
 
@@ -15,7 +15,7 @@
         /// Initializes a new instance of the <see cref="Features.Value" /> class.
         /// </summary>
         /// <param name="owner"><inheritdoc cref="Owner" /></param>
-        public Value(decimal coolValue, bool isPercent)
+        public Value(double coolValue, bool isPercent)
         {
             CoolValue = coolValue;
             IsPercent = isPercent;

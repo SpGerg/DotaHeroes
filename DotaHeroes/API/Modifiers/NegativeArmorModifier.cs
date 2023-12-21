@@ -4,9 +4,9 @@ namespace DotaHeroes.API.Modifiers
 {
     public class NegativeArmorModifier : INegativeArmorModifier
     {
-        public decimal NegativeArmor { get; set; }
+        public double NegativeArmor { get; set; }
 
-        public NegativeArmorModifier(decimal negativeArmor)
+        public NegativeArmorModifier(double negativeArmor)
         {
             NegativeArmor = negativeArmor;
         }

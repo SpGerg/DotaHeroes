@@ -8,11 +8,6 @@ namespace DotaHeroes.API.Features
         /// <summary>
         /// Initializes a new instance of the <see cref="ActiveAbility" /> class.
         /// </summary>
-        public ActiveAbility() : base() { }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ActiveAbility" /> class.
-        /// </summary>
         public ActiveAbility(Hero hero) : base(hero) { }
 
         protected abstract bool Execute(ArraySegment<string> arguments, out string response);
@@ -22,28 +17,28 @@ namespace DotaHeroes.API.Features
         /// </summary>
         public virtual bool CheckAndExecute(ArraySegment<string> arguments, out string response)
         {
-            if (Plugin.Instance.Config.Debug) Log.Info("to execute");
+            Log.Debug("to execute");
 
             if (!base.Execute(out response, true))
             {
                 return false;
             }
 
-            if (Plugin.Instance.Config.Debug) Log.Info("after execute");
+            Log.Debug("after execute");
 
             if (!CheckCooldown(out response, out CooldownInfo cooldown))
             {
                 return false;
             }
 
-            if (Plugin.Instance.Config.Debug) Log.Info("after cooldown");
+            Log.Debug("after cooldown");
 
             if (!Execute(arguments, out response))
             {
                 return false;
             }
 
-            if (Plugin.Instance.Config.Debug) Log.Info("after abstract execute");
+            Log.Debug("after abstract execute");
 
             RunCooldown(cooldown);
             return true;

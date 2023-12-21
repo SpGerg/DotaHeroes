@@ -25,9 +25,7 @@ namespace DotaHeroes.API.Auras.Items
 
         public override float Radius { get; set; } = 5;
 
-        public decimal Armor { get; set; } = Plugin.Instance.Config.Abilites["buckler_aura"].Values["extra_armor"][0];
-
-        public BucklerAura() : base() { }
+        public double Armor { get; set; } = Plugin.Instance.Config.Abilites["buckler_aura"].Values["extra_armor"][0];
 
         public BucklerAura(Hero owner) : base(owner)
         {

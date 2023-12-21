@@ -31,29 +31,22 @@ namespace DotaHeroes
             Instance = this;
             SoundsPath = Instance.ConfigPath.Replace("\\7777.yml", string.Empty).Replace($"\\{Server.Port}.yml", string.Empty);
 
-            DTAPI.RegisterAbility(new MeatHook());
-            DTAPI.RegisterAbility(new Rot());
-            DTAPI.RegisterAbility(new FleshHeap());
-            DTAPI.RegisterAbility(new Dismember());
-            DTAPI.RegisterAbility(new ChargeOfDarkness());
-            DTAPI.RegisterAbility(new Bulldoze());
-            DTAPI.RegisterAbility(new GreaterBash());
-            DTAPI.RegisterAbility(new NetherStrike());
-            DTAPI.RegisterAbility(new UnholyStrength());
-            DTAPI.RegisterAbility(new SwitchAttribute());
-            DTAPI.RegisterAbility(new Phase());
-            DTAPI.RegisterAbility(new CrystalysCriticalStrike());
-            DTAPI.RegisterAbility(new BucklerAura());
+            DTAPI.RegisterAbility(new MeatHook(null));
+            DTAPI.RegisterAbility(new Rot(null));
+            DTAPI.RegisterAbility(new FleshHeap(null));
+            DTAPI.RegisterAbility(new Dismember(null));
+            DTAPI.RegisterAbility(new ChargeOfDarkness(null));
+            DTAPI.RegisterAbility(new Bulldoze(null));
+            DTAPI.RegisterAbility(new GreaterBash(null));
+            DTAPI.RegisterAbility(new NetherStrike(null));
+            DTAPI.RegisterAbility(new UnholyStrength(null));
+            DTAPI.RegisterAbility(new SwitchAttribute(null));
+            DTAPI.RegisterAbility(new Phase(null));
+            DTAPI.RegisterAbility(new CrystalysCriticalStrike(null));
+            DTAPI.RegisterAbility(new BucklerAura(null));
 
-            if (Config.Heroes["pudge"].IsRegistering)
-            {
-                DTAPI.RegisterHero(new Pudge());
-            }
-
-            if (Config.Heroes["spirit_breaker"].IsRegistering)
-            {
-                DTAPI.RegisterHero(new SpiritBreaker());
-            }
+            DTAPI.RegisterHero(new Pudge());
+            DTAPI.RegisterHero(new SpiritBreaker());
 
             //Here ingredients
             DTAPI.RegisterItem(new Circlet());

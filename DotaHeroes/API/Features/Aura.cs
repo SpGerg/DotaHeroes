@@ -45,11 +45,6 @@ namespace DotaHeroes.API.Features
 
         private bool isActive;
 
-        protected Aura() : base()
-        {
-            Heroes = new List<Hero>();
-        }
-
         public Aura(Hero owner) : base(owner)
         {
             Heroes = new List<Hero>();
@@ -87,7 +82,7 @@ namespace DotaHeroes.API.Features
 
                 foreach (var hero in DTAPI.GetHeroes().Values)
                 {
-                    if (Plugin.Instance.Config.Debug) Log.Info(hero.Player.Nickname);
+                    Log.Debug(hero.Player.Nickname);
 
                     if (TargetType.HasFlag(TargetType.ToEnemy))
                     {
@@ -101,7 +96,7 @@ namespace DotaHeroes.API.Features
                     if (IsInsideAura(hero) && !Heroes.Contains(hero))
                     {
                         Added(hero);
-
+ 
                         Heroes.Add(hero);
                     }
 

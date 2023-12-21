@@ -20,7 +20,7 @@ namespace DotaHeroes.Events.Internal
 
             var damageBlocks = ev.Hero.GetEffects().Where(effect => damageBlockType.IsAssignableFrom(effect.GetType())); //For some reason, checking "effect is IDamageBlock" is not work.
 
-            decimal total_damage = ev.Damage;
+            double total_damage = ev.Damage;
 
             foreach (var effect in damageBlocks)
             {

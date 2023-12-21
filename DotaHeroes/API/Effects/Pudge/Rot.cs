@@ -19,7 +19,7 @@ namespace DotaHeroes.API.Effects.Pudge
 
         public Hero Attacker { get; set; }
 
-        public decimal Damage { get; set; }
+        public double Damage { get; set; }
 
         public DamageType DamageType { get; set; }
 

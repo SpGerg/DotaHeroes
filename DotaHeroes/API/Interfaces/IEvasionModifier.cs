@@ -2,6 +2,6 @@
 {
     public interface IEvasionModifier : IModifier
     {
-        decimal Evasion { get; set; }
+        double Evasion { get; set; }
     }
 }

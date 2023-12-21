@@ -4,9 +4,9 @@ namespace DotaHeroes.API.Modifiers
 {
     public class ArmorModifier : IArmorModifier
     {
-        public decimal Armor { get; set; }
+        public double Armor { get; set; }
 
-        public ArmorModifier(decimal armor)
+        public ArmorModifier(double armor)
         {
             Armor = armor;
         }

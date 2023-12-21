@@ -14,7 +14,7 @@ namespace DotaHeroes.API.Events.EventArgs.Hero
 
         public Features.Hero Target { get; }
 
-        public decimal Damage { get; set; }
+        public double Damage { get; set; }
 
         public DamageType DamageType { get; set; }
 
@@ -28,7 +28,7 @@ namespace DotaHeroes.API.Events.EventArgs.Hero
         /// <param name="damage"><inheritdoc cref="Damage" /></param>
         /// <param name="damageType"><inheritdoc cref="DamageType" /></param>
         /// <param name="isAllowed"><inheritdoc cref="IsAllowed" /></param>
-        public HeroAttackingEventArgs(Features.Hero hero, Features.Hero target, decimal damage, DamageType damageType, bool isAllowed)
+        public HeroAttackingEventArgs(Features.Hero hero, Features.Hero target, double damage, DamageType damageType, bool isAllowed)
         {
             Hero = hero;
             Target = target;

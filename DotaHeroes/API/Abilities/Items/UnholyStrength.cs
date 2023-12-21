@@ -25,15 +25,13 @@ namespace DotaHeroes.API.Abilities.Items
 
         public override TargetType TargetType => TargetType.None;
 
-        public Dictionary<string, List<decimal>> Values { get; } = Plugin.Instance.Config.Abilites["unholy_strength"].Values;
+        public Dictionary<string, List<double>> Values { get; } = Plugin.Instance.Config.Abilites["unholy_strength"].Values;
 
         public int MaxLevel { get; set; } = 1;
 
         public int MinLevel { get; set; } = 1;
 
         public IReadOnlyList<int> HeroLevelToLevelUp => throw new NotImplementedException();
-
-        public UnholyStrength() : base() { }
 
         public UnholyStrength(Hero hero) : base(hero) { }
 

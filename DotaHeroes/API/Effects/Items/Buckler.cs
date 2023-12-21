@@ -13,7 +13,7 @@ namespace DotaHeroes.API.Effects.Items
 
         public override EffectClassType EffectClassType => EffectClassType.Positive;
 
-        public decimal Armor { get; set; }
+        public double Armor { get; set; }
 
         public Buckler() : base() { }
 

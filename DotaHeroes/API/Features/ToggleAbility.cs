@@ -8,11 +8,6 @@ namespace DotaHeroes.API.Features
         public bool IsActive { get; set; }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ToggleAbility" /> class.
-        /// </summary>
-        public ToggleAbility() : base() { }
-
-        /// <summary>
         ///     Initializes a new instance of the <see cref="ToggleAbility" /> class.
         /// </summary>
         /// <param name="hero"><inheritdoc cref="Hero" /></param>

@@ -4,9 +4,9 @@ namespace DotaHeroes.API.Modifiers
 {
     public class EvasionModifier : IEvasionModifier
     {
-        public decimal Evasion { get; set; }
+        public double Evasion { get; set; }
 
-        public EvasionModifier(decimal evasion)
+        public EvasionModifier(double evasion)
         {
             Evasion = evasion;
         }

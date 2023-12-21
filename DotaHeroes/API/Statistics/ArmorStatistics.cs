@@ -6,7 +6,7 @@ namespace DotaHeroes.API.Statistics
 {
     public class ArmorStatistics
     {
-        public decimal BaseArmor { get; set; }
+        public double BaseArmor { get; set; }
 
         public List<IArmorModifier> ArmorModifiers { get; set; }
 
@@ -18,35 +18,35 @@ namespace DotaHeroes.API.Statistics
             NegativeArmorModifiers = new List<INegativeArmorModifier>();
         }
 
-        public ArmorStatistics(decimal baseArmor)
+        public ArmorStatistics(double baseArmor)
         {
             BaseArmor = baseArmor;
             ArmorModifiers = new List<IArmorModifier>();
             NegativeArmorModifiers = new List<INegativeArmorModifier>();
         }
 
-        public ArmorStatistics(decimal baseArmor, List<IArmorModifier> armorModifiers, List<INegativeArmorModifier> negativeArmorModifiers)
+        public ArmorStatistics(double baseArmor, List<IArmorModifier> armorModifiers, List<INegativeArmorModifier> negativeArmorModifiers)
         {
             BaseArmor = baseArmor;
             ArmorModifiers = armorModifiers;
             NegativeArmorModifiers = negativeArmorModifiers;
         }
 
-        public decimal GetPhysicalDamage(decimal damage, decimal agility)
+        public double GetPhysicalDamage(double damage, double agility)
         {
             var armor = GetBaseArmor(agility);
-            decimal armor_percent = (0.052m * armor) / (0.9m + 0.048m * armor);
+            double armor_percent = (0.052 * armor) / (0.9 + 0.048 * armor);
             return (damage - ((damage / 100) * armor_percent));
         }
 
-        public decimal GetBaseArmor(decimal agility)
+        public double GetBaseArmor(double agility)
         {
             return (BaseArmor + (agility / 6)) * (1 - GetNegativeArmorFromModifiers() / 10);
         }
 
-        public decimal GetArmorFromModifiers()
+        public double GetArmorFromModifiers()
         {
-            decimal result = 0;
+            double result = 0;
 
             foreach (var armor in ArmorModifiers)
             {
@@ -56,9 +56,9 @@ namespace DotaHeroes.API.Statistics
             return result;
         }
 
-        public decimal GetNegativeArmorFromModifiers()
+        public double GetNegativeArmorFromModifiers()
         {
-            decimal result = 0;
+            double result = 0;
 
             foreach (var negativeArmor in NegativeArmorModifiers)
             {
@@ -73,7 +73,7 @@ namespace DotaHeroes.API.Statistics
             return $"Armor: {Math.Round(BaseArmor, 1)}";
         }
 
-        public string ToString(decimal agility)
+        public string ToString(double agility)
         {
             var armor = GetArmorFromModifiers();
 

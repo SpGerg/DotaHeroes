@@ -46,17 +46,17 @@ namespace DotaHeroes
                 {
                     Attribute = AttributeType.Strength,
                     Strength = 25,
-                    StrengthFromLevel = 3.0m,
+                    StrengthFromLevel = 3.0,
                     Agility = 14,
-                    AgilityFromLevel = 1.4m,
+                    AgilityFromLevel = 1.4,
                     Intelligence = 16,
-                    IntelligenceFromLevel = 1.8m,
+                    IntelligenceFromLevel = 1.8,
                     BaseHealth = 120,
-                    BaseHealthRegeneration = 1.75m,
+                    BaseHealthRegeneration = 1.75,
                     BaseMana = 75,
                     BaseAttackDamage = 45,
                     BaseAttackSpeed = 10,
-                    BaseAttackRange = 2m,
+                    BaseAttackRange = 2,
                     BaseAttackProjectileSpeed = 0,
                     BaseArmor = -1,
                     BaseMagicResistance = ResistanceStatistics.BaseResistance,
@@ -82,23 +82,60 @@ namespace DotaHeroes
                 {
                     Attribute = AttributeType.Strength,
                     Strength = 28,
-                    StrengthFromLevel = 3.3m,
+                    StrengthFromLevel = 3.3,
                     Agility = 17,
-                    AgilityFromLevel = 1.7m,
+                    AgilityFromLevel = 1.7,
                     Intelligence = 14,
-                    IntelligenceFromLevel = 1.8m,
+                    IntelligenceFromLevel = 1.8,
                     BaseHealth = 120,
-                    BaseHealthRegeneration = 1.25m,
+                    BaseHealthRegeneration = 1.25,
                     BaseMana = 75,
-                    BaseManaRegeneration = 0.5m,
+                    BaseManaRegeneration = 0.5,
                     BaseAttackDamage = 31,
                     BaseAttackSpeed = 10,
-                    BaseAttackRange = 2m,
+                    BaseAttackRange = 2,
                     BaseAttackProjectileSpeed = 0,
                     BaseArmor = 1,
                     BaseMagicResistance = ResistanceStatistics.BaseResistance,
                     BaseEffectResistance = 0,
                     BaseSpeed = 30
+                }
+            )
+            },
+            { "morphling", new HeroSerializable(
+                new List<string>
+                {
+                    "charge_of_darkness",
+                    "bulldoze",
+                    "greater_bash",
+                    "nether_strike"
+                },
+                new List<RoleTypeId>
+                {
+                    RoleTypeId.Tutorial
+                },
+                HeroClassType.Ranged,
+                new HeroStatisticsSerializable()
+                {
+                    Attribute = AttributeType.Agility,
+                    Strength = 23,
+                    StrengthFromLevel = 3.2,
+                    Agility = 24,
+                    AgilityFromLevel = 3.9,
+                    Intelligence = 19,
+                    IntelligenceFromLevel = 1.8,
+                    BaseHealth = 120,
+                    BaseHealthRegeneration = 1.25,
+                    BaseMana = 75,
+                    BaseManaRegeneration = 0.5,
+                    BaseAttackDamage = 12,
+                    BaseAttackSpeed = 10,
+                    BaseAttackRange = 5,
+                    BaseAttackProjectileSpeed = 0,
+                    BaseArmor = -2,
+                    BaseMagicResistance = ResistanceStatistics.BaseResistance,
+                    BaseEffectResistance = 0,
+                    BaseSpeed = 10
                 }
             )
             },
@@ -108,126 +145,126 @@ namespace DotaHeroes
         public Dictionary<string, AbilitySerializable> Abilites { get; set; } = new()
         {
             { "meat_hook", new AbilitySerializable(
-                new Dictionary<string, List<decimal>>
+                new Dictionary<string, List<double>>
                 {
-                    { "damage", new List<decimal> { 120, 180, 210, 240 } },
-                    { "mana_cost", new List<decimal> { 120, 130, 140, 150 } },
-                    { "cooldown", new List<decimal> { 12, 11, 9, 8 } },
-                    { "cast_range", new List<decimal> { 20, 30, 40, 50 } }
+                    { "damage", new List<double> { 120, 180, 210, 240 } },
+                    { "mana_cost", new List<double> { 120, 130, 140, 150 } },
+                    { "cooldown", new List<double> { 12, 11, 9, 8 } },
+                    { "cast_range", new List<double> { 20, 30, 40, 50 } }
                 }
             )
             },
             { "rot", new AbilitySerializable(
-                new Dictionary<string, List<decimal>>
+                new Dictionary<string, List<double>>
                 {
-                    { "damage", new List<decimal> { 30, 50, 80, 110 } },
-                    { "mana_cost", new List<decimal> { 0, 0, 0, 0 } },
+                    { "damage", new List<double> { 30, 50, 80, 110 } },
+                    { "mana_cost", new List<double> { 0, 0, 0, 0 } },
                 }
             )
             },
             { "flesh_heap", new AbilitySerializable(
-                new Dictionary<string, List<decimal>>
+                new Dictionary<string, List<double>>
                 {
-                    { "damage_block", new List<decimal> { 8, 14, 20, 26 } },
-                    { "mana_cost", new List<decimal> { 120, 130, 140, 150 } },
-                    { "cooldown", new List<decimal> { 12, 11, 9, 8 } },
+                    { "damage_block", new List<double> { 8, 14, 20, 26 } },
+                    { "mana_cost", new List<double> { 120, 130, 140, 150 } },
+                    { "cooldown", new List<double> { 12, 11, 9, 8 } },
                 }
             )
             },
             { "dismember", new AbilitySerializable(
-                new Dictionary<string, List<decimal>>
+                new Dictionary<string, List<double>>
                 {
-                    { "damage", new List<decimal>() { 120, 150, 180, 210 } },
-                    { "cooldown", new List<decimal>() { 30, 25, 20, 15 } },
-                    { "range", new List<decimal>() { 2, 2, 2, 2 } },
-                    { "strength_to_damage", new List<decimal>() { 30, 60, 90 } },
+                    { "damage", new List<double>() { 120, 150, 180, 210 } },
+                    { "cooldown", new List<double>() { 30, 25, 20, 15 } },
+                    { "range", new List<double>() { 2, 2, 2, 2 } },
+                    { "strength_to_damage", new List<double>() { 30, 60, 90 } },
                 }
             )
             },
             { "charge_of_darkness", new AbilitySerializable(
-                new Dictionary<string, List<decimal>>
+                new Dictionary<string, List<double>>
                 {
-                    { "extra_speed", new List<decimal> { 25, 40, 55, 70 } },
-                    { "stun", new List<decimal> { 1.2m, 1.5m, 1.2m, 2.1m } },
-                    { "cooldown", new List<decimal> { 21, 18, 15, 12 } },
+                    { "extra_speed", new List<double> { 25, 40, 55, 70 } },
+                    { "stun", new List<double> { 1.2, 1.5, 1.2, 2.1 } },
+                    { "cooldown", new List<double> { 21, 18, 15, 12 } },
                 }
             )
             },
             { "bulldoze", new AbilitySerializable(
-                new Dictionary<string, List<decimal>>
+                new Dictionary<string, List<double>>
                 {
-                    { "duration", new List<decimal> { 8, 8, 8, 8 } },
-                    { "extra_effect_resistance", new List<decimal> { 40, 50, 60, 70 } },
-                    { "extra_speed", new List<decimal> { 25, 40, 55, 70 } },
-                    { "cooldown", new List<decimal> { 22, 20, 18, 16 } },
+                    { "duration", new List<double> { 8, 8, 8, 8 } },
+                    { "extra_effect_resistance", new List<double> { 40, 50, 60, 70 } },
+                    { "extra_speed", new List<double> { 25, 40, 55, 70 } },
+                    { "cooldown", new List<double> { 22, 20, 18, 16 } },
                 }
             )
             },
             { "greater_bash", new AbilitySerializable(
-                new Dictionary<string, List<decimal>>
+                new Dictionary<string, List<double>>
                 {
-                    { "stun", new List<decimal> { 0.9m, 1.1m, 1.3m, 1.5m } },
-                    { "damage_from_speed", new List<decimal> { 25, 30, 35, 40 } },
-                    { "chance", new List<decimal> { 17, 17, 17, 17 } },
-                    { "cooldown", new List<decimal> { 2, 2, 2 } },
+                    { "stun", new List<double> { 0.9, 1.1, 1.3, 1.5 } },
+                    { "damage_from_speed", new List<double> { 25, 30, 35, 40 } },
+                    { "chance", new List<double> { 17, 17, 17, 17 } },
+                    { "cooldown", new List<double> { 2, 2, 2 } },
                 }
             )
             },
             { "nether_strike", new AbilitySerializable(
-                new Dictionary<string, List<decimal>>
+                new Dictionary<string, List<double>>
                 {
-                    { "damage", new List<decimal> { 125, 200, 275 } },
-                    { "cooldown", new List<decimal> { 90, 70, 50 } },
+                    { "damage", new List<double> { 125, 200, 275 } },
+                    { "cooldown", new List<double> { 90, 70, 50 } },
                 }
             )
             },
             { "unholy_strength", new AbilitySerializable(
-                new Dictionary<string, List<decimal>>()
+                new Dictionary<string, List<double>>()
                 {
-                    { "extra_attack_damage", new List<decimal> { 35 } },
-                    { "strength", new List<decimal> { 25 } },
-                    { "armor", new List<decimal> { 4 } }
+                    { "extra_attack_damage", new List<double> { 35 } },
+                    { "strength", new List<double> { 25 } },
+                    { "armor", new List<double> { 4 } }
                 }
             )
             },
             { "switch_attribute", new AbilitySerializable(
-                new Dictionary<string, List<decimal>>()
+                new Dictionary<string, List<double>>()
                 {
-                    { "given", new List<decimal> { 10 } },
+                    { "given", new List<double> { 10 } },
                 }
             )
             },
             { "phase", new AbilitySerializable(
-                new Dictionary<string, List<decimal>>()
+                new Dictionary<string, List<double>>()
                 {
-                    { "extra_speed_melee", new List<decimal> { 25 } },
-                    { "extra_speed_ranged", new List<decimal> { 15 } },
-                    { "duration", new List<decimal> { 3 } },
-                    { "cooldown", new List<decimal> { 8 } },
+                    { "extra_speed_melee", new List<double> { 25 } },
+                    { "extra_speed_ranged", new List<double> { 15 } },
+                    { "duration", new List<double> { 3 } },
+                    { "cooldown", new List<double> { 8 } },
                 }
             )
             },
             { "vanguard_damage_block", new AbilitySerializable(
-                new Dictionary<string, List<decimal>>()
+                new Dictionary<string, List<double>>()
                 {
-                    { "damage_block_melee", new List<decimal> { 64 } },
-                    { "damage_block_ranged", new List<decimal> { 32 } },
-                    { "chance", new List<decimal> { 60 } }
+                    { "damage_block_melee", new List<double> { 64 } },
+                    { "damage_block_ranged", new List<double> { 32 } },
+                    { "chance", new List<double> { 60 } }
                 }
             )
             },
             { "crystalys_critical_strike", new AbilitySerializable(
-                new Dictionary<string, List<decimal>>()
+                new Dictionary<string, List<double>>()
                 {
-                    { "critical_damage", new List<decimal> { 160 } },
-                    { "chance", new List<decimal> { 30 } }
+                    { "critical_damage", new List<double> { 160 } },
+                    { "chance", new List<double> { 30 } }
                 }
             )
             },
             { "buckler_aura", new AbilitySerializable(
-                new Dictionary<string, List<decimal>>()
+                new Dictionary<string, List<double>>()
                 {
-                    { "extra_armor", new List<decimal> { 2 } },
+                    { "extra_armor", new List<double> { 2 } },
                 }
             )
             },
@@ -249,7 +286,7 @@ namespace DotaHeroes
                     { StatisticsType.Strength, new Value(5, false) },
                     { StatisticsType.Agility, new Value(2, false) },
                     { StatisticsType.Intelligence, new Value(2, false) },
-                    { StatisticsType.HealthRegeneration, new Value(0.75m, false) },
+                    { StatisticsType.HealthRegeneration, new Value(0.75, false) },
                     { StatisticsType.ExtraAttackDamage, new Value(3, false) },
                 }
             )
@@ -286,7 +323,7 @@ namespace DotaHeroes
                     { StatisticsType.Agility, new Value(2, false) },
                     { StatisticsType.Intelligence, new Value(5, false) },
                     { StatisticsType.Mana, new Value(3, true) },
-                    { StatisticsType.ManaRegeneration, new Value(0.75m, false) },
+                    { StatisticsType.ManaRegeneration, new Value(0.75, false) },
                 }
             )
             },
@@ -566,7 +603,7 @@ namespace DotaHeroes
                 },
                 new Dictionary<StatisticsType, Value>()
                 {
-                    { StatisticsType.HealthRegeneration, new Value(5.25m, false) }
+                    { StatisticsType.HealthRegeneration, new Value(5.25, false) }
                 }
             )
             },
@@ -588,7 +625,7 @@ namespace DotaHeroes
                 new List<string>() { },
                 new Dictionary<StatisticsType, Value>()
                 {
-                    { StatisticsType.HealthRegeneration, new Value(5.25m, false) }
+                    { StatisticsType.HealthRegeneration, new Value(5.25, false) }
                 }
             )
             },
