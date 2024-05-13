@@ -9,7 +9,6 @@ using DotaHeroes.API.Items.Recipes;
 using DotaHeroes.Events.Internal;
 using Exiled.API.Features;
 using System;
-using System.IO;
 using Hero = DotaHeroes.API.Events.Handlers.Hero;
 using Player = Exiled.Events.Handlers.Player;
 
