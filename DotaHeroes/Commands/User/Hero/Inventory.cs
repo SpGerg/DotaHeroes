@@ -1,4 +1,4 @@
-﻿using NorthwoodLib.Pools;
+﻿using Exiled.API.Features.Pools;
 using System;
 
 namespace DotaHeroes.Commands.User.Hero
@@ -11,7 +11,7 @@ namespace DotaHeroes.Commands.User.Hero
 
         protected override bool Execute(API.Features.Hero hero, ArraySegment<string> arguments, out string response)
         {
-            var stringBuilder = StringBuilderPool.Shared.Rent();
+            var stringBuilder = StringBuilderPool.Pool.Get();
 
             var index = -1;
 
@@ -22,7 +22,7 @@ namespace DotaHeroes.Commands.User.Hero
                 index++;
             }
 
-            response = StringBuilderPool.Shared.ToStringReturn(stringBuilder);
+            response = StringBuilderPool.Pool.ToStringReturn(stringBuilder);
             return true;
         }
     }

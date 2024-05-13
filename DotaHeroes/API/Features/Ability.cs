@@ -1,6 +1,6 @@
 ﻿using DotaHeroes.API.Enums;
 using DotaHeroes.API.Interfaces;
-using NorthwoodLib.Pools;
+using Exiled.API.Features.Pools;
 using System.Collections.Generic;
 using System.Text;
 
@@ -197,7 +197,7 @@ namespace DotaHeroes.API.Features
         /// </summary>
         public override string ToString()
         {
-            StringBuilder stringBuilder = StringBuilderPool.Shared.Rent();
+            StringBuilder stringBuilder = StringBuilderPool.Pool.Get();
 
             stringBuilder.AppendLine("Name: " + Name);
             stringBuilder.AppendLine("Description: " + Description);
@@ -205,7 +205,7 @@ namespace DotaHeroes.API.Features
             stringBuilder.AppendLine("Ability Type: " + AbilityType.ToString());
             stringBuilder.AppendLine("Target Type: " + TargetType.ToString());
 
-            return StringBuilderPool.Shared.ToStringReturn(stringBuilder);
+            return StringBuilderPool.Pool.ToStringReturn(stringBuilder);
         }
 
         /// <summary>
@@ -213,7 +213,7 @@ namespace DotaHeroes.API.Features
         /// </summary>
         public string ToString(Hero hero)
         {
-            StringBuilder stringBuilder = StringBuilderPool.Shared.Rent();
+            StringBuilder stringBuilder = StringBuilderPool.Pool.Get();
 
             stringBuilder.AppendLine("Name: " + Name);
             stringBuilder.AppendLine("Description: " + Description);
@@ -222,7 +222,7 @@ namespace DotaHeroes.API.Features
             stringBuilder.AppendLine("Target Type: " + TargetType.ToString());
             stringBuilder.AppendLine("Cooldown: " + Cooldowns.ToStringIsCooldown(hero.Player.Id, Slug));
 
-            return StringBuilderPool.Shared.ToStringReturn(stringBuilder);
+            return StringBuilderPool.Pool.ToStringReturn(stringBuilder);
         }
 
         /// <summary>
@@ -230,7 +230,7 @@ namespace DotaHeroes.API.Features
         /// </summary>
         public virtual string ToStringHud(Hero hero)
         {
-            StringBuilder stringBuilder = StringBuilderPool.Shared.Rent();
+            StringBuilder stringBuilder = StringBuilderPool.Pool.Get();
             stringBuilder.AppendLine("Name: " + Name);
             stringBuilder.AppendLine("Level: " + (Level + 1));
 
@@ -253,7 +253,7 @@ namespace DotaHeroes.API.Features
                 stringBuilder.AppendLine("Active: " + toggleAbility.ToStringIsActive());
             }
 
-            return StringBuilderPool.Shared.ToStringReturn(stringBuilder);
+            return StringBuilderPool.Pool.ToStringReturn(stringBuilder);
         }
 
         public abstract Ability Create(Hero hero);

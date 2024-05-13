@@ -6,8 +6,8 @@ using DotaHeroes.API.Features.Objects;
 using DotaHeroes.API.Interfaces;
 using DotaHeroes.API.Statistics;
 using Exiled.API.Features;
+using Exiled.API.Features.Pools;
 using MEC;
-using NorthwoodLib.Pools;
 using PlayerRoles;
 using System;
 using System.Collections.Generic;
@@ -703,7 +703,7 @@ namespace DotaHeroes.API.Features
         /// </summary>
         public override string ToString()
         {
-            var stringBuilder = StringBuilderPool.Shared.Rent();
+            var stringBuilder = StringBuilderPool.Pool.Get();
 
             stringBuilder.AppendLine("Name: " + HeroName);
             stringBuilder.AppendLine("Level: " + Level);
@@ -731,7 +731,7 @@ namespace DotaHeroes.API.Features
                 }
             }
 
-            return StringBuilderPool.Shared.ToStringReturn(stringBuilder);
+            return StringBuilderPool.Pool.ToStringReturn(stringBuilder);
         }
 
         public abstract Hero Create(Player player, SideType sideType);

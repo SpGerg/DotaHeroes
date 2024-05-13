@@ -1,5 +1,5 @@
 ﻿using DotaHeroes.API.Enums;
-using NorthwoodLib.Pools;
+using Exiled.API.Features.Pools;
 using System.Collections.Generic;
 using System.Text;
 
@@ -87,7 +87,7 @@ namespace DotaHeroes.API.Features
         /// </summary>
         public virtual string ToStringHud(Hero hero)
         {
-            StringBuilder stringBuilder = StringBuilderPool.Shared.Rent();
+            StringBuilder stringBuilder = StringBuilderPool.Pool.Get();
             stringBuilder.AppendLine("Name: " + Name);
 
             var cooldown = Cooldowns.GetCooldown(hero.Player.Id, Slug);
@@ -102,7 +102,7 @@ namespace DotaHeroes.API.Features
                 stringBuilder.AppendLine("Active: " + toggleAbility.ToStringIsActive());
             }
 
-            return StringBuilderPool.Shared.ToStringReturn(stringBuilder);
+            return StringBuilderPool.Pool.ToStringReturn(stringBuilder);
         }
 
         public abstract Item Create(Hero owner);

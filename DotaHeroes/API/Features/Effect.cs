@@ -1,7 +1,7 @@
 ﻿using DotaHeroes.API.Enums;
 using DotaHeroes.API.Interfaces;
+using Exiled.API.Features.Pools;
 using MEC;
-using NorthwoodLib.Pools;
 using System;
 using System.Text;
 
@@ -117,7 +117,7 @@ namespace DotaHeroes.API.Features
         /// </summary>
         public virtual string ToStringHud(Hero hero)
         {
-            StringBuilder stringBuilder = StringBuilderPool.Shared.Rent();
+            StringBuilder stringBuilder = StringBuilderPool.Pool.Get();
             stringBuilder.AppendLine("Name: " + Name);
 
             var duration = EffectDuration;
@@ -128,7 +128,7 @@ namespace DotaHeroes.API.Features
             }
 
 
-            return StringBuilderPool.Shared.ToStringReturn(stringBuilder);
+            return StringBuilderPool.Pool.ToStringReturn(stringBuilder);
         }
     }
 }

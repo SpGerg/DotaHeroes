@@ -1,6 +1,6 @@
 ﻿using DotaHeroes.API.Extensions;
 using Exiled.API.Features;
-using NorthwoodLib.Pools;
+using Exiled.API.Features.Pools;
 using System;
 
 namespace DotaHeroes.Commands.Admin
@@ -15,7 +15,7 @@ namespace DotaHeroes.Commands.Admin
         {
             if (arguments.Count == 0)
             {
-                var stringBuilder = StringBuilderPool.Shared.Rent();
+                var stringBuilder = StringBuilderPool.Pool.Get();
 
                 stringBuilder.AppendLine("Command format: set_hero <hero name>");
 
@@ -26,7 +26,7 @@ namespace DotaHeroes.Commands.Admin
                     stringBuilder.AppendLine(hero.Value.Slug);
                 }
 
-                response = StringBuilderPool.Shared.ToStringReturn(stringBuilder);
+                response = StringBuilderPool.Pool.ToStringReturn(stringBuilder);
                 return false;
             }
 

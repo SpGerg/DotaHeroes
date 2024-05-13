@@ -1,6 +1,6 @@
 ﻿using CommandSystem;
+using Exiled.API.Features.Pools;
 using Mono.Collections.Generic;
-using NorthwoodLib.Pools;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -35,7 +35,7 @@ namespace DotaHeroes.Commands.User.Hero
 
         public override void LoadGeneratedCommands()
         {
-            StringBuilder stringBuilder = StringBuilderPool.Shared.Rent();
+            StringBuilder stringBuilder = StringBuilderPool.Pool.Get();
 
             foreach (var command in AllCommands)
             {
@@ -43,7 +43,7 @@ namespace DotaHeroes.Commands.User.Hero
                 RegisterCommand(command);
             }
 
-            message = StringBuilderPool.Shared.ToStringReturn(stringBuilder);
+            message = StringBuilderPool.Pool.ToStringReturn(stringBuilder);
         }
 
         protected override bool ExecuteParent(ArraySegment<string> arguments, ICommandSender sender, out string response)

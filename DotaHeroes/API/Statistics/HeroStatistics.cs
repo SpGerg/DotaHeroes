@@ -1,7 +1,7 @@
 ﻿using DotaHeroes.API.Enums;
 using DotaHeroes.API.Features;
 using DotaHeroes.API.Modifiers;
-using NorthwoodLib.Pools;
+using Exiled.API.Features.Pools;
 using System.Collections.Generic;
 
 namespace DotaHeroes.API.Statistics
@@ -237,7 +237,7 @@ namespace DotaHeroes.API.Statistics
 
         public override string ToString()
         {
-            var stringBuilder = StringBuilderPool.Shared.Rent();
+            var stringBuilder = StringBuilderPool.Pool.Get();
             stringBuilder.AppendLine(HealthAndMana.ToString());
             stringBuilder.AppendLine(Attack.ToString());
             stringBuilder.AppendLine(Armor.ToString(Agility));
@@ -246,7 +246,7 @@ namespace DotaHeroes.API.Statistics
             stringBuilder.AppendLine(Speed.ToString());
             stringBuilder.AppendLine(AttributeType.ToString());
 
-            return StringBuilderPool.Shared.ToStringReturn(stringBuilder);
+            return StringBuilderPool.Pool.ToStringReturn(stringBuilder);
         }
 
         private void UpdateAttackDamage(double value, AttributeType attributeType)

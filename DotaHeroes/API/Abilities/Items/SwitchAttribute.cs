@@ -1,7 +1,7 @@
 ﻿using DotaHeroes.API.Enums;
 using DotaHeroes.API.Features;
 using DotaHeroes.API.Interfaces;
-using NorthwoodLib.Pools;
+using Exiled.API.Features.Pools;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -82,11 +82,11 @@ namespace DotaHeroes.API.Abilities.Items
 
         public override string ToStringHud(Hero hero)
         {
-            StringBuilder stringBuilder = StringBuilderPool.Shared.Rent();
+            StringBuilder stringBuilder = StringBuilderPool.Pool.Get();
             stringBuilder.AppendLine("Name: " + Name);
             stringBuilder.AppendLine("Current attribute: " + CurrentAttribute);
 
-            return StringBuilderPool.Shared.ToStringReturn(stringBuilder);
+            return StringBuilderPool.Pool.ToStringReturn(stringBuilder);
         }
 
         public override Ability Create(Hero hero)

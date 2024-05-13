@@ -1,5 +1,5 @@
 ﻿using DotaHeroes.API.Enums;
-using NorthwoodLib.Pools;
+using Exiled.API.Features.Pools;
 using System;
 using System.Collections.Generic;
 
@@ -17,7 +17,7 @@ namespace DotaHeroes.Commands.User.Hero
         {
             if (arguments.Count == 0)
             {
-                var stringBuilder = StringBuilderPool.Shared.Rent();
+                var stringBuilder = StringBuilderPool.Pool.Get();
 
                 stringBuilder.AppendLine("Command format: buy_item <name>");
                 stringBuilder.AppendLine("Command example: buy_item bracer");
@@ -29,7 +29,7 @@ namespace DotaHeroes.Commands.User.Hero
                     stringBuilder.AppendLine(item.Value.Slug);
                 }
 
-                response = StringBuilderPool.Shared.ToStringReturn(stringBuilder);
+                response = StringBuilderPool.Pool.ToStringReturn(stringBuilder);
                 return true;
             }
 
@@ -37,7 +37,7 @@ namespace DotaHeroes.Commands.User.Hero
 
             if (_item == default)
             {
-                var stringBuilder = StringBuilderPool.Shared.Rent();
+                var stringBuilder = StringBuilderPool.Pool.Get();
 
                 stringBuilder.AppendLine("Item list: ");
 
@@ -46,7 +46,7 @@ namespace DotaHeroes.Commands.User.Hero
                     stringBuilder.AppendLine(item.Value.Slug);
                 }
 
-                response = StringBuilderPool.Shared.ToStringReturn(stringBuilder);
+                response = StringBuilderPool.Pool.ToStringReturn(stringBuilder);
                 return true;
             }
 

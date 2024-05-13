@@ -1,7 +1,7 @@
 ﻿using DotaHeroes.API.Enums;
 using DotaHeroes.API.Features;
 using Exiled.API.Features;
-using NorthwoodLib.Pools;
+using Exiled.API.Features.Pools;
 using System;
 
 namespace DotaHeroes.Commands.Admin
@@ -16,7 +16,7 @@ namespace DotaHeroes.Commands.Admin
         {
             if (arguments.Count <= 2)
             {
-                var stringBuilder = StringBuilderPool.Shared.Rent();
+                var stringBuilder = StringBuilderPool.Pool.Get();
 
                 stringBuilder.AppendLine("Command format: stats <type> <value> <isReduce>");
                 stringBuilder.AppendLine("Command format example: stats agility 3 false");
@@ -28,13 +28,13 @@ namespace DotaHeroes.Commands.Admin
                     stringBuilder.AppendLine(value);
                 }
 
-                response = StringBuilderPool.Shared.ToStringReturn(stringBuilder);
+                response = StringBuilderPool.Pool.ToStringReturn(stringBuilder);
                 return false;
             }
 
             if (!Enum.TryParse(arguments.Array[2], true, out StatisticsType statisticsType))
             {
-                var stringBuilder = StringBuilderPool.Shared.Rent();
+                var stringBuilder = StringBuilderPool.Pool.Get();
 
                 stringBuilder.AppendLine("List of all statistics: ");
 
@@ -43,7 +43,7 @@ namespace DotaHeroes.Commands.Admin
                     stringBuilder.AppendLine(value);
                 }
 
-                response = StringBuilderPool.Shared.ToStringReturn(stringBuilder);
+                response = StringBuilderPool.Pool.ToStringReturn(stringBuilder);
                 return false;
             }
 

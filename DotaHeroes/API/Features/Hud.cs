@@ -1,5 +1,5 @@
 ﻿using Exiled.API.Features;
-using NorthwoodLib.Pools;
+using Exiled.API.Features.Pools;
 
 namespace DotaHeroes.API.Features
 {
@@ -24,7 +24,7 @@ namespace DotaHeroes.API.Features
             if (hero == null || hero.Player == null || hero.IsHeroDead) return;
 
             var player = hero.Player;
-            var abilites = StringBuilderPool.Shared.Rent();
+            var abilites = StringBuilderPool.Pool.Get();
 
             foreach (var ability in hero.Abilities)
             {
@@ -40,7 +40,7 @@ namespace DotaHeroes.API.Features
                 index++;
             }
 
-            player.ShowHint($"<pos=0><size=16><align=Left>{hero}</align></size></pos><size=12><align=Right>{StringBuilderPool.Shared.ToStringReturn(abilites)}</align></size>", short.MaxValue);
+            player.ShowHint($"<pos=0><size=16><align=Left>{hero}</align></size></pos><size=12><align=Right>{StringBuilderPool.Pool.ToStringReturn(abilites)}</align></size>", short.MaxValue);
         }
 
         /// <summary>

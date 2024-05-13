@@ -1,5 +1,5 @@
 ﻿using CommandSystem;
-using NorthwoodLib.Pools;
+using Exiled.API.Features.Pools;
 using System;
 using System.Text;
 
@@ -17,7 +17,7 @@ namespace DotaHeroes.Commands.User.Hero
         {
             if (arguments.Count < 2)
             {
-                StringBuilder stringBuilder = StringBuilderPool.Shared.Rent();
+                StringBuilder stringBuilder = StringBuilderPool.Pool.Get();
 
                 stringBuilder.AppendLine("Command format: use_ability <ability index> <is item>");
                 stringBuilder.AppendLine("Command example: use_ability 1 false. It will be use first ability (Meat hook for example).");
@@ -32,7 +32,7 @@ namespace DotaHeroes.Commands.User.Hero
                     index++;
                 }
 
-                response = StringBuilderPool.Shared.ToStringReturn(stringBuilder);
+                response = StringBuilderPool.Pool.ToStringReturn(stringBuilder);
 
                 return false;
             }

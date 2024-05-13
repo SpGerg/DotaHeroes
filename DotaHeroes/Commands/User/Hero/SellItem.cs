@@ -1,4 +1,4 @@
-﻿using NorthwoodLib.Pools;
+﻿using Exiled.API.Features.Pools;
 using System;
 
 namespace DotaHeroes.Commands.User.Hero
@@ -13,13 +13,13 @@ namespace DotaHeroes.Commands.User.Hero
         {
             if (arguments.Count == 0)
             {
-                var stringBuilder = StringBuilderPool.Shared.Rent();
+                var stringBuilder = StringBuilderPool.Pool.Get();
 
                 stringBuilder.AppendLine("Command format: sell_item <index>");
                 stringBuilder.AppendLine("Command example: sell_item 0");
                 stringBuilder.AppendLine("Get item index you can by .inventory command");
 
-                response = StringBuilderPool.Shared.ToStringReturn(stringBuilder);
+                response = StringBuilderPool.Pool.ToStringReturn(stringBuilder);
                 return true;
             }
 
