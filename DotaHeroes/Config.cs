@@ -218,6 +218,15 @@ namespace DotaHeroes
                 }
             )
             },
+            { "waveform", new AbilitySerializable(
+                new Dictionary<string, List<double>>
+                {
+                    { "damage", new List<double> { 75, 150, 225, 300 } },
+                    { "cooldown", new List<double> { 21, 18, 15, 12 } },
+                    { "range", new List<double> { 700, 800, 900, 1000 } }
+                }
+            )
+            },
             { "unholy_strength", new AbilitySerializable(
                 new Dictionary<string, List<double>>()
                 {

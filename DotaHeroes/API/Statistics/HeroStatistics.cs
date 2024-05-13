@@ -84,7 +84,7 @@ namespace DotaHeroes.API.Statistics
 
         public SpeedStatistics Speed { get; }
 
-        // Im init cuz all heroes by default have 0% evasion. wepith eawskughifwean, fmcvzkloppjito 0pwea
+        // Im init cuz all heroes by default have 0% evasion.
         public EvasionStatistics Evasion { get; } = new EvasionStatistics();
 
         public AttributeType AttributeType { get; set; }

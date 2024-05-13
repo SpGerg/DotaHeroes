@@ -20,8 +20,14 @@ namespace DotaHeroes.API.Items
 
         public override string Lore => "Powet treads";
 
+        private SwitchAttribute _switchAttribute;
+
         public PowerTreads() : base()
         {
+            if (MainAbility is SwitchAttribute switchAttribute)
+            {
+                _switchAttribute = switchAttribute;
+            }
         }
 
         protected PowerTreads(Hero owner) : base(owner)
@@ -30,20 +36,14 @@ namespace DotaHeroes.API.Items
 
         public override void Added()
         {
-            if (MainAbility is SwitchAttribute switchAttribute)
-            {
-                switchAttribute.UpdateAttribute(Owner, Owner.HeroStatistics.AttributeType);
-            }
+            _switchAttribute.UpdateAttribute(Owner, Owner.HeroStatistics.AttributeType);
 
             base.Added();
         }
 
         public override void Removed()
         {
-            if (MainAbility is SwitchAttribute switchAttribute)
-            {
-                switchAttribute.UpdateAttribute(Owner, AttributeType.None);
-            }
+            _switchAttribute.UpdateAttribute(Owner, AttributeType.None);
 
             base.Removed();
         }
