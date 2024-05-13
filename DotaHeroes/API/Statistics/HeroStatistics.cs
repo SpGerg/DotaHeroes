@@ -1,8 +1,6 @@
-﻿using CustomPlayerEffects;
-using DotaHeroes.API.Enums;
+﻿using DotaHeroes.API.Enums;
 using DotaHeroes.API.Features;
 using DotaHeroes.API.Modifiers;
-using Exiled.API.Features;
 using NorthwoodLib.Pools;
 using System.Collections.Generic;
 

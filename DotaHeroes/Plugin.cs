@@ -1,16 +1,16 @@
-﻿using DotaHeroes.Events.Internal;
-using Exiled.API.Features;
-using Player = Exiled.Events.Handlers.Player;
-using Hero = DotaHeroes.API.Events.Handlers.Hero;
-using DotaHeroes.API.Heroes;
+﻿using DotaHeroes.API;
+using DotaHeroes.API.Abilities.Items;
 using DotaHeroes.API.Abilities.Pudge;
 using DotaHeroes.API.Abilities.SpiritBreaker;
+using DotaHeroes.API.Auras.Items;
+using DotaHeroes.API.Heroes;
 using DotaHeroes.API.Items;
 using DotaHeroes.API.Items.Recipes;
-using DotaHeroes.API.Abilities.Items;
-using DotaHeroes.API;
+using DotaHeroes.Events.Internal;
+using Exiled.API.Features;
 using System;
-using DotaHeroes.API.Auras.Items;
+using Hero = DotaHeroes.API.Events.Handlers.Hero;
+using Player = Exiled.Events.Handlers.Player;
 
 namespace DotaHeroes
 {
@@ -24,7 +24,7 @@ namespace DotaHeroes
 
         public override string Author => "SpGerg";
 
-        public string SoundsPath { get; private set; } 
+        public string SoundsPath { get; private set; }
 
         public override void OnEnabled()
         {

@@ -1,5 +1,4 @@
-﻿using DotaHeroes.API.Abilities.Items;
-using DotaHeroes.API.Enums;
+﻿using DotaHeroes.API.Enums;
 using DotaHeroes.API.Features;
 using DotaHeroes.API.Interfaces;
 using System;
@@ -39,7 +38,7 @@ namespace DotaHeroes.API.Abilities.SpiritBreaker
 
             Owner.EnableEffect(effect, (float)Values["duration"][Level]);
 
-            Audio.Play(Owner.Player.Position, SoundsPath + "\\activate.ogg", 75f, false, Owner.Player);
+            Features.Audio.Play(Owner.Player.Position, SoundsPath + "\\activate.ogg", 75f, false, Owner.Player);
 
             response = "Bulldoze has been activated.";
             return true;

@@ -24,7 +24,7 @@ namespace DotaHeroes.API.Features
 
         public abstract HeroClassType HeroClassType { get; set; }
 
-        public virtual List<Ability> Abilities 
+        public virtual List<Ability> Abilities
         {
             get
             {
@@ -51,7 +51,8 @@ namespace DotaHeroes.API.Features
 
         public Inventory Inventory { get; protected set; }
 
-        public HeroStateType HeroStateType {
+        public HeroStateType HeroStateType
+        {
             get
             {
                 return heroStateType;
@@ -411,7 +412,7 @@ namespace DotaHeroes.API.Features
 
             Player.Role.Set(RoleTypeId.Spectator);
 
-            foreach (var ability in Abilities)  
+            foreach (var ability in Abilities)
             {
                 if (ability is ToggleAbility toggleAbility)
                 {
@@ -674,7 +675,7 @@ namespace DotaHeroes.API.Features
         /// <summary>
         /// Respawn
         /// </summary>
-        public virtual void Respawn() 
+        public virtual void Respawn()
         {
             var healthAndMana = HeroStatistics.HealthAndMana;
             healthAndMana.Health = healthAndMana.MaximumHealth;

@@ -1,6 +1,4 @@
 ﻿using DotaHeroes.API.Enums;
-using DotaHeroes.API.Features;
-using Exiled.API.Features;
 using NorthwoodLib.Pools;
 using System;
 using System.Collections.Generic;

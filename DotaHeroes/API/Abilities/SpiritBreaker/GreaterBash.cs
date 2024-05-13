@@ -1,5 +1,4 @@
-﻿using DotaHeroes.API.Abilities.Items;
-using DotaHeroes.API.Effects;
+﻿using DotaHeroes.API.Effects;
 using DotaHeroes.API.Enums;
 using DotaHeroes.API.Events.EventArgs.Hero;
 using DotaHeroes.API.Features;
@@ -56,7 +55,7 @@ namespace DotaHeroes.API.Abilities.SpiritBreaker
             Log.Debug("Bash");
 
             Bash(ev.Target, ev.Hero, ev.Damage);
- 
+
             Cooldowns.AddCooldown(ev.Hero.Player.Id, new CooldownInfo(Slug, (float)Values["cooldown"][Level]));
         }
 
@@ -75,7 +74,7 @@ namespace DotaHeroes.API.Abilities.SpiritBreaker
 
             target.TakeDamage(attacker, total_damage, DamageType.Magical);
 
-            Audio.Play(Owner.Player.Position, SoundsPath + "\\bash.ogg", 75f, false, Owner.Player);
+            Features.Audio.Play(Owner.Player.Position, SoundsPath + "\\bash.ogg", 75f, false, Owner.Player);
         }
 
         public override Ability Create(Hero hero)
@@ -84,4 +83,3 @@ namespace DotaHeroes.API.Abilities.SpiritBreaker
         }
     }
 }
-  

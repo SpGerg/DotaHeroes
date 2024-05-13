@@ -14,7 +14,8 @@ namespace DotaHeroes.API.Effects.Pudge
 
         public override EffectClassType EffectClassType => EffectClassType.Positive;
 
-        public override int Stack {
+        public override int Stack
+        {
             get
             {
                 return count;

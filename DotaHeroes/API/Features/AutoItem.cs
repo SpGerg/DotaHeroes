@@ -1,13 +1,4 @@
-﻿using DotaHeroes.API.Features.Serializables;
-using Exiled.API.Features;
-using Exiled.API.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DotaHeroes.API.Features
+﻿namespace DotaHeroes.API.Features
 {
     public abstract class AutoItem : Item
     {

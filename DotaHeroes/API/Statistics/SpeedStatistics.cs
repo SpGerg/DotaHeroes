@@ -1,14 +1,13 @@
 ﻿using CustomPlayerEffects;
 using DotaHeroes.API.Features;
-using Exiled.API.Features;
 using MEC;
-using UnityEngine;
 
 namespace DotaHeroes.API.Statistics
 {
     public class SpeedStatistics
     {
-        public sbyte Speed {
+        public sbyte Speed
+        {
             get
             {
                 return speed;

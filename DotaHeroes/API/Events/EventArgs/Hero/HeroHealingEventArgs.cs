@@ -17,7 +17,7 @@ namespace DotaHeroes.API.Events.EventArgs.Hero
         public bool IsAllowed { get; set; }
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="HeroHealingEventArgs" /> class.
+        /// Initializes a new instance of the <see cref="HeroHealingEventArgs" /> class.
         /// </summary>
         /// <param name="hero"><inheritdoc cref="Hero" /></param>
         /// <param name="healer"><inheritdoc cref="Healer" /></param>

@@ -71,7 +71,7 @@ namespace DotaHeroes.API.Statistics
             {
                 return 0;
             }
-            
+
             return 1 - result * 100;
         }
 

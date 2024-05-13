@@ -31,7 +31,7 @@ namespace DotaHeroes.API.Effects.SpiritBreaker
         public override void Disabled()
         {
             Owner.HeroStatistics.Speed.Speed -= ExtraSpeed;
-            
+
             base.Disabled();
         }
     }

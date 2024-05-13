@@ -8,10 +8,11 @@ namespace DotaHeroes.API.Statistics
 
         public int AttackDamage { get; set; }
 
-        public int ExtraAttackDamage { get; set; } 
+        public int ExtraAttackDamage { get; set; }
 
         [YamlIgnore]
-        public int FullDamage {
+        public int FullDamage
+        {
             get
             {
                 return AttackDamage + ExtraAttackDamage;

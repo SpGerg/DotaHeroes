@@ -1,9 +1,5 @@
 ﻿using NorthwoodLib.Pools;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DotaHeroes.Commands.User.Hero
 {
@@ -27,7 +23,7 @@ namespace DotaHeroes.Commands.User.Hero
                 foreach (var item in hero.Abilities)
                 {
                     stringBuilder.AppendLine($"{index}: {item.Name}");
-                    stringBuilder.AppendLine($"- Level: {item.Level+1}");
+                    stringBuilder.AppendLine($"- Level: {item.Level + 1}");
                     index++;
                 }
 
@@ -57,7 +53,7 @@ namespace DotaHeroes.Commands.User.Hero
             {
                 response = $"Ability {_item.Name} was not level upped, you havent points to level up or you cant level up this.";
             }
-            
+
             return true;
         }
     }

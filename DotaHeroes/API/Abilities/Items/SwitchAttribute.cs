@@ -1,18 +1,17 @@
 ﻿using DotaHeroes.API.Enums;
 using DotaHeroes.API.Features;
 using DotaHeroes.API.Interfaces;
-using Exiled.API.Features;
 using NorthwoodLib.Pools;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace DotaHeroes.API.Abilities.Items
 {
     public class SwitchAttribute : ActiveAbility, ILevelValues
     {
+        public SwitchAttribute(Hero hero) : base(hero) { }
+
         public override string Name => "Switch attribute";
 
         public override string Slug => "switch_attribute";
@@ -34,8 +33,6 @@ namespace DotaHeroes.API.Abilities.Items
         public int MinLevel { get; set; } = 1;
 
         public IReadOnlyList<int> HeroLevelToLevelUp => throw new NotImplementedException();
-
-        public SwitchAttribute(Hero hero) : base(hero) { }
 
         public override void LevelUp() { }
 

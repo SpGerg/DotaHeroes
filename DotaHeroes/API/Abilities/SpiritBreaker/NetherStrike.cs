@@ -1,5 +1,4 @@
-﻿using DotaHeroes.API.Abilities.Items;
-using DotaHeroes.API.Enums;
+﻿using DotaHeroes.API.Enums;
 using DotaHeroes.API.Features;
 using DotaHeroes.API.Interfaces;
 using MEC;
@@ -45,7 +44,7 @@ namespace DotaHeroes.API.Abilities.SpiritBreaker
 
             Owner.HeroStateType = HeroStateType.Casting;
 
-            Audio.Play(Owner.Player.Position, SoundsPath + "\\precast.ogg", 75f, false, Owner.Player);
+            Features.Audio.Play(Owner.Player.Position, SoundsPath + "\\precast.ogg", 75f, false, Owner.Player);
 
             response = "Your target is " + target.HeroName;
             return true;
@@ -59,7 +58,7 @@ namespace DotaHeroes.API.Abilities.SpiritBreaker
 
             Owner.HeroStateType = HeroStateType.None;
 
-            Audio.Play(Owner.Player.Position, SoundsPath + "\\cast.ogg", 75f, false, Owner.Player);
+            Features.Audio.Play(Owner.Player.Position, SoundsPath + "\\cast.ogg", 75f, false, Owner.Player);
 
             Owner.Player.Position = target.Player.Position;
             Owner.Player.Rotation = target.Player.Rotation;

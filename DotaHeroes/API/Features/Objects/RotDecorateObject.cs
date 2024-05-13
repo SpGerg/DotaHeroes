@@ -1,7 +1,4 @@
-﻿using DotaHeroes.API.Enums;
-using DotaHeroes.API.Features.Components;
-using DotaHeroes.API.Interfaces;
-using Mirror;
+﻿using Mirror;
 
 namespace DotaHeroes.API.Features.Objects
 {

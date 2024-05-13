@@ -8,7 +8,8 @@ namespace DotaHeroes.API.Features
 
         public float Duration { get; set; }
 
-        public int Cooldown {
+        public int Cooldown
+        {
             get
             {
                 if ((DateTime.Now - useTime).TotalSeconds > Duration)

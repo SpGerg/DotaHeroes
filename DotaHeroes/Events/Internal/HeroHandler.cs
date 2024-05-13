@@ -2,12 +2,7 @@
 using DotaHeroes.API.Events.EventArgs.Hero;
 using DotaHeroes.API.Features;
 using DotaHeroes.API.Interfaces;
-using Exiled.API.Features;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 
 namespace DotaHeroes.Events.Internal
@@ -56,7 +51,7 @@ namespace DotaHeroes.Events.Internal
                 }
             }
         }
-        
+
         internal static void Silence(HeroExecutingAbilityEventArgs ev)
         {
             if (!ev.Hero.TryGetEffect(out Silence effect)) return;

@@ -1,12 +1,7 @@
 ﻿using DotaHeroes.API.Enums;
-using DotaHeroes.API.Events.Handlers;
 using Exiled.API.Features;
 using MEC;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 
 namespace DotaHeroes.API.Features
@@ -27,7 +22,8 @@ namespace DotaHeroes.API.Features
 
         public List<Hero> Heroes { get; set; }
 
-        public bool IsActive {
+        public bool IsActive
+        {
             get
             {
                 return isActive;
@@ -96,7 +92,7 @@ namespace DotaHeroes.API.Features
                     if (IsInsideAura(hero) && !Heroes.Contains(hero))
                     {
                         Added(hero);
- 
+
                         Heroes.Add(hero);
                     }
 

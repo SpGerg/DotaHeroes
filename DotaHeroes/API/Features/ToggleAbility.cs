@@ -1,5 +1,4 @@
-﻿using Exiled.API.Features;
-using System;
+﻿using System;
 
 namespace DotaHeroes.API.Features
 {
@@ -37,7 +36,7 @@ namespace DotaHeroes.API.Features
 
             //if (!CheckCooldown(hero, out response, out CooldownInfo cooldown))
             //{
-                //return false;
+            //return false;
             //}
 
             IsActive = !IsActive;

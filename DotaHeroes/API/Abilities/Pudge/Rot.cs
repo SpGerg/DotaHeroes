@@ -1,5 +1,4 @@
-﻿using DotaHeroes.API.Abilities.Items;
-using DotaHeroes.API.Enums;
+﻿using DotaHeroes.API.Enums;
 using DotaHeroes.API.Features;
 using DotaHeroes.API.Features.Objects;
 using DotaHeroes.API.Interfaces;
@@ -57,7 +56,7 @@ namespace DotaHeroes.API.Abilities.Pudge
             decorateRot.AdminToyBase.gameObject.AddComponent<RotDecorateObject>().Initialize(Owner);
 
             Owner.Values["decorate_rot"] = decorateRot;
-            Owner.Values["audio_rot"] = Audio.Play(Owner.Player.Position, SoundsPath + "\\rot.ogg", 100f, true, Owner.Player);
+            Owner.Values["audio_rot"] = Features.Audio.Play(Owner.Player.Position, SoundsPath + "\\rot.ogg", 100f, true, Owner.Player);
 
             Timing.RunCoroutine(RotCoroutine());
 
@@ -76,7 +75,7 @@ namespace DotaHeroes.API.Abilities.Pudge
 
             try
             {
-                Audio.StopLoop(Owner.Values["audio_rot"] as Player);
+                Features.Audio.StopLoop(Owner.Values["audio_rot"] as Player);
             }
             catch { }
 

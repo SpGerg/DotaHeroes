@@ -2,17 +2,15 @@
 using DotaHeroes.API.Events.EventArgs.Hero;
 using DotaHeroes.API.Features;
 using DotaHeroes.API.Interfaces;
-using UnityEngine;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DotaHeroes.API.Abilities.Items
 {
     public class CrystalysCriticalStrike : PassiveAbility, ILevelValues
     {
+        public CrystalysCriticalStrike(Hero hero) : base(hero) { }
+
         public override string Name => "Crystalys critical strike";
 
         public override string Slug => "crystalys_critical_strike";
@@ -32,8 +30,6 @@ namespace DotaHeroes.API.Abilities.Items
         public override AbilityType AbilityType => AbilityType.Passive;
 
         public override TargetType TargetType => TargetType.None;
-
-        public CrystalysCriticalStrike(Hero hero) : base(hero) { }
 
         public override void LevelUp() { }
 

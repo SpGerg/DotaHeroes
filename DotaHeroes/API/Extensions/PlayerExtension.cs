@@ -44,7 +44,7 @@ namespace DotaHeroes.API.Extensions
             }
 
             HeroController heroController = player.GameObject.GetComponent<HeroController>();
-            
+
             if (heroController == null)
             {
                 return false;
@@ -74,7 +74,7 @@ namespace DotaHeroes.API.Extensions
 
         public static bool IsAudio(this Player player)
         {
-            if (player.Nickname.Contains(Audio.SoundBotName) || player.CustomName.Contains(Audio.SoundBotName))
+            if (player.Nickname.Contains(Features.Audio.SoundBotName) || player.CustomName.Contains(Features.Audio.SoundBotName))
             {
                 return true;
             }

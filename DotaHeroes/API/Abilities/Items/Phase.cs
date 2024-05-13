@@ -4,14 +4,13 @@ using DotaHeroes.API.Features;
 using DotaHeroes.API.Interfaces;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DotaHeroes.API.Abilities.Items
 {
     public class Phase : ActiveAbility, ILevelValues
     {
+        public Phase(Hero owner) : base(owner) { }
+
         public override string Name => "Phase";
 
         public override string Slug => "phase";
@@ -31,8 +30,6 @@ namespace DotaHeroes.API.Abilities.Items
         public int MinLevel { get; set; } = 1;
 
         public IReadOnlyList<int> HeroLevelToLevelUp => throw new NotImplementedException();
-
-        public Phase(Hero owner) : base(owner) { }
 
         public override void LevelUp() { }
 

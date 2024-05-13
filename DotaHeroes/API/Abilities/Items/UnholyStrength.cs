@@ -1,18 +1,15 @@
-﻿using DotaHeroes.API.Effects.Items;
-using DotaHeroes.API.Enums;
+﻿using DotaHeroes.API.Enums;
 using DotaHeroes.API.Features;
 using DotaHeroes.API.Interfaces;
-using Exiled.API.Features;
-using MEC;
-using NorthwoodLib.Pools;
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace DotaHeroes.API.Abilities.Items
 {
     public class UnholyStrength : ToggleAbility, ILevelValues
     {
+        public UnholyStrength(Hero hero) : base(hero) { }
+
         public override string Name => "Unholy strength";
 
         public override string Slug => "unholy_strength";
@@ -32,8 +29,6 @@ namespace DotaHeroes.API.Abilities.Items
         public int MinLevel { get; set; } = 1;
 
         public IReadOnlyList<int> HeroLevelToLevelUp => throw new NotImplementedException();
-
-        public UnholyStrength(Hero hero) : base(hero) { }
 
         public override void LevelUp() { }
 

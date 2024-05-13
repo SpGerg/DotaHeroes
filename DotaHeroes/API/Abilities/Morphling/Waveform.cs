@@ -10,6 +10,8 @@ namespace DotaHeroes.API.Abilities.Morphling
 {
     public class Waveform : ActiveAbility, ILevelValues
     {
+        public Waveform(Hero hero) : base(hero) { }
+
         public override string Name => "Waveform";
 
         public override string Slug => "waveform";
@@ -30,8 +32,6 @@ namespace DotaHeroes.API.Abilities.Morphling
 
         public IReadOnlyList<int> HeroLevelToLevelUp => Features.Utils.EmptyLevelsList;
 
-        public Waveform(Hero hero) : base(hero) { }
-
         protected override bool Execute(ArraySegment<string> arguments, out string response)
         {
             Timing.RunCoroutine(MoveCoroutine());
@@ -51,7 +51,7 @@ namespace DotaHeroes.API.Abilities.Morphling
             var range = (int)(Values["range"][Level] / 48);
             var target = Features.Utils.GetTargetPositionFromMouse(Owner.Player.Position, Owner.Player.CameraTransform.forward, range);
 
-            for (int i = 0;i < range;i++)
+            for (int i = 0; i < range; i++)
             {
                 Owner.Player.Position += Vector3.MoveTowards(Owner.Player.Position, target, 2 * Time.deltaTime);
 

@@ -1,7 +1,6 @@
 ﻿using DotaHeroes.API.Effects;
 using DotaHeroes.API.Enums;
 using DotaHeroes.API.Events.EventArgs.Hero;
-using DotaHeroes.API.Features;
 using DotaHeroes.API.Features.Objects;
 using Exiled.API.Features.Toys;
 using MEC;
@@ -19,16 +18,12 @@ namespace DotaHeroes.Commands.User.Hero
 
         protected override bool Execute(API.Features.Hero hero, ArraySegment<string> arguments, out string response)
         {
-            RaycastHit hit;
-
-            var player = hero.Player;
-
             if (!API.Features.Utils.GetHeroFromPlayerEyeDirection(hero, (float)hero.HeroStatistics.Attack.AttackRange, out response, out API.Features.Hero target))
             {
                 return false;
             }
 
-            if (hero.TryGetEffect(out Disarm result))
+            if (hero.TryGetEffect<Disarm>(out _))
             {
                 response = "You are disarmed";
                 return true;
@@ -79,9 +74,9 @@ namespace DotaHeroes.Commands.User.Hero
 
         private IEnumerator<float> SoundCoroutine(API.Features.Hero hero, bool isHit)
         {
-            Audio.Play(hero.Player.Position, Plugin.Instance.SoundsPath + $"\\{hero.Slug}\\attack\\" + $"\\whoosh{UnityEngine.Random.Range(0, 4)}.ogg");
+            API.Features.Audio.Play(hero.Player.Position, Plugin.Instance.SoundsPath + $"\\{hero.Slug}\\attack\\" + $"\\whoosh{UnityEngine.Random.Range(0, 4)}.ogg");
             yield return Timing.WaitForSeconds(0.5f);
-            if (isHit) Audio.Play(hero.Player.Position, Plugin.Instance.SoundsPath + $"\\{hero.Slug}\\attack\\" + $"\\attack{UnityEngine.Random.Range(0, 3)}.ogg");
+            if (isHit) API.Features.Audio.Play(hero.Player.Position, Plugin.Instance.SoundsPath + $"\\{hero.Slug}\\attack\\" + $"\\attack{UnityEngine.Random.Range(0, 3)}.ogg");
         }
     }
 }

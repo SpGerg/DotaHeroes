@@ -1,7 +1,6 @@
 ﻿using DotaHeroes.API.Enums;
 using PlayerRoles;
 using System.Collections.Generic;
-using YamlDotNet.Serialization;
 
 namespace DotaHeroes.API.Features.Serializables
 {

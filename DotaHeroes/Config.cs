@@ -421,8 +421,8 @@ namespace DotaHeroes
             { "buckler_recipe", new ItemSerializable(250, 250, string.Empty,
                 new List<string>() { },
                 new List<string>() { },
-                new List<string>() 
-                { 
+                new List<string>()
+                {
                     "buckler"
                 },
                 new Dictionary<StatisticsType, Value>() { }
@@ -477,7 +477,7 @@ namespace DotaHeroes
             { "belt_of_strength", new ItemSerializable(450, 225, string.Empty, new List<string>(),
                 new List<string>()
                 {
-                    
+
                 },
                 new List<string>()
                 { },
@@ -642,7 +642,7 @@ namespace DotaHeroes
                 new List<string>() { },
                 new List<string>() { },
                 new List<string>()
-                { 
+                {
                     "buckler"
                 },
                 new Dictionary<StatisticsType, Value>()

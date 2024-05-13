@@ -7,7 +7,7 @@ namespace DotaHeroes.API.Features.Serializables
         public Dictionary<string, List<double>> Values { get; set; }
 
         public AbilitySerializable()
-        { 
+        {
             Values = new();
         }
 

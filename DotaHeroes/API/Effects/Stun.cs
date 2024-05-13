@@ -21,7 +21,7 @@ namespace DotaHeroes.API.Effects
 
         public bool IsIgnoreSpellImmunity { get; set; }
 
-        public Stun() : base() { }   
+        public Stun() : base() { }
 
         public Stun(Hero owner) : base(owner)
         {

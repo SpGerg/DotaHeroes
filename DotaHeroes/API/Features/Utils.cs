@@ -184,7 +184,7 @@ namespace DotaHeroes.API.Features
             }
 
             if (modifier is IResistanceModifier resistanceModifier)
-            {   
+            {
                 hero.HeroStatistics.Resistance.ResistanceModifiers.Add(resistanceModifier);
             }
 

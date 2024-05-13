@@ -4,7 +4,8 @@ namespace DotaHeroes.API.Statistics
 {
     public class HealthAndManaStatistics
     {
-        public double MaximumHealth {
+        public double MaximumHealth
+        {
             get
             {
                 return maximumHealth;

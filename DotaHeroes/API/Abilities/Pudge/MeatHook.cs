@@ -1,5 +1,4 @@
 ﻿using CustomPlayerEffects;
-using DotaHeroes.API.Abilities.Items;
 using DotaHeroes.API.Enums;
 using DotaHeroes.API.Features;
 using DotaHeroes.API.Features.Objects;
@@ -49,7 +48,7 @@ namespace DotaHeroes.API.Abilities.Pudge
         {
             var player = Owner.Player;
 
-            var sound = Audio.Play(player.Position, $"{SoundsPath}\\moving_to_target.ogg");
+            var sound = Features.Audio.Play(player.Position, $"{SoundsPath}\\moving_to_target.ogg");
 
             Primitive primitive = Primitive.Create(player.Position, player.Rotation.eulerAngles, new Vector3(-0.5f, -0.5f, -0.5f), false);
             primitive.Type = PrimitiveType.Cube;

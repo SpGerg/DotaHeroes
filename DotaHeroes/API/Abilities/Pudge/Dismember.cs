@@ -1,5 +1,4 @@
 ﻿using CustomPlayerEffects;
-using DotaHeroes.API.Abilities.Items;
 using DotaHeroes.API.Effects;
 using DotaHeroes.API.Enums;
 using DotaHeroes.API.Features;
@@ -95,10 +94,10 @@ namespace DotaHeroes.API.Abilities.Pudge
 
         private IEnumerator<float> SoundCoroutine(Hero hero)
         {
-            for (int i = 0;i < 3;i++)
+            for (int i = 0; i < 3; i++)
             {
-                Audio.Play(Owner.Player.Position, SoundsPath + $"\\blood{i}.ogg");
-                Audio.Play(Owner.Player.Position, SoundsPath + $"\\swing{i}.ogg");
+                Features.Audio.Play(Owner.Player.Position, SoundsPath + $"\\blood{i}.ogg");
+                Features.Audio.Play(Owner.Player.Position, SoundsPath + $"\\swing{i}.ogg");
 
                 yield return Timing.WaitForSeconds(0.5f);
             }
@@ -107,8 +106,8 @@ namespace DotaHeroes.API.Abilities.Pudge
 
             for (int i = 0; i < 2; i++)
             {
-                Audio.Play(Owner.Player.Position, SoundsPath + $"\\blood{i}.ogg");
-                Audio.Play(Owner.Player.Position, SoundsPath + $"\\swing{i}.ogg");
+                Features.Audio.Play(Owner.Player.Position, SoundsPath + $"\\blood{i}.ogg");
+                Features.Audio.Play(Owner.Player.Position, SoundsPath + $"\\swing{i}.ogg");
 
                 yield return Timing.WaitForSeconds(0.5f);
             }

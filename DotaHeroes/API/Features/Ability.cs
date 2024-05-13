@@ -1,6 +1,5 @@
 ﻿using DotaHeroes.API.Enums;
 using DotaHeroes.API.Interfaces;
-using Exiled.API.Features;
 using NorthwoodLib.Pools;
 using System.Collections.Generic;
 using System.Text;
@@ -27,7 +26,8 @@ namespace DotaHeroes.API.Features
 
         public bool IsVisible { get; set; } = true;
 
-        public bool IsStop { 
+        public bool IsStop
+        {
             get
             {
                 return isStop;
@@ -185,7 +185,7 @@ namespace DotaHeroes.API.Features
                 var _ability = DTAPI.GetAbilityOrDefaultBySlug(ability);
 
                 if (_ability == default) continue;
-                
+
                 result.Add(isCreate ? _ability.Create(hero) : _ability);
             }
 

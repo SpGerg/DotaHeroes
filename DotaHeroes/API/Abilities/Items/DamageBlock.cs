@@ -4,14 +4,13 @@ using DotaHeroes.API.Features;
 using DotaHeroes.API.Interfaces;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DotaHeroes.API.Abilities.Items
 {
     public class DamageBlock : PassiveAbility, ILevelValues
     {
+        public DamageBlock(Hero hero) : base(hero) { }
+
         public override string Name => "Damage block";
 
         public override string Slug => "damage_block";
@@ -31,8 +30,6 @@ namespace DotaHeroes.API.Abilities.Items
         public override AbilityType AbilityType => AbilityType.Passive;
 
         public override TargetType TargetType => TargetType.None;
-
-        public DamageBlock(Hero hero) : base(hero) { }
 
         public override void LevelUp() { }
 

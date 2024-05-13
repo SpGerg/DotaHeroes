@@ -57,7 +57,7 @@ namespace DotaHeroes.API.Features
 
         private IEnumerator<float> DamageCoroutine()
         {
-            for (int i = 0;i < TimesDamage;i++)
+            for (int i = 0; i < TimesDamage; i++)
             {
                 if (!IsEnabled || Hero.IsHeroDead) yield break;
 
@@ -69,7 +69,7 @@ namespace DotaHeroes.API.Features
                 {
                     Hero.TakeDamage(Attacker, Damage, DamageType);
                 }
-                
+
                 yield return Timing.WaitForSeconds(Interval);
             }
         }

@@ -1,7 +1,6 @@
 ﻿using DotaHeroes.API.Enums;
 using DotaHeroes.API.Features;
 using DotaHeroes.API.Interfaces;
-using System;
 namespace DotaHeroes.API.Effects
 {
     public class Break : Effect, IEffectDuration

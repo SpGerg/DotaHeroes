@@ -1,10 +1,4 @@
-﻿using DotaHeroes.API.Enums;
-using DotaHeroes.API.Features;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using DotaHeroes.API.Features;
 
 namespace DotaHeroes.API.Items
 {
@@ -18,7 +12,7 @@ namespace DotaHeroes.API.Items
 
         public override string Lore => "Kialidl lol kok ik l";
 
-        public PhaseBoots() : base() 
+        public PhaseBoots() : base()
         {
         }
 

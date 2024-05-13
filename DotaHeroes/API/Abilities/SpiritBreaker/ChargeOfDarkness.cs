@@ -1,5 +1,4 @@
 ﻿using CommandSystem;
-using DotaHeroes.API.Abilities.Items;
 using DotaHeroes.API.Effects.SpiritBreaker;
 using DotaHeroes.API.Enums;
 using DotaHeroes.API.Features;
@@ -52,12 +51,12 @@ namespace DotaHeroes.API.Abilities.SpiritBreaker
 
             Owner.EnableEffect(effect);
             Owner.HeroStateType = HeroStateType.Casting;
-            
+
             Timing.RunCoroutine(RunningCoroutine(target));
 
-            foreach (var _hero in DTAPI.GetHeroes().Values)
+            foreach (var hero in DTAPI.GetHeroes().Values)
             {
-                Audio.Play(_hero.Player.Position, SoundsPath + "\\start.ogg", 100f, false, _hero.Player);
+                Features.Audio.Play(hero.Player.Position, SoundsPath + "\\start.ogg", 100f, false, hero.Player);
             }
 
             response = $"Your target is {target.HeroName}";

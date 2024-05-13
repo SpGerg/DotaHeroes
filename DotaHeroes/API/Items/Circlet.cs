@@ -1,6 +1,4 @@
-﻿using DotaHeroes.API.Enums;
-using DotaHeroes.API.Features;
-using System.Collections.Generic;
+﻿using DotaHeroes.API.Features;
 
 namespace DotaHeroes.API.Items
 {
@@ -16,7 +14,7 @@ namespace DotaHeroes.API.Items
 
         public Circlet() : base() { }
 
-        protected Circlet(Hero owner) : base(owner) 
+        protected Circlet(Hero owner) : base(owner)
         {
         }
 

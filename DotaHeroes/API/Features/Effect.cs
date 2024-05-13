@@ -126,7 +126,7 @@ namespace DotaHeroes.API.Features
             {
                 stringBuilder.AppendLine("Duration: " + duration);
             }
-            
+
 
             return StringBuilderPool.Shared.ToStringReturn(stringBuilder);
         }

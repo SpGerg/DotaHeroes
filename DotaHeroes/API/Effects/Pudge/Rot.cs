@@ -1,7 +1,6 @@
 ﻿using DotaHeroes.API.Enums;
 using DotaHeroes.API.Features;
 using DotaHeroes.API.Interfaces;
-using Exiled.API.Features;
 
 namespace DotaHeroes.API.Effects.Pudge
 {
@@ -38,7 +37,7 @@ namespace DotaHeroes.API.Effects.Pudge
             DamageOverTime.Damage = Damage;
             DamageOverTime.DamageType = DamageType;
             DamageOverTime.Run();
-             
+
             base.Enabled();
         }
 
