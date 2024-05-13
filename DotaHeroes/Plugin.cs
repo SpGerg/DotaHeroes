@@ -9,6 +9,7 @@ using DotaHeroes.API.Items.Recipes;
 using DotaHeroes.Events.Internal;
 using Exiled.API.Features;
 using System;
+using System.IO;
 using Hero = DotaHeroes.API.Events.Handlers.Hero;
 using Player = Exiled.Events.Handlers.Player;
 
@@ -18,9 +19,9 @@ namespace DotaHeroes
     {
         public static Plugin Instance { get; private set; }
 
-        public override Version Version => new Version(1, 1, 0);
+        public override Version Version => new(1, 1, 1);
 
-        public override Version RequiredExiledVersion => new Version(8, 2, 1);
+        public override Version RequiredExiledVersion => new(8, 8, 0);
 
         public override string Author => "SpGerg";
 
