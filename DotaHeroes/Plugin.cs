@@ -31,6 +31,13 @@ namespace DotaHeroes
             Instance = this;
             SoundsPath = Instance.ConfigPath.Replace("\\7777.yml", string.Empty).Replace($"\\{Server.Port}.yml", string.Empty);
 
+            Log.Info("===========================================");
+            Log.Info("        Thanks for using DotaHeroes        ");
+            Log.Info("               by SpGerg");
+            Log.Info("===========================================");
+            Log.Info("If you found eror in plugin, dm me in discord (#spgerg)");
+
+            //Here abilities
             DTAPI.RegisterAbility(new MeatHook(null));
             DTAPI.RegisterAbility(new Rot(null));
             DTAPI.RegisterAbility(new FleshHeap(null));
@@ -45,6 +52,7 @@ namespace DotaHeroes
             DTAPI.RegisterAbility(new CrystalysCriticalStrike(null));
             DTAPI.RegisterAbility(new BucklerAura(null));
 
+            //Here heroes
             DTAPI.RegisterHero(new Pudge());
             DTAPI.RegisterHero(new SpiritBreaker());
 
