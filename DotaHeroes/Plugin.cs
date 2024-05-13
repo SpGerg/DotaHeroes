@@ -36,7 +36,6 @@ namespace DotaHeroes
             Log.Info("        Thanks for using DotaHeroes        ");
             Log.Info("               by SpGerg                   ");
             Log.Info($"           Version  {Version}             ");
-            Log.Info("               by SpGerg                   ");
             Log.Info("===========================================");
             Log.Info("If you found eror in plugin, dm me in discord (#spgerg)");
 
