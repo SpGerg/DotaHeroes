@@ -12,6 +12,7 @@ using System;
 using Hero = DotaHeroes.API.Events.Handlers.Hero;
 using Player = Exiled.Events.Handlers.Player;
 
+//Well, maybe i finish morphling... maybe.
 namespace DotaHeroes
 {
     public class Plugin : Plugin<Config>
