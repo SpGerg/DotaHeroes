@@ -37,7 +37,7 @@ namespace DotaHeroes
             Log.Info("               by SpGerg                   ");
             Log.Info($"           Version  {Version}             ");
             Log.Info("===========================================");
-            Log.Info("If you found eror in plugin, dm me in discord (#spgerg)");
+            Log.Info("If you found error in plugin, dm me in discord (#spgerg)");
 
             //Here abilities
             DTAPI.RegisterAbility(new MeatHook(null));
