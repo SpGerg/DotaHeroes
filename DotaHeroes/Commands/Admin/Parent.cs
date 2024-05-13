@@ -24,7 +24,7 @@ namespace DotaHeroes.Commands.Admin
             new HeroDummy()
         };
 
-        private string message = string.Empty;
+        private string _message = string.Empty;
 
         public Parent()
         {
@@ -41,12 +41,12 @@ namespace DotaHeroes.Commands.Admin
                 RegisterCommand(command);
             }
 
-            message = StringBuilderPool.Pool.ToStringReturn(stringBuilder);
+            _message = StringBuilderPool.Pool.ToStringReturn(stringBuilder);
         }
 
         protected override bool ExecuteParent(ArraySegment<string> arguments, ICommandSender sender, out string response)
         {
-            response = message;
+            response = _message;
             return true;
         }
     }
